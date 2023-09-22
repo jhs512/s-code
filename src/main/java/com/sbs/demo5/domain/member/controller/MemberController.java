@@ -1,10 +1,9 @@
 package com.sbs.demo5.domain.member.controller;
 
 import com.sbs.demo5.base.rsData.RsData;
+import com.sbs.demo5.domain.base.rq.Rq;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.service.MemberService;
-import com.sbs.demo5.standard.util.Ut;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/usr/member")
 @RequiredArgsConstructor
 public class MemberController {
+    private final Rq rq;
     private final MemberService memberService;
 
     @GetMapping("/join")
@@ -38,14 +38,13 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String join(@Valid JoinForm joinForm, HttpServletRequest req) {
+    public String join(@Valid JoinForm joinForm) {
         RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getNickname());
 
         if (joinRs.isFail()) {
-            req.setAttribute("msg", joinRs.getMsg());
-            return "common/js";
+            return rq.historyBack(joinRs.getMsg());
         }
 
-        return "redirect:/?msg=" + Ut.url.encode(joinRs.getMsg());
+        return rq.redirect("/", joinRs.getMsg());
     }
 }
