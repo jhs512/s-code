@@ -1,5 +1,6 @@
 package com.sbs.demo5.domain.member.service;
 
+import com.sbs.demo5.base.rsData.RsData;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Member join(String username, String password, String nickname) {
+    public RsData<Member> join(String username, String password, String nickname) {
         Member member = Member
                 .builder()
                 .username(username)
@@ -25,7 +26,9 @@ public class MemberService {
                 .nickname(nickname)
                 .build();
 
-        return memberRepository.save(member);
+        member = memberRepository.save(member);
+
+        return RsData.of("S-1", "회원가입이 완료되었습니다.", member);
     }
 
     public Optional<Member> findByUsername(String username) {
