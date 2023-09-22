@@ -22,7 +22,7 @@
 
                 if ( form.username.value.length == 0 ) {
                     form.username.focus();
-                    alert('아이디를 입력해주세요.');
+                    toastWarning('아이디를 입력해주세요.');
                     return;
                 }
 
@@ -30,7 +30,7 @@
 
                 if ( form.password.value.length == 0 ) {
                     form.password.focus();
-                    alert('비밀번호를 입력해주세요.');
+                    toastWarning('비밀번호를 입력해주세요.');
                     return;
                 }
 
@@ -38,13 +38,13 @@
 
                 if ( form.passwordConfirm.value.length == 0 ) {
                     form.passwordConfirm.focus();
-                    alert('비밀번호를 확인을 입력해주세요.');
+                    toastWarning('비밀번호를 확인을 입력해주세요.');
                     return;
                 }
 
                 if ( form.password.value != form.passwordConfirm.value ) {
                     form.passwordConfirm.focus();
-                    alert('비밀번호를 확인이 일치하지 않습니다.');
+                    toastWarning('비밀번호를 확인이 일치하지 않습니다.');
                     return;
                 }
 
