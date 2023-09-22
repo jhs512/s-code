@@ -4,6 +4,7 @@ import com.sbs.demo5.base.rsData.RsData;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.service.MemberService;
 import com.sbs.demo5.standard.util.Ut;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -37,10 +38,11 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String join(@Valid JoinForm joinForm) {
+    public String join(@Valid JoinForm joinForm, HttpServletRequest req) {
         RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getNickname());
 
         if (joinRs.isFail()) {
+            req.setAttribute("msg", joinRs.getMsg());
             return "common/js";
         }
 
