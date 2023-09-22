@@ -1,6 +1,9 @@
 package com.sbs.demo5.domain.member.controller;
 
+import com.sbs.demo5.base.rsData.RsData;
+import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.service.MemberService;
+import com.sbs.demo5.standard.util.Ut;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -28,13 +31,19 @@ public class MemberController {
         @NotBlank
         private String username;
         @NotBlank
+        private String nickname;
+        @NotBlank
         private String password;
     }
 
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm) {
-        memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getUsername());
+        RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getUsername());
 
-        return "redirect:/";
+        if (joinRs.isFail()) {
+            return "redirect:/usr/member/join?failMsg=" + Ut.url.encode(joinRs.getMsg());
+        }
+
+        return "redirect:/?msg=" + Ut.url.encode(joinRs.getMsg());
     }
 }
