@@ -41,4 +41,10 @@ public class MemberService {
     public Optional<Member> findById(long id) {
         return memberRepository.findById(id);
     }
+
+    public RsData checkUsernameDup(String username) {
+        if (findByUsername(username).isPresent()) return RsData.of("F-1", "%s(은)는 사용중인 아이디입니다.".formatted(username));
+
+        return RsData.of("S-1", "%s(은)는 사용 가능한 아이디입니다.".formatted(username));
+    }
 }
