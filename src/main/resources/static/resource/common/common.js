@@ -29,7 +29,7 @@ function parseMsg(msg) {
 }
 
 function toastMsg(isNotice, msg) {
-    if ( isNotice ) toastNotice(msg);
+    if (isNotice) toastNotice(msg);
     else toastWarning(msg);
 }
 
