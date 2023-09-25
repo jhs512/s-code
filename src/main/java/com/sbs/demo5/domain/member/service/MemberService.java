@@ -1,7 +1,9 @@
 package com.sbs.demo5.domain.member.service;
 
 import com.sbs.demo5.base.rsData.RsData;
+import com.sbs.demo5.domain.attr.service.AttrService;
 import com.sbs.demo5.domain.email.service.EmailService;
+import com.sbs.demo5.domain.emailVerification.service.EmailVerificationService;
 import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.genFile.service.GenFileService;
 import com.sbs.demo5.domain.member.entity.Member;
@@ -25,6 +27,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final GenFileService genFileService;
     private final EmailService emailService;
+    private final EmailVerificationService emailVerificationService;
+    private final AttrService attrService;
 
     @Transactional
     public RsData<Member> join(String username, String password, String nickname, String email, MultipartFile profileImg) {
@@ -48,24 +52,29 @@ public class MemberService {
             genFileService.save(member.getModelName(), member.getId(), "common", "profileImg", 0, profileImg);
         }
 
-        sendJoinCompleteMail(member);
+        sendJoinCompleteEmail(member);
+        sendVerificationEmail(member);
 
         return RsData.of("S-1", "회원가입이 완료되었습니다.", member);
     }
 
-    private void sendJoinCompleteMail(Member member) {
+    private void sendJoinCompleteEmail(Member member) {
         CompletableFuture<RsData> sendRsFuture = emailService.send(member.getEmail(), "회원가입이 완료되었습니다.", "회원가입이 완료되었습니다.");
 
         final String email = member.getEmail();
 
         sendRsFuture.whenComplete((rs, throwable) -> {
             if (rs.isFail()) {
-                log.info("메일 발송 실패 : " + email);
+                log.info("sendJoinCompleteMail, 메일 발송 실패 : " + email);
                 return;
             }
 
-            log.info("메일 발송 성공 : " + email);
+            log.info("sendJoinCompleteMail, 메일 발송 성공 : " + email);
         });
+    }
+
+    private void sendVerificationEmail(Member member) {
+        emailVerificationService.send(member);
     }
 
     private Optional<Member> findByEmail(String email) {
@@ -97,5 +106,24 @@ public class MemberService {
                         member.getModelName(), member.getId(), "common", "profileImg", 0
                 )
                 .map(GenFile::getUrl);
+    }
+
+    @Transactional
+    public RsData verifyEmail(long id, String verificationCode) {
+        RsData verifyVerificationCodeRs = emailVerificationService.verifyVerificationCode(id, verificationCode);
+
+        if (verifyVerificationCodeRs.isSuccess() == false) {
+            return verifyVerificationCodeRs;
+        }
+
+        Member member = memberRepository.findById(id).get();
+
+        setEmailVerified(member);
+
+        return RsData.of("S-1", "이메일인증이 완료되었습니다.");
+    }
+
+    private void setEmailVerified(Member member) {
+        attrService.set("member__%d__extra__emailVerified".formatted(member.getId()), true);
     }
 }

@@ -49,5 +49,8 @@ logging:
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
 custom:
+  site:
+    name: 바로잡다
+    baseUrl: "http://localhost:8090"
   genFile:
     dirPath: c:/temp/demo5
