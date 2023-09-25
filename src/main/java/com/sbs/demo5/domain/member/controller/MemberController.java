@@ -1,7 +1,7 @@
 package com.sbs.demo5.domain.member.controller;
 
 import com.sbs.demo5.base.rsData.RsData;
-import com.sbs.demo5.domain.base.rq.Rq;
+import com.sbs.demo5.base.rq.Rq;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.service.MemberService;
 import jakarta.validation.Valid;
