@@ -2,7 +2,12 @@ package com.sbs.demo5.domain.genFile.entity;
 
 import com.sbs.demo5.base.jpa.BaseEntity;
 import jakarta.persistence.Entity;
-import lombok.*;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -13,6 +18,9 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @SuperBuilder
 @ToString(callSuper = true)
+@Table(indexes = {
+        @Index(name = "idx1", columnList = "relId,relTypeCode,typeCode,type2Code")
+})
 public class GenFile extends BaseEntity {
     private String relTypeCode;
     private long relId;

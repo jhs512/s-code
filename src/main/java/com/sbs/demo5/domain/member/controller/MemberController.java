@@ -9,12 +9,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/usr/member")
@@ -30,6 +28,7 @@ public class MemberController {
 
     @Getter
     @AllArgsConstructor
+    @ToString
     public static class JoinForm {
         @NotBlank
         private String username;
@@ -37,14 +36,13 @@ public class MemberController {
         private String nickname;
         @NotBlank
         private String password;
-        private MultipartRequest profileImg;
+        private MultipartFile profileImg;
     }
 
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm) {
-
-
-        RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getNickname());
+        System.out.println("joinForm : " + joinForm);
+        RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getNickname(), joinForm.getProfileImg());
 
         if (joinRs.isFail()) {
             return rq.historyBack(joinRs.getMsg());

@@ -1,12 +1,14 @@
 package com.sbs.demo5.domain.member.service;
 
 import com.sbs.demo5.base.rsData.RsData;
+import com.sbs.demo5.domain.genFile.service.GenFileService;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -16,9 +18,10 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final GenFileService genFileService;
 
     @Transactional
-    public RsData<Member> join(String username, String password, String nickname) {
+    public RsData<Member> join(String username, String password, String nickname, MultipartFile profileImg) {
         if (findByUsername(username).isPresent())
             return RsData.of("F-1", "%s(은)는 사용중인 아이디입니다.".formatted(username));
 
@@ -30,6 +33,10 @@ public class MemberService {
                 .build();
 
         member = memberRepository.save(member);
+
+        if (profileImg != null) {
+            genFileService.save(member.getModelName(), member.getId(), "common", "profileImg", 0, profileImg);
+        }
 
         return RsData.of("S-1", "회원가입이 완료되었습니다.", member);
     }

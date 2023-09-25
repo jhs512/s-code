@@ -14,10 +14,10 @@ public class NotProd {
     @Bean
     public ApplicationRunner init(MemberService memberService) {
         return args -> {
-            memberService.join("admin", "1234", "admin");
+            memberService.join("admin", "1234", "admin", null);
 
             IntStream.rangeClosed(1, 3).forEach(i -> {
-                memberService.join("user" + i, "1234", "nickname" + i);
+                memberService.join("user" + i, "1234", "nickname" + i, null);
             });
         };
     }
