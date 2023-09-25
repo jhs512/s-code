@@ -1,6 +1,19 @@
 server:
   port: 8090
 spring:
+  profiles:
+    include: secret
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: jangka512@gmail.com
+    password: NEED_TO_INPUT_ON_SECRET
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   thymeleaf:
     cache: false
     prefix: file:src/main/resources/templates/
