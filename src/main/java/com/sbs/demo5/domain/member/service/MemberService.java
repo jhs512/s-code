@@ -1,6 +1,7 @@
 package com.sbs.demo5.domain.member.service;
 
 import com.sbs.demo5.base.rsData.RsData;
+import com.sbs.demo5.domain.email.service.EmailService;
 import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.genFile.service.GenFileService;
 import com.sbs.demo5.domain.member.entity.Member;
@@ -20,6 +21,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final GenFileService genFileService;
+    private final EmailService emailService;
 
     @Transactional
     public RsData<Member> join(String username, String password, String nickname, String email, MultipartFile profileImg) {
@@ -43,7 +45,13 @@ public class MemberService {
             genFileService.save(member.getModelName(), member.getId(), "common", "profileImg", 0, profileImg);
         }
 
+        sendJoinCompleteMail(member);
+
         return RsData.of("S-1", "회원가입이 완료되었습니다.", member);
+    }
+
+    private void sendJoinCompleteMail(Member member) {
+        emailService.send(member.getEmail(), "회원가입이 완료되었습니다.", "회원가입이 완료되었습니다.");
     }
 
     private Optional<Member> findByEmail(String email) {
