@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartRequest;
 
 @Controller
 @RequestMapping("/usr/member")
@@ -36,10 +37,13 @@ public class MemberController {
         private String nickname;
         @NotBlank
         private String password;
+        private MultipartRequest profileImg;
     }
 
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm) {
+
+
         RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getNickname());
 
         if (joinRs.isFail()) {

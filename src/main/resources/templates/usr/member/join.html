@@ -15,7 +15,7 @@
             회원가입
         </h1>
 
-        <form th:action name="join-form" method="POST" onsubmit="submitJoinForm(this); return false;"
+        <form enctype="multipart/form-data" th:action name="join-form" method="POST" onsubmit="submitJoinForm(this); return false;"
               class="flex flex-col gap-6">
             <div class="form-control">
                 <label class="label">
@@ -49,6 +49,14 @@
                 </label>
                 <input type="text" name="nickname" placeholder="별명" class="input input-bordered"
                        maxlength="30">
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">프로필 이미지</span>
+                </label>
+                <input type="file" name="profimeImg" class="file-input file-input-bordered"
+                       accept="image/jpeg, image/png, image/gif">
             </div>
 
             <div>
