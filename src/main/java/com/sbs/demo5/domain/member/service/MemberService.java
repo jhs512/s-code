@@ -7,16 +7,19 @@ import com.sbs.demo5.domain.genFile.service.GenFileService;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -51,7 +54,18 @@ public class MemberService {
     }
 
     private void sendJoinCompleteMail(Member member) {
-        emailService.send(member.getEmail(), "회원가입이 완료되었습니다.", "회원가입이 완료되었습니다.");
+        CompletableFuture<RsData> sendRsFuture = emailService.send(member.getEmail(), "회원가입이 완료되었습니다.", "회원가입이 완료되었습니다.");
+
+        final String email = member.getEmail();
+
+        sendRsFuture.whenComplete((rs, throwable) -> {
+            if (rs.isFail()) {
+                log.info("메일 발송 실패 : " + email);
+                return;
+            }
+
+            log.info("메일 발송 성공 : " + email);
+        });
     }
 
     private Optional<Member> findByEmail(String email) {
