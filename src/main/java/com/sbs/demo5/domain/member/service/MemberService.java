@@ -1,6 +1,7 @@
 package com.sbs.demo5.domain.member.service;
 
 import com.sbs.demo5.base.rsData.RsData;
+import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.genFile.service.GenFileService;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.repository.MemberRepository;
@@ -53,5 +54,12 @@ public class MemberService {
         if (findByUsername(username).isPresent()) return RsData.of("F-1", "%s(은)는 사용중인 아이디입니다.".formatted(username));
 
         return RsData.of("S-1", "%s(은)는 사용 가능한 아이디입니다.".formatted(username));
+    }
+
+    public Optional<String> findProfileImgUrl(Member member) {
+        return genFileService.findGenFileBy(
+                        member.getModelName(), member.getId(), "common", "profileImg", 0
+                )
+                .map(GenFile::getUrl);
     }
 }

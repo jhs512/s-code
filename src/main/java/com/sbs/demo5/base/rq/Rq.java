@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
+import java.util.Optional;
+
 @Component
 @RequestScope
 public class Rq {
@@ -177,5 +179,11 @@ public class Rq {
 
     public String redirect(String url, String msg) {
         return "redirect:" + Ut.url.modifyQueryParam(url, "msg", Ut.url.encodeWithTtl(msg));
+    }
+
+    public String getProfileImgUrl() {
+        return Optional.ofNullable(getMember())
+                .flatMap(memberService::findProfileImgUrl)
+                .orElse("https://placehold.co/30x30?text=UU");
     }
 }
