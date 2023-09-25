@@ -22,15 +22,19 @@ public class MemberService {
     private final GenFileService genFileService;
 
     @Transactional
-    public RsData<Member> join(String username, String password, String nickname, MultipartFile profileImg) {
+    public RsData<Member> join(String username, String password, String nickname, String email, MultipartFile profileImg) {
         if (findByUsername(username).isPresent())
             return RsData.of("F-1", "%s(은)는 사용중인 아이디입니다.".formatted(username));
+
+        if (findByEmail(email).isPresent())
+            return RsData.of("F-2", "%s(은)는 사용중인 이메일입니다.".formatted(username));
 
         Member member = Member
                 .builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .nickname(nickname)
+                .email(email)
                 .build();
 
         member = memberRepository.save(member);
@@ -42,6 +46,10 @@ public class MemberService {
         return RsData.of("S-1", "회원가입이 완료되었습니다.", member);
     }
 
+    private Optional<Member> findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
@@ -50,10 +58,16 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
-    public RsData checkUsernameDup(String username) {
+    public RsData<String> checkUsernameDup(String username) {
         if (findByUsername(username).isPresent()) return RsData.of("F-1", "%s(은)는 사용중인 아이디입니다.".formatted(username));
 
-        return RsData.of("S-1", "%s(은)는 사용 가능한 아이디입니다.".formatted(username));
+        return RsData.of("S-1", "%s(은)는 사용 가능한 아이디입니다.".formatted(username), username);
+    }
+
+    public RsData<String> checkEmailDup(String email) {
+        if (findByEmail(email).isPresent()) return RsData.of("F-1", "%s(은)는 사용중인 이메일입니다.".formatted(email));
+
+        return RsData.of("S-1", "%s(은)는 사용 가능한 이메일입니다.".formatted(email), email);
     }
 
     public Optional<String> findProfileImgUrl(Member member) {

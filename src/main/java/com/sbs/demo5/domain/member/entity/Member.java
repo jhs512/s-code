@@ -23,10 +23,9 @@ import static lombok.AccessLevel.PROTECTED;
 public class Member extends BaseEntity {
     @Column(unique = true)
     private String username;
-    @Setter
     private String password;
-    @Setter
     private String nickname;
+    private String email;
 
     public boolean isAdmin() {
         return "admin".equals(username);

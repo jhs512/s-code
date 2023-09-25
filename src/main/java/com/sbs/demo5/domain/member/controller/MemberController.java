@@ -44,6 +44,8 @@ public class MemberController {
         private String nickname;
         @NotBlank
         private String password;
+        @NotBlank
+        private String email;
         private MultipartFile profileImg;
     }
 
@@ -51,7 +53,7 @@ public class MemberController {
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm) {
         System.out.println("joinForm : " + joinForm);
-        RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getNickname(), joinForm.getProfileImg());
+        RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getNickname(), joinForm.getEmail(), joinForm.getProfileImg());
 
         if (joinRs.isFail()) {
             return rq.historyBack(joinRs.getMsg());
@@ -62,7 +64,13 @@ public class MemberController {
 
     @GetMapping("/checkUsernameDup")
     @ResponseBody
-    public RsData checkUsernameDup(String username) {
+    public RsData<String> checkUsernameDup(String username) {
         return memberService.checkUsernameDup(username);
+    }
+
+    @GetMapping("/checkEmailDup")
+    @ResponseBody
+    public RsData<String> checkEmailDup(String email) {
+        return memberService.checkEmailDup(email);
     }
 }
