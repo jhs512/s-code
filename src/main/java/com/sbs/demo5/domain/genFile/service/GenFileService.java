@@ -2,11 +2,14 @@ package com.sbs.demo5.domain.genFile.service;
 
 import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.genFile.repository.GenFileRepository;
+import com.sbs.demo5.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import com.sbs.demo5.standard.util.Ut;
+
+import java.io.File;
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +41,16 @@ public class GenFileService {
                 .build();
 
         genFileRepository.save(genFile);
+
+        File file = new File(genFile.getFilePath());
+
+        file.getParentFile().mkdirs();
+
+        try {
+            multipartFile.transferTo(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         return genFile;
     }

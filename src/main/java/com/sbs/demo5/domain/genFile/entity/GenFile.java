@@ -1,5 +1,6 @@
 package com.sbs.demo5.domain.genFile.entity;
 
+import com.sbs.demo5.base.app.AppConfig;
 import com.sbs.demo5.base.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
@@ -33,4 +34,20 @@ public class GenFile extends BaseEntity {
     private String fileExt;
     private String fileDir;
     private String originFileName;
+
+    public String getFileName() {
+        return getId() + "." + getFileExt();
+    }
+
+    public String getUrl() {
+        return "/gen/" + getFileDir() + "/" + getFileName();
+    }
+
+    public String getDownloadUrl() {
+        return "/download/gen/" + getId();
+    }
+
+    public String getFilePath() {
+        return AppConfig.getGenFileDirPath() + "/" + getFileDir() + "/" + getFileName();
+    }
 }
