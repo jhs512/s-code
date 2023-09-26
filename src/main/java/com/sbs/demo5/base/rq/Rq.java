@@ -1,5 +1,6 @@
 package com.sbs.demo5.base.rq;
 
+import com.sbs.demo5.base.rsData.RsData;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.service.MemberService;
 import com.sbs.demo5.standard.util.Ut;
@@ -22,8 +23,8 @@ public class Rq {
     private final HttpServletRequest req;
     private final HttpServletResponse resp;
     private final HttpSession session;
-    private Member member = null;
     private final User user;
+    private Member member = null;
 
     public Rq(MemberService memberService, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
         this.memberService = memberService;
@@ -166,6 +167,10 @@ public class Rq {
         return sb.toString();
     }
 
+    public String historyBack(RsData rs) {
+        return historyBack(rs.getMsg());
+    }
+
     public String historyBack(String msg) {
         String referer = req.getHeader("referer");
         String key = "historyBackFailMsg___" + referer;
@@ -175,6 +180,10 @@ public class Rq {
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
         return "common/js";
+    }
+
+    public String redirect(String url, RsData rs) {
+        return redirect(url, rs.getMsg());
     }
 
     public String redirect(String url, String msg) {

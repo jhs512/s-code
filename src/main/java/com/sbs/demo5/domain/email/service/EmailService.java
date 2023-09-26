@@ -18,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 public class EmailService {
     private final JavaMailSender mailSender;
 
+    // 명령
     @Async
     public CompletableFuture<RsData> send(String to, String subject, String body) {
         if (to.endsWith("@test.com")) return CompletableFuture.supplyAsync(() -> RsData.of("S-2", "메일이 발송되었습니다."));

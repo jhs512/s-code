@@ -8,23 +8,24 @@
 
 <body>
 
-<div layout:fragment="content" class="flex-1 flex items-center justify-center">
+<div class="flex-1 flex items-center justify-center" layout:fragment="content">
     <div class="max-w-2xl w-full px-4">
         <h1 class="mb-4">
             <i class="fa-solid fa-user-plus"></i>
             회원가입
         </h1>
 
-        <form enctype="multipart/form-data" th:action name="join-form" method="POST"
+        <form class="flex flex-col gap-6" enctype="multipart/form-data" method="POST" name="join-form"
               onsubmit="submitJoinForm(this); return false;"
-              class="flex flex-col gap-6">
+              th:action>
             <div class="form-control">
                 <label class="label">
                     <span class="label-text">아이디</span>
                 </label>
-                <input type="text" name="username" placeholder="아이디" class="input input-bordered" autofocus
-                       maxlength="30" onchange="$(this).keyup();" onpaste="setTimeoutZero(() => $(this).keyup());"
-                       onkeyup="checkUsernameDupDebounce();">
+                <input autofocus class="input input-bordered" maxlength="30" name="username" onchange="$(this).keyup();"
+                       onkeyup="checkUsernameDupDebounce();" onpaste="setTimeoutZero(() => $(this).keyup());"
+                       placeholder="아이디"
+                       type="text">
                 <div class="mt-2 text-sm">
                 </div>
             </div>
@@ -33,32 +34,33 @@
                 <label class="label">
                     <span class="label-text">비밀번호</span>
                 </label>
-                <input type="password" name="password" placeholder="비밀번호" class="input input-bordered" maxlength="30">
+                <input class="input input-bordered" maxlength="30" name="password" placeholder="비밀번호" type="password">
             </div>
 
             <div class="form-control">
                 <label class="label">
                     <span class="label-text">비밀번호 확인</span>
                 </label>
-                <input type="password" name="passwordConfirm" placeholder="비밀번호 확인" class="input input-bordered"
-                       maxlength="30">
+                <input class="input input-bordered" maxlength="30" name="passwordConfirm" placeholder="비밀번호 확인"
+                       type="password">
             </div>
 
             <div class="form-control">
                 <label class="label">
                     <span class="label-text">별명</span>
                 </label>
-                <input type="text" name="nickname" placeholder="별명" class="input input-bordered"
-                       maxlength="30">
+                <input class="input input-bordered" maxlength="30" name="nickname" placeholder="별명"
+                       type="text">
             </div>
 
             <div class="form-control">
                 <label class="label">
                     <span class="label-text">이메일</span>
                 </label>
-                <input type="email" name="email" placeholder="이메일" class="input input-bordered"
-                       maxlength="30" onchange="$(this).keyup();" onpaste="setTimeoutZero(() => $(this).keyup());"
-                       onkeyup="checkEmailDupDebounce();">
+                <input class="input input-bordered" maxlength="30" name="email" onchange="$(this).keyup();"
+                       onkeyup="checkEmailDupDebounce();" onpaste="setTimeoutZero(() => $(this).keyup());"
+                       placeholder="이메일"
+                       type="email">
                 <div class="mt-2 text-sm">
                 </div>
             </div>
@@ -67,8 +69,9 @@
                 <label class="label">
                     <span class="label-text">프로필 이미지</span>
                 </label>
-                <input type="file" name="profileImg" class="file-input file-input-bordered"
-                       accept="image/jpeg, image/png, image/gif">
+                <input accept="image/jpeg, image/png, image/gif" class="file-input file-input-bordered"
+                       name="profileImg"
+                       type="file">
             </div>
 
             <div>
@@ -78,9 +81,9 @@
                 </button>
 
                 <div class="text-center">
-                    <a href="/usr/member/login" class="btn btn-link">로그인</a>
-                    <a href="/usr/member/findUsername" class="btn btn-link">아이디 찾기</a>
-                    <a href="/usr/member/findPassword" class="btn btn-link">비밀번호 찾기</a>
+                    <a class="btn btn-link" href="/usr/member/login">로그인</a>
+                    <a class="btn btn-link" href="/usr/member/findUsername">아이디 찾기</a>
+                    <a class="btn btn-link" href="/usr/member/findPassword">비밀번호 찾기</a>
                 </div>
             </div>
         </form>
@@ -112,12 +115,12 @@
                     'checkUsernameDup?username=' + form.username.value
                 )
                     .then(res => res.json())
-                    .then((rsData) => {
-                        if ( rsData.success ) {
-                            validUsername = rsData.data;
+                    .then((rs) => {
+                        if ( rs.success ) {
+                            validUsername = rs.data;
                         }
 
-                        setUsernameInputMsg(rsData.success, rsData.msg);
+                        setUsernameInputMsg(rs.success, rs.msg);
                     });
             }
 
@@ -166,12 +169,12 @@
                     'checkEmailDup?email=' + form.email.value
                 )
                     .then(res => res.json())
-                    .then((rsData) => {
-                        if ( rsData.success ) {
-                            validEmail = rsData.data;
+                    .then((rs) => {
+                        if ( rs.success ) {
+                            validEmail = rs.data;
                         }
 
-                        setEmailInputMsg(rsData.success, rsData.msg);
+                        setEmailInputMsg(rs.success, rs.msg);
                     });
             }
 
