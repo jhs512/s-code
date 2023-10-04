@@ -125,4 +125,8 @@ public class MemberService {
     public void setEmailVerified(Long memberId) {
         attrService.set("member__%d__extra__emailVerified".formatted(memberId), true);
     }
+
+    public boolean isEmailVerified(Member member) {
+        return attrService.getAsBoolean("member__%d__extra__emailVerified".formatted(member.getId()), false);
+    }
 }

@@ -3,6 +3,7 @@ package com.sbs.demo5.domain.member.controller;
 import com.sbs.demo5.base.rq.Rq;
 import com.sbs.demo5.base.rsData.RsData;
 import com.sbs.demo5.domain.member.entity.Member;
+import com.sbs.demo5.domain.member.exception.EmailNotVerifiedAccessDeniedException;
 import com.sbs.demo5.domain.member.service.MemberService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -78,5 +79,18 @@ public class MemberController {
         @NotBlank
         private String email;
         private MultipartFile profileImg;
+    }
+
+    public boolean assertCurrentMemberVerified() {
+        if (!memberService.isEmailVerified(rq.getMember()))
+            throw new EmailNotVerifiedAccessDeniedException("이메일 인증 후 이용해주세요.");
+
+        return true;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/notVerified")
+    public String showNotVerified() {
+        return "usr/member/notVerified";
     }
 }

@@ -21,10 +21,10 @@ import java.util.concurrent.CompletableFuture;
 @Transactional(readOnly = true)
 public class EmailVerificationService {
     private final EmailService emailService;
-    private final AttrService attrService;
     @Autowired
     @Lazy
     private MemberService memberService;
+    private final AttrService attrService;
 
     // 조회
 
