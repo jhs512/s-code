@@ -34,7 +34,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     // 조회
-    private Optional<Member> findByEmail(String email) {
+    public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
 
@@ -129,4 +129,5 @@ public class MemberService {
     public boolean isEmailVerified(Member member) {
         return attrService.getAsBoolean("member__%d__extra__emailVerified".formatted(member.getId()), false);
     }
+
 }

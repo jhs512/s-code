@@ -66,6 +66,38 @@ public class MemberController {
         return memberService.checkEmailDup(email);
     }
 
+    public boolean assertCurrentMemberVerified() {
+        if (!memberService.isEmailVerified(rq.getMember()))
+            throw new EmailNotVerifiedAccessDeniedException("이메일 인증 후 이용해주세요.");
+
+        return true;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/notVerified")
+    public String showNotVerified() {
+        return "usr/member/notVerified";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/findUsername")
+    public String showFindUsername() {
+        return "usr/member/findUsername";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/findUsername")
+    public String findUsername(String email) {
+        return memberService.findByEmail(email)
+                .map(member ->
+                        rq.redirect(
+                                "/usr/member/login?username=%s".formatted(member.getUsername()),
+                                "해당 회원의 아이디는 `%s` 입니다.".formatted(member.getUsername())
+                        )
+                )
+                .orElse(rq.historyBack("`%s` (은)는 존재하지 않은 회원 이메일 입니다."));
+    }
+
     @Getter
     @AllArgsConstructor
     @ToString
@@ -79,18 +111,5 @@ public class MemberController {
         @NotBlank
         private String email;
         private MultipartFile profileImg;
-    }
-
-    public boolean assertCurrentMemberVerified() {
-        if (!memberService.isEmailVerified(rq.getMember()))
-            throw new EmailNotVerifiedAccessDeniedException("이메일 인증 후 이용해주세요.");
-
-        return true;
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/notVerified")
-    public String showNotVerified() {
-        return "usr/member/notVerified";
     }
 }

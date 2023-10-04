@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public class Ut {
@@ -106,6 +107,29 @@ public class Ut {
 
         public static String withTtl(String msg) {
             return msg + ";ttl=" + new Date().getTime();
+        }
+    }
+
+    public static class str {
+        public static boolean hasLength(String string) {
+            return string != null && string.length() > 0;
+        }
+    }
+
+    public static class thy {
+        private static String getFirstStrOrEmpty(List<String> requestParameterValues) {
+            return Optional.ofNullable(requestParameterValues)
+                    .filter(values -> !values.isEmpty())
+                    .map(values -> values.get(0).replaceAll("%20", "").trim())
+                    .orElse("");
+        }
+
+        public static boolean inputAttributeAutofocus(List<String> requestParameterValues) {
+            return !str.hasLength(getFirstStrOrEmpty(requestParameterValues));
+        }
+
+        public static String value(List<String> requestParameterValues) {
+            return getFirstStrOrEmpty(requestParameterValues);
         }
     }
 }
