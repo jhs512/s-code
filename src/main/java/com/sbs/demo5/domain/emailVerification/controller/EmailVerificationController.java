@@ -19,10 +19,18 @@ public class EmailVerificationController {
     public String verify(long memberId, String code) {
         RsData verifyEmailRs = emailVerificationService.verify(memberId, code);
 
-        if (verifyEmailRs.isFail()) return rq.redirect("/", verifyEmailRs.getMsg());
+        // 각 상황별 이동해야 하는 URL
+        String afterFailUrl = "/";
+        String afterSuccessButLogoutUrl = "/usr/member/login";
+        String afterSuccessUrl = "/";
 
-        if (rq.isLogout()) return rq.redirect("/usr/member/login", verifyEmailRs);
+        // 인증실패한 상황
+        if (verifyEmailRs.isFail()) return rq.redirect(afterFailUrl, verifyEmailRs);
 
-        return rq.redirect("/", verifyEmailRs);
+        // 인증성공했지만 로그아웃인 상황
+        if (rq.isLogout()) return rq.redirect(afterSuccessButLogoutUrl, verifyEmailRs);
+
+        // 인증성공했고 로그인인 상황
+        return rq.redirect(afterSuccessUrl, verifyEmailRs);
     }
 }

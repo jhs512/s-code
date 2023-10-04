@@ -190,6 +190,12 @@ public class Rq {
         return "redirect:" + Ut.url.modifyQueryParam(url, "msg", Ut.url.encodeWithTtl(msg));
     }
 
+    public String redirectOrBack(String url, RsData rs) {
+        if (rs.isFail()) return historyBack(rs);
+
+        return redirect(url, rs);
+    }
+
     public String getProfileImgUrl() {
         return Optional.ofNullable(getMember())
                 .flatMap(memberService::findProfileImgUrl)

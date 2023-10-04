@@ -48,9 +48,7 @@ public class MemberController {
                 joinForm.getProfileImg()
         );
 
-        if (joinRs.isFail()) return rq.historyBack(joinRs);
-
-        return rq.redirect("/", joinRs);
+        return rq.redirectOrBack("/", joinRs);
     }
 
     @PreAuthorize("isAnonymous()")
