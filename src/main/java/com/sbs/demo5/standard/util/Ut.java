@@ -114,6 +114,18 @@ public class Ut {
         public static boolean hasLength(String string) {
             return string != null && string.length() > 0;
         }
+
+        public static String tempPassword(int i) {
+            String passwordSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+            StringBuilder password = new StringBuilder();
+
+            for (int x = 0; x < i; x++) {
+                int random = (int) (Math.random() * passwordSet.length());
+                password.append(passwordSet.charAt(random));
+            }
+
+            return password.toString();
+        }
     }
 
     public static class thy {

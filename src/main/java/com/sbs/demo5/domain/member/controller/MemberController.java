@@ -95,7 +95,27 @@ public class MemberController {
                                 "해당 회원의 아이디는 `%s` 입니다.".formatted(member.getUsername())
                         )
                 )
-                .orElse(rq.historyBack("`%s` (은)는 존재하지 않은 회원 이메일 입니다."));
+                .orElseGet(() -> rq.historyBack("`%s` (은)는 존재하지 않은 회원 이메일 입니다.".formatted(email)));
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/findPassword")
+    public String showFindPassword() {
+        return "usr/member/findPassword";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/findPassword")
+    public String findPassword(String username, String email) {
+        return
+                memberService.findByUsernameAndEmail(username, email)
+                        .map(member -> {
+                            memberService.sendTempPasswordToEmail(member);
+                            return rq.redirect(
+                                    "/usr/member/login?lastUsername=%s".formatted(member.getUsername()),
+                                    "해당 회원의 이메일로 임시 비밀번호를 발송하였습니다."
+                            );
+                        }).orElseGet(() -> rq.historyBack("일치하는 회원이 존재하지 않습니다."));
     }
 
     @Getter

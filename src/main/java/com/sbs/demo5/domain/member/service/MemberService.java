@@ -9,6 +9,7 @@ import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.genFile.service.GenFileService;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.repository.MemberRepository;
+import com.sbs.demo5.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -97,15 +98,15 @@ public class MemberService {
     }
 
     private void sendJoinCompleteEmail(Member member) {
+        final String email = member.getEmail();
+
         CompletableFuture<RsData> sendRsFuture = emailService.send(
-                member.getEmail(),
+                email,
                 "[%s 가입축하] 회원가입이 완료되었습니다.".formatted(
                         AppConfig.getSiteName()
                 ),
                 "많은 이용 바랍니다."
         );
-
-        final String email = member.getEmail();
 
         sendRsFuture.whenComplete((rs, throwable) -> {
             if (rs.isFail()) {
@@ -130,4 +131,32 @@ public class MemberService {
         return attrService.getAsBoolean("member__%d__extra__emailVerified".formatted(member.getId()), false);
     }
 
+    public Optional<Member> findByUsernameAndEmail(String username, String email) {
+        return memberRepository.findByUsernameAndEmail(username, email);
+    }
+
+    @Transactional
+    public void sendTempPasswordToEmail(Member member) {
+        final String tempPassword = Ut.str.tempPassword(6);
+        member.setPassword(passwordEncoder.encode(tempPassword));
+
+        final String email = member.getEmail();
+
+        CompletableFuture<RsData> sendRsFuture = emailService.send(
+                email,
+                "[%s 임시비밀번호] 임시 비밀번호 입니다.".formatted(
+                        AppConfig.getSiteName()
+                ),
+                tempPassword
+        );
+
+        sendRsFuture.whenComplete((rs, throwable) -> {
+            if (rs.isFail()) {
+                log.info("sendTempPasswordToEmail, 메일 발송 실패 : " + email);
+                return;
+            }
+
+            log.info("sendTempPasswordToEmail, 메일 발송 성공 : " + email);
+        });
+    }
 }
