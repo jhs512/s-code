@@ -12,7 +12,10 @@ import java.io.IOException;
 public class CustomSimpleUrlAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        setDefaultFailureUrl("/usr/member/login?failMsg=" + Ut.url.encodeWithTtl("올바르지 않은 회원정보 입니다."));
+        // request 객체에서 폼에서 POST 방식으로 username 을 이름으로 하여 보낸 값을 얻고 싶어
+        String username = request.getParameter("username");
+
+        setDefaultFailureUrl("/usr/member/login?username=" + username + "&failMsg=" + Ut.url.encodeWithTtl("올바르지 않은 회원정보 입니다."));
         super.onAuthenticationFailure(request, response, exception);
     }
 }
