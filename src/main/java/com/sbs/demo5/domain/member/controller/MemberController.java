@@ -91,7 +91,7 @@ public class MemberController {
         return memberService.findByEmail(email)
                 .map(member ->
                         rq.redirect(
-                                "/usr/member/login?username=%s".formatted(member.getUsername()),
+                                "/usr/member/login?lastUsername=%s".formatted(member.getUsername()),
                                 "해당 회원의 아이디는 `%s` 입니다.".formatted(member.getUsername())
                         )
                 )
