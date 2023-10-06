@@ -26,6 +26,11 @@ public class GenFileService {
     // 명령
     @Transactional
     public GenFile save(String relTypeCode, Long relId, String typeCode, String type2Code, int fileNo, MultipartFile multipartFile) {
+        findGenFileBy(relTypeCode, relId, typeCode, type2Code, fileNo).ifPresent(genFile -> {
+            Ut.file.remove(genFile.getFilePath());
+            genFileRepository.delete(genFile);
+        });
+
         String originFileName = multipartFile.getOriginalFilename();
         String fileExt = Ut.file.getExt(originFileName);
         String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);

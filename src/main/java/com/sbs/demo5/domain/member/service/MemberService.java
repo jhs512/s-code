@@ -49,7 +49,7 @@ public class MemberService {
 
     public Optional<String> findProfileImgUrl(Member member) {
         return genFileService.findGenFileBy(
-                        member.getModelName(), member.getId(), "common", "profileImg", 0
+                        member.getModelName(), member.getId(), "common", "profileImg", 1
                 )
                 .map(GenFile::getUrl);
     }
@@ -94,7 +94,9 @@ public class MemberService {
     }
 
     private void saveProfileImg(Member member, MultipartFile profileImg) {
-        genFileService.save(member.getModelName(), member.getId(), "common", "profileImg", 0, profileImg);
+        if (profileImg.isEmpty()) return;
+
+        genFileService.save(member.getModelName(), member.getId(), "common", "profileImg", 1, profileImg);
     }
 
     private void sendJoinCompleteEmail(Member member) {
@@ -163,5 +165,17 @@ public class MemberService {
 
             log.info("sendTempPasswordToEmail, 메일 발송 성공 : " + email);
         });
+    }
+
+    @Transactional
+    public RsData<Member> modify(long memberId, String password, String nickname, MultipartFile profileImg) {
+        Member member = findById(memberId).get();
+
+        if (password != null) member.setPassword(passwordEncoder.encode(password));
+        if (nickname != null) member.setNickname(nickname);
+
+        if (profileImg != null) saveProfileImg(member, profileImg);
+
+        return RsData.of("S-1", "회원정보가 수정되었습니다.", member);
     }
 }

@@ -124,6 +124,25 @@ public class MemberController {
         return "usr/member/me";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify")
+    public String showModify() {
+        return "usr/member/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify")
+    public String modify(@Valid ModifyForm modifyForm) {
+        RsData<Member> modifyRs = memberService.modify(
+                rq.getMember().getId(),
+                modifyForm.getPassword(),
+                modifyForm.getNickname(),
+                modifyForm.getProfileImg()
+        );
+
+        return rq.redirectOrBack("/usr/member/me", modifyRs);
+    }
+
     @Getter
     @AllArgsConstructor
     @ToString
@@ -136,6 +155,16 @@ public class MemberController {
         private String password;
         @NotBlank
         private String email;
+        private MultipartFile profileImg;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @ToString
+    public static class ModifyForm {
+        @NotBlank
+        private String nickname;
+        private String password;
         private MultipartFile profileImg;
     }
 }

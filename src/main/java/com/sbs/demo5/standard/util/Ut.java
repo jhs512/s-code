@@ -1,5 +1,6 @@
 package com.sbs.demo5.standard.util;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -52,6 +53,13 @@ public class Ut {
             }
 
             return "etc";
+        }
+
+        public static void remove(String filePath) {
+            File file = new File(filePath);
+            if (file.exists()) {
+                file.delete();
+            }
         }
     }
 
