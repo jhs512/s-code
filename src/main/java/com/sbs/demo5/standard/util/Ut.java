@@ -2,6 +2,8 @@ package com.sbs.demo5.standard.util;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -110,18 +112,30 @@ public class Ut {
         }
 
         public static String encodeWithTtl(String s) {
-            if (!Ut.str.hasLength(s)) return "";
+            if (Ut.str.isBlank(s)) return "";
             return withTtl(encode(s));
         }
 
         public static String withTtl(String msg) {
             return msg + ";ttl=" + new Date().getTime();
         }
+
+        public static String getPath(String refererUrl, String defaultValue) {
+            try {
+                return new URL(refererUrl).getPath();
+            } catch (MalformedURLException e) {
+                return defaultValue;
+            }
+        }
     }
 
     public static class str {
         public static boolean hasLength(String string) {
             return string != null && string.length() > 0;
+        }
+
+        public static boolean isBlank(String string) {
+            return !hasLength(string);
         }
 
         public static String tempPassword(int i) {

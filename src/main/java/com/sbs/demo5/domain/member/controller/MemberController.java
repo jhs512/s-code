@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -127,17 +128,15 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify")
     public String showModify() {
+        if (!rq.getRefererUrlPath("").startsWith("/usr/member/checkPassword"))
+            throw new AccessDeniedException("올바르지 않은 접근입니다.");
+
         return "usr/member/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify")
     public String modify(@Valid ModifyForm modifyForm) {
-        String oldPassword = modifyForm.getOldPassword();
-
-        if (!memberService.isSamePassword(rq.getMember(), oldPassword))
-            return rq.historyBack("기존 비밀번호가 일치하지 않습니다.");
-
         RsData<Member> modifyRs = memberService.modify(
                 rq.getMember().getId(),
                 modifyForm.getPassword(),
@@ -159,8 +158,6 @@ public class MemberController {
     public String checkPassword(String password, String redirectUrl) {
         if (!memberService.isSamePassword(rq.getMember(), password))
             return rq.historyBack("비밀번호가 일치하지 않습니다.");
-
-        System.out.println("redirectUrl : " + redirectUrl);
 
         return rq.redirect(redirectUrl);
     }

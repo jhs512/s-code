@@ -21,14 +21,6 @@
 
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text">기존 비밀번호</span>
-                </label>
-                <input class="input input-bordered" maxlength="30" name="oldPassword" placeholder="기존 비밀번호"
-                       type="password">
-            </div>
-
-            <div class="form-control">
-                <label class="label">
                     <span class="label-text">기존 프로필 이미지</span>
                 </label>
                 <div class="flex justify-center">
@@ -102,20 +94,6 @@
             let submitModifyFormDone = false;
             function submitModifyForm(form) {
                 if ( submitModifyFormDone ) return;
-
-                form.oldPassword.value = form.oldPassword.value.trim();
-
-                if ( form.oldPassword.value.length == 0 ) {
-                    form.oldPassword.focus();
-                    toastWarning('기존 비밀번호를 입력해주세요.');
-                    return;
-                }
-
-                if ( form.oldPassword.value.length < 4 ) {
-                    form.oldPassword.focus();
-                    toastWarning('기존 비밀번호를 4자 이상 입력해주세요.');
-                    return;
-                }
 
                 form.password.value = form.password.value.trim();
 
