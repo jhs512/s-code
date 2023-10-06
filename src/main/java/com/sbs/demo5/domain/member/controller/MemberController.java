@@ -118,6 +118,12 @@ public class MemberController {
                         }).orElseGet(() -> rq.historyBack("일치하는 회원이 존재하지 않습니다."));
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/me")
+    public String showMe() {
+        return "usr/member/me";
+    }
+
     @Getter
     @AllArgsConstructor
     @ToString

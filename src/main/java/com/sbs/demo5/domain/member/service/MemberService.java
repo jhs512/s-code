@@ -127,6 +127,11 @@ public class MemberService {
         attrService.set("member__%d__extra__emailVerified".formatted(memberId), true);
     }
 
+    @Transactional
+    public void setEmailVerified(Member member) {
+        setEmailVerified(member.getId());
+    }
+
     public boolean isEmailVerified(Member member) {
         return attrService.getAsBoolean("member__%d__extra__emailVerified".formatted(member.getId()), false);
     }
