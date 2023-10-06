@@ -182,11 +182,16 @@ public class Rq {
         return "common/js";
     }
 
+    public String redirect(String url) {
+        return redirect(url, "");
+    }
+
     public String redirect(String url, RsData rs) {
         return redirect(url, rs.getMsg());
     }
 
     public String redirect(String url, String msg) {
+        if (!Ut.str.hasLength(msg)) return "redirect:" + url;
         return "redirect:" + Ut.url.modifyQueryParam(url, "msg", Ut.url.encodeWithTtl(msg));
     }
 

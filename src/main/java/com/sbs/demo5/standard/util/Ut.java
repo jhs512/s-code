@@ -110,6 +110,7 @@ public class Ut {
         }
 
         public static String encodeWithTtl(String s) {
+            if (!Ut.str.hasLength(s)) return "";
             return withTtl(encode(s));
         }
 
