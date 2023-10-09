@@ -41,7 +41,7 @@
                 <label class="label">
                     <span class="label-text">아이디</span>
                 </label>
-                <div class="badge badge-primary" th:text="${@rq.member.username}"></div>
+                <div class="badge badge-lg badge-ghost" th:text="${@rq.member.username}"></div>
             </div>
 
             <div class="form-control">
@@ -92,14 +92,15 @@
             const modifyForm = document['modify-form'];
 
             let submitModifyFormDone = false;
+
             function submitModifyForm(form) {
-                if ( submitModifyFormDone ) return;
+                if (submitModifyFormDone) return;
 
                 form.password.value = form.password.value.trim();
 
-                if ( form.password.value.length > 0 ) {
+                if (form.password.value.length > 0) {
 
-                    if ( form.password.value.length < 4 ) {
+                    if (form.password.value.length < 4) {
                         form.password.focus();
                         toastWarning('새 비밀번호를 4자 이상 입력해주세요.');
                         return;
@@ -107,13 +108,13 @@
 
                     form.passwordConfirm.value = form.passwordConfirm.value.trim();
 
-                    if ( form.passwordConfirm.value.length == 0 ) {
+                    if (form.passwordConfirm.value.length == 0) {
                         form.passwordConfirm.focus();
                         toastWarning('새 비밀번호를 확인을 입력해주세요.');
                         return;
                     }
 
-                    if ( form.password.value != form.passwordConfirm.value ) {
+                    if (form.password.value != form.passwordConfirm.value) {
                         form.passwordConfirm.focus();
                         toastWarning('새 비밀번호를 확인이 일치하지 않습니다.');
                         return;
@@ -122,13 +123,13 @@
 
                 form.nickname.value = form.nickname.value.trim();
 
-                if ( form.nickname.value.length == 0 ) {
+                if (form.nickname.value.length == 0) {
                     form.nickname.focus();
                     toastWarning('별명을 입력해주세요.');
                     return;
                 }
 
-                if ( form.nickname.value.length < 4 ) {
+                if (form.nickname.value.length < 4) {
                     form.nickname.focus();
                     toastWarning('별명을 4자 이상 입력해주세요.');
                     return;

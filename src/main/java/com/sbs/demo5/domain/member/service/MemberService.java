@@ -175,9 +175,8 @@ public class MemberService {
     public RsData<Member> modify(long memberId, String password, String nickname, MultipartFile profileImg) {
         Member member = findById(memberId).get();
 
-        if (password != null) member.setPassword(passwordEncoder.encode(password));
-        if (nickname != null) member.setNickname(nickname);
-
+        if (Ut.str.hasLength(password)) member.setPassword(passwordEncoder.encode(password));
+        if (Ut.str.hasLength(nickname)) member.setNickname(nickname);
         if (profileImg != null) saveProfileImg(member, profileImg);
 
         return RsData.of("S-1", "회원정보가 수정되었습니다.", member);
@@ -205,10 +204,8 @@ public class MemberService {
         return RsData.of("F-2", "유효하지 않은 코드입니다.");
     }
 
-    public Page<Member> findAll(String kwType, String kw, Pageable pageable) {
-
-
-        return memberRepository.dslFindAll(kwType, kw, pageable);
+    public Page<Member> findByKw(String kwType, String kw, Pageable pageable) {
+        return memberRepository.findByKw(kwType, kw, pageable);
     }
 
     public String getProfileImgUrl(Member member) {

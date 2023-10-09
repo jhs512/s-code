@@ -57,6 +57,6 @@ function setTimeoutZero(callback) {
 $(function () {
     $('select[value]').each(function (index, el) {
         const value = $(el).attr('value');
-        if ( value ) $(el).val(value);
+        if (value) $(el).val(value);
     });
 });

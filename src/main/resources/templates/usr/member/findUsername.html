@@ -39,18 +39,19 @@
 
         <script>
             let submitFindUsernameFormDone = false;
+
             function submitFindUsernameForm(form) {
-                if ( submitFindUsernameFormDone ) return;
+                if (submitFindUsernameFormDone) return;
 
                 form.email.value = form.email.value.trim();
 
-                if ( form.email.value.length == 0 ) {
+                if (form.email.value.length == 0) {
                     form.email.focus();
                     toastWarning('이메일을 입력해주세요.');
                     return;
                 }
 
-                if ( form.email.value.length < 4 ) {
+                if (form.email.value.length < 4) {
                     form.email.focus();
                     toastWarning('이메일을 4자 이상 입력해주세요.');
                     return;
