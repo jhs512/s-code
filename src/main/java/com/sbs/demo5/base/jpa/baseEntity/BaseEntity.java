@@ -1,4 +1,4 @@
-package com.sbs.demo5.base.jpa;
+package com.sbs.demo5.base.jpa.baseEntity;
 
 import jakarta.persistence.*;
 import lombok.*;

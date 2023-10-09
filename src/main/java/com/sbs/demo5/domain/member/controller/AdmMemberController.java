@@ -25,11 +25,16 @@ public class AdmMemberController {
     private final Rq rq;
 
     @GetMapping("/list")
-    public String showList(Model model, @RequestParam(defaultValue = "1") int page) {
+    public String showList(
+            Model model,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String kw,
+            @RequestParam(defaultValue = "all") String kwType
+    ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
-        Page<Member> memberPage = memberService.findAll(pageable);
+        Page<Member> memberPage = memberService.findAll(kwType, kw, pageable);
         model.addAttribute("memberPage", memberPage);
 
         return "adm/member/list";

@@ -1,7 +1,7 @@
 package com.sbs.demo5.domain.genFile.entity;
 
 import com.sbs.demo5.base.app.AppConfig;
-import com.sbs.demo5.base.jpa.BaseEntity;
+import com.sbs.demo5.base.jpa.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;

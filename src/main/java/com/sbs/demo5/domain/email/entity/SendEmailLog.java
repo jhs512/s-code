@@ -1,6 +1,6 @@
 package com.sbs.demo5.domain.email.entity;
 
-import com.sbs.demo5.base.jpa.BaseEntity;
+import com.sbs.demo5.base.jpa.baseEntity.BaseEntity;
 import com.sbs.demo5.base.rsData.RsData;
 import jakarta.persistence.Entity;
 import lombok.*;

@@ -205,8 +205,10 @@ public class MemberService {
         return RsData.of("F-2", "유효하지 않은 코드입니다.");
     }
 
-    public Page<Member> findAll(Pageable pageable) {
-        return memberRepository.findAll(pageable);
+    public Page<Member> findAll(String kwType, String kw, Pageable pageable) {
+
+
+        return memberRepository.dslFindAll(kwType, kw, pageable);
     }
 
     public String getProfileImgUrl(Member member) {
