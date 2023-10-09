@@ -5,6 +5,7 @@ import com.sbs.demo5.base.rsData.RsData;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.exception.EmailNotVerifiedAccessDeniedException;
 import com.sbs.demo5.domain.member.service.MemberService;
+import com.sbs.demo5.standard.util.Ut;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -127,16 +128,29 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify")
-    public String showModify() {
-        if (!rq.getRefererUrlPath("").startsWith("/usr/member/checkPassword"))
-            throw new AccessDeniedException("올바르지 않은 접근입니다.");
+    public String showModify(String checkPasswordAuthCode) {
+        memberService
+                .checkCheckPasswordAuthCode(rq.getMember(), checkPasswordAuthCode)
+                .optional()
+                .filter(RsData::isFail)
+                .ifPresent((rsData) -> {
+                    throw new AccessDeniedException("올바르지 않은 접근입니다.");
+                });
 
         return "usr/member/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify")
-    public String modify(@Valid ModifyForm modifyForm) {
+    public String modify(@Valid ModifyForm modifyForm, String checkPasswordAuthCode) {
+        memberService
+                .checkCheckPasswordAuthCode(rq.getMember(), checkPasswordAuthCode)
+                .optional()
+                .filter(RsData::isFail)
+                .ifPresent((rsData) -> {
+                    throw new AccessDeniedException("올바르지 않은 접근입니다.");
+                });
+
         RsData<Member> modifyRs = memberService.modify(
                 rq.getMember().getId(),
                 modifyForm.getPassword(),
@@ -158,6 +172,10 @@ public class MemberController {
     public String checkPassword(String password, String redirectUrl) {
         if (!memberService.isSamePassword(rq.getMember(), password))
             return rq.historyBack("비밀번호가 일치하지 않습니다.");
+
+        String code = memberService.genCheckPasswordAuthCode(rq.getMember());
+
+        redirectUrl = Ut.url.modifyQueryParam(redirectUrl, "checkPasswordAuthCode", code);
 
         return rq.redirect(redirectUrl);
     }
@@ -183,8 +201,6 @@ public class MemberController {
     public static class ModifyForm {
         @NotBlank
         private String nickname;
-        @NotBlank
-        private String oldPassword;
         private String password;
         private MultipartFile profileImg;
     }

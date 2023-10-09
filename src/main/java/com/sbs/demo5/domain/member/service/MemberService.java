@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -181,5 +183,23 @@ public class MemberService {
 
     public boolean isSamePassword(Member member, String oldPassword) {
         return passwordEncoder.matches(oldPassword, member.getPassword());
+    }
+
+    @Transactional
+    public String genCheckPasswordAuthCode(Member member) {
+        String code = UUID.randomUUID().toString();
+
+        attrService.set("member__%d__extra__checkPasswordAuthCode".formatted(member.getId()), code, LocalDateTime.now().plusSeconds(60 * 30));
+
+        return code;
+    }
+
+    public RsData<?> checkCheckPasswordAuthCode(Member member, String checkPasswordAuthCode) {
+        if (checkPasswordAuthCode == null) return RsData.of("F-1", "checkPasswordAuthCode를 입력해주세요.");
+
+        if (attrService.get("member__%d__extra__checkPasswordAuthCode".formatted(member.getId()), "").equals(checkPasswordAuthCode))
+            return RsData.of("S-1", "유효한 코드입니다.");
+
+        return RsData.of("F-2", "유효하지 않은 코드입니다.");
     }
 }
