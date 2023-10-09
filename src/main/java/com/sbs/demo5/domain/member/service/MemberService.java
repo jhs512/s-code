@@ -12,6 +12,8 @@ import com.sbs.demo5.domain.member.repository.MemberRepository;
 import com.sbs.demo5.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -201,5 +203,15 @@ public class MemberService {
             return RsData.of("S-1", "유효한 코드입니다.");
 
         return RsData.of("F-2", "유효하지 않은 코드입니다.");
+    }
+
+    public Page<Member> findAll(Pageable pageable) {
+        return memberRepository.findAll(pageable);
+    }
+
+    public String getProfileImgUrl(Member member) {
+        return Optional.ofNullable(member)
+                .flatMap(this::findProfileImgUrl)
+                .orElse("https://placehold.co/30x30?text=UU");
     }
 }

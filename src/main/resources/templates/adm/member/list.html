@@ -1,0 +1,83 @@
+<html layout:decorate="~{adm/common/layout}">
+
+<head>
+    <title>회원목록</title>
+</head>
+
+<body>
+
+<div class="flex-1 flex items-center justify-center" layout:fragment="content">
+    <div class="container w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-solid fa-users"></i>
+            회원목록
+        </h1>
+
+        <div>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[20px]">
+                <li class="group" th:each="member : ${memberPage.content}">
+                    <div class="card shadow-xl">
+                        <div class="card-body">
+
+                            <div class="flex flex-col gap-6">
+                                <div class="flex flex-col gap-6">
+                                    <div class="form-control">
+                                        <div class="flex justify-center">
+                                            <img class="w-40 h-40 rounded-full" th:src="${@memberService.getProfileImgUrl(member)}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">회원번호</span>
+                                        </label>
+                                        <div th:text="${member.id}"></div>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">회원번호</span>
+                                        </label>
+                                        <div th:text="${member.id}"></div>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">가입일</span>
+                                        </label>
+                                        <div th:text="${#temporals.format(member.createDate, 'yy.MM.dd')}"></div>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">아이디</span>
+                                        </label>
+                                        <div th:text="${member.username}"></div>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">별명</span>
+                                        </label>
+                                        <div th:text="${member.nickname}"></div>
+                                    </div>
+
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text">EMAIL</span>
+                                        </label>
+                                        <div th:text="${member.email}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

@@ -13,3 +13,7 @@ html > body {
 #toast-container .toast {
   white-space: normal;
 }
+
+.form-control .label .label-text {
+  opacity: 0.8;
+}

@@ -28,29 +28,28 @@
                         <label class="label">
                             <span class="label-text">가입일</span>
                         </label>
-                        <div class="badge badge-primary"
-                             th:text="${#temporals.format(@rq.member.createDate, 'yy.MM.dd')}"></div>
+                        <div th:text="${#temporals.format(@rq.member.createDate, 'yy.MM.dd')}"></div>
                     </div>
 
-                    <div>
+                    <div class="form-control">
                         <label class="label">
                             <span class="label-text">아이디</span>
                         </label>
-                        <div class="badge badge-primary" th:text="${@rq.member.username}"></div>
+                        <div th:text="${@rq.member.username}"></div>
                     </div>
 
-                    <div>
+                    <div class="form-control">
                         <label class="label">
                             <span class="label-text">별명</span>
                         </label>
-                        <div class="badge badge-primary" th:text="${@rq.member.nickname}"></div>
+                        <div th:text="${@rq.member.nickname}"></div>
                     </div>
 
-                    <div>
+                    <div class="form-control">
                         <label class="label">
                             <span class="label-text">EMAIL</span>
                         </label>
-                        <div class="badge badge-primary" th:text="${@rq.member.email}"></div>
+                        <div th:text="${@rq.member.email}"></div>
                     </div>
                 </div>
             </div>
