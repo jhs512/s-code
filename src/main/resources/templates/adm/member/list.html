@@ -85,31 +85,10 @@
                 </form>
             </dialog>
 
-            <div th:if="${!memberPage.isEmpty()}"
-                 th:with="queryStrBase = '?kwType=' + ${param.kwType != null ? param.kwType : ''} + '&kw=' + ${param.kw != null ? param.kw : ''} + '&'"
-                 class="mt-4 flex justify-center">
-                <div class="join">
-                    <a th:href="@{|${queryStrBase}page=1|}" class="join-item btn"
-                       th:classappend="${memberPage.number + 1 - 1 <= 1} ? 'btn-disabled'">
-                        «
-                    </a>
-
-                    <a th:if="${memberPage.number + 1 - 1 > 1}" class="join-item btn btn-disabled">...</a>
-
-                    <a th:each="page: ${#numbers.sequence(1, memberPage.totalPages)}"
-                       th:if="${page >= memberPage.number + 1 - 1 and page <= memberPage.number + 1 + 1}"
-                       th:classappend="${page == memberPage.number + 1} ? 'btn-active'"
-                       th:href="@{|${queryStrBase}page=${page}|}"
-                       class="join-item btn" th:text="${page}">
-                    </a>
-
-                    <a th:if="${memberPage.number + 1 + 1 < memberPage.totalPages}" class="join-item btn btn-disabled">...</a>
-
-                    <a th:href="@{|${queryStrBase}page=${memberPage.totalPages}|}" class="join-item btn"
-                       th:classappend="${memberPage.number + 1 + 1 >= memberPage.totalPages} ? 'btn-disabled'">
-                        »
-                    </a>
-                </div>
+            <div class="mt-4"
+                 th:if="${memberPage.totalPages > 1}"
+                 th:with="queryStrBase = '?kwType=' + ${param.kwType != null ? param.kwType : ''} + '&kw=' + ${param.kw != null ? param.kw : ''} + '&'">
+                <div th:replace="common/fragments :: pagination(${memberPage}, ${queryStrBase}, 1)"></div>
             </div>
 
             <ul class="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[20px]">
@@ -165,31 +144,10 @@
                 </li>
             </ul>
 
-            <div th:if="${!memberPage.isEmpty()}"
-                 th:with="queryStrBase = '?kwType=' + ${param.kwType != null ? param.kwType : ''} + '&kw=' + ${param.kw != null ? param.kw : ''} + '&'"
-                 class="mt-4 flex justify-center">
-                <div class="join">
-                    <a th:href="@{|${queryStrBase}page=1|}" class="join-item btn"
-                       th:classappend="${memberPage.number + 1 - 1 <= 1} ? 'btn-disabled'">
-                        «
-                    </a>
-
-                    <a th:if="${memberPage.number + 1 - 1 > 1}" class="join-item btn btn-disabled">...</a>
-
-                    <a th:each="page: ${#numbers.sequence(1, memberPage.totalPages)}"
-                       th:if="${page >= memberPage.number + 1 - 1 and page <= memberPage.number + 1 + 1}"
-                       th:classappend="${page == memberPage.number + 1} ? 'btn-active'"
-                       th:href="@{|${queryStrBase}page=${page}|}"
-                       class="join-item btn" th:text="${page}">
-                    </a>
-
-                    <a th:if="${memberPage.number + 1 + 1 < memberPage.totalPages}" class="join-item btn btn-disabled">...</a>
-
-                    <a th:href="@{|${queryStrBase}page=${memberPage.totalPages}|}" class="join-item btn"
-                       th:classappend="${memberPage.number + 1 + 1 >= memberPage.totalPages} ? 'btn-disabled'">
-                        »
-                    </a>
-                </div>
+            <div class="mt-4"
+                 th:if="${memberPage.totalPages > 1}"
+                 th:with="queryStrBase = '?kwType=' + ${param.kwType != null ? param.kwType : ''} + '&kw=' + ${param.kw != null ? param.kw : ''} + '&'">
+                <div th:replace="common/fragments :: pagination(${memberPage}, ${queryStrBase}, 1)"></div>
             </div>
         </div>
     </div>
