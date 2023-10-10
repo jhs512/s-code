@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
     @Getter
+    public static String tempDirPath;
+
+    @Getter
     public static String genFileDirPath;
 
     @Getter
@@ -14,6 +17,11 @@ public class AppConfig {
 
     @Getter
     public static String siteBaseUrl;
+
+    @Value("${custom.tempDirPath}")
+    public void setTempDirPath(String tempDirPath) {
+        AppConfig.tempDirPath = tempDirPath;
+    }
 
     @Value("${custom.genFile.dirPath}")
     public void setGenFileDirPath(String genFileDirPath) {

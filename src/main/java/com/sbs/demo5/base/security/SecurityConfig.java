@@ -38,6 +38,10 @@ public class SecurityConfig {
                         exceptionHandling -> exceptionHandling
                                 .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
+                .oauth2Login(
+                        oauth2Login -> oauth2Login
+                                .loginPage("/usr/member/login")
+                )
                 .csrf((csrf) -> csrf
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
                 .headers((headers) -> headers

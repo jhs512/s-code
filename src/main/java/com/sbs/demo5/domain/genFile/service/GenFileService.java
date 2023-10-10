@@ -6,10 +6,8 @@ import com.sbs.demo5.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -25,17 +23,17 @@ public class GenFileService {
 
     // 명령
     @Transactional
-    public GenFile save(String relTypeCode, Long relId, String typeCode, String type2Code, int fileNo, MultipartFile multipartFile) {
+    public GenFile save(String relTypeCode, Long relId, String typeCode, String type2Code, int fileNo, String sourceFile) {
         findGenFileBy(relTypeCode, relId, typeCode, type2Code, fileNo).ifPresent(genFile -> {
             Ut.file.remove(genFile.getFilePath());
             genFileRepository.delete(genFile);
         });
 
-        String originFileName = multipartFile.getOriginalFilename();
+        String originFileName = Ut.file.getOriginFileName(sourceFile);
         String fileExt = Ut.file.getExt(originFileName);
         String fileExtTypeCode = Ut.file.getFileExtTypeCodeFromFileExt(fileExt);
         String fileExtType2Code = Ut.file.getFileExtType2CodeFromFileExt(fileExt);
-        int fileSize = (int) multipartFile.getSize();
+        long fileSize = new File(sourceFile).length();
         String fileDir = getCurrentDirName(relTypeCode);
 
         GenFile genFile = GenFile.builder()
@@ -58,11 +56,8 @@ public class GenFileService {
 
         file.getParentFile().mkdirs();
 
-        try {
-            multipartFile.transferTo(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Ut.file.moveFile(sourceFile, file);
+        Ut.file.remove(sourceFile);
 
         return genFile;
     }
