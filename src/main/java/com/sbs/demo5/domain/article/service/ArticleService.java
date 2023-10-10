@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -33,5 +35,9 @@ public class ArticleService {
 
     public Page<Article> findByKw(Board board, String kwType, String kw, Pageable pageable) {
         return articleRepository.findByKw(board, kwType, kw, pageable);
+    }
+
+    public Optional<Article> findById(long id) {
+        return articleRepository.findById(id);
     }
 }

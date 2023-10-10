@@ -24,7 +24,7 @@
                 <div class="flex flex-wrap gap-2">
                     <button class="btn btn-sm btn-primary" onclick="searchFormModal.showModal()">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        검색어
+                        검색
                         <span th:if="${UtThy.hasText(param.kw)}">`<span class="normal-case"
                                                                         th:text="${param.kw}"></span>`</span>
                     </button>
@@ -32,6 +32,11 @@
                        class="btn btn-sm btn-outline">
                         <i class="fa-solid fa-xmark"></i>
                         검색조건 지우기
+                    </a>
+
+                    <a th:if="${@rq.login}" class="btn btn-sm btn-outline" th:href="|/usr/article/${board.code}/write|">
+                        <i class="fa-solid fa-pen"></i>
+                        글쓰기
                     </a>
                 </div>
             </div>
@@ -140,3 +145,5 @@
 </div>
 
 </body>
+
+</html>
