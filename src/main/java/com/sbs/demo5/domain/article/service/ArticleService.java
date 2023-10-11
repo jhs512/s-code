@@ -20,6 +20,7 @@ import java.util.Optional;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
+    @Transactional
     public RsData<Article> write(Board board, Member author, String subject, String body) {
         Article article = Article.builder()
                 .board(board)
@@ -39,5 +40,32 @@ public class ArticleService {
 
     public Optional<Article> findById(long id) {
         return articleRepository.findById(id);
+    }
+
+    public RsData<?> checkActorCanModify(Member actor, Article article) {
+        if (actor == null || !actor.equals(article.getAuthor())) {
+            return new RsData<>("F-1", "권한이 없습니다.", null);
+        }
+
+        return new RsData<>("S-1", "가능합니다.", null);
+    }
+
+    public RsData<?> checkActorCanDelete(Member actor, Article article) {
+        return checkActorCanModify(actor, article);
+    }
+
+    @Transactional
+    public RsData<Article> modify(Article article, String subject, String body) {
+        article.setSubject(subject);
+        article.setBody(body);
+
+        return new RsData<>("S-1", article.getId() + "번 게시물이 수정되었습니다.", article);
+    }
+
+    @Transactional
+    public RsData<?> remove(Article article) {
+        articleRepository.delete(article);
+
+        return new RsData<>("S-1", article.getId() + "번 게시물이 삭제되었습니다.", null);
     }
 }

@@ -59,4 +59,30 @@ $(function () {
         const value = $(el).attr('value');
         if (value) $(el).val(value);
     });
+
+    $('a[method="post"]').click(function (e) {
+        let onclickAfter = null;
+
+        eval("onclickAfter = function() { " + $(this).attr('onclick-after') + "}");
+
+        if (!onclickAfter()) return false;
+
+        const action = $(this).attr('href');
+        const csfTokenValue = $("meta[name='_csrf']").attr("content");
+
+        // 동적으로 폼을 만든다.
+        const $form = $(`<form action="${action}" method="POST"><input type="hidden" name="_csrf" value="${csfTokenValue}"></form>`);
+        $('body').append($form);
+        $form.submit();
+
+        return false;
+    });
+
+    $('a[method="post"][onclick]').each(function (index, el) {
+        const onclick = $(el).attr('onclick');
+
+        $(el).removeAttr('onclick');
+
+        $(el).attr('onclick-after', onclick);
+    });
 });

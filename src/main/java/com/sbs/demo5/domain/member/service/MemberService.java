@@ -121,6 +121,8 @@ public class MemberService {
     private void sendJoinCompleteEmail(Member member) {
         final String email = member.getEmail();
 
+        if (Ut.str.isBlank(email)) return;
+
         CompletableFuture<RsData> sendRsFuture = emailService.send(
                 email,
                 "[%s 가입축하] 회원가입이 완료되었습니다.".formatted(
@@ -140,6 +142,8 @@ public class MemberService {
     }
 
     private void sendEmailVerificationEmail(Member member) {
+        if (Ut.str.isBlank(member.getEmail())) return;
+
         emailVerificationService.send(member);
     }
 

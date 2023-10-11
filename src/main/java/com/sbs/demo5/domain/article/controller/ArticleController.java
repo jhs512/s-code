@@ -4,8 +4,10 @@ import com.sbs.demo5.base.rq.Rq;
 import com.sbs.demo5.base.rsData.RsData;
 import com.sbs.demo5.domain.article.entity.Article;
 import com.sbs.demo5.domain.article.service.ArticleService;
+import com.sbs.demo5.domain.base.exception.NeedHistoryBackException;
 import com.sbs.demo5.domain.board.entity.Board;
 import com.sbs.demo5.domain.board.service.BoardService;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -80,11 +82,69 @@ public class ArticleController {
     @AllArgsConstructor
     @Getter
     public static class ArticleWriteForm {
+        @NotBlank
         private String subject;
+        @NotBlank
         private String body;
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{boardCode}/modify/{id}")
+    public String showModify(
+            Model model,
+            @PathVariable String boardCode,
+            @PathVariable long id
+    ) {
+        Board board = boardService.findByCode(boardCode).get();
+        Article article = articleService.findById(id).get();
+
+        articleService
+                .checkActorCanModify(rq.getMember(), article)
+                .optional()
+                .filter(RsData::isFail)
+                .ifPresent(rsData -> {
+                    throw new NeedHistoryBackException(rsData);
+                });
+
+        model.addAttribute("board", board);
+        model.addAttribute("article", article);
+
+        return "usr/article/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{boardCode}/modify/{id}")
+    public String modify(
+            Model model,
+            @PathVariable String boardCode,
+            @PathVariable long id,
+            ArticleModifyForm modifyForm
+    ) {
+        Board board = boardService.findByCode(boardCode).get();
+        Article article = articleService.findById(id).get();
+
+        articleService
+                .checkActorCanModify(rq.getMember(), article)
+                .optional()
+                .filter(RsData::isFail)
+                .ifPresent(rsData -> {
+                    throw new NeedHistoryBackException(rsData);
+                });
+
+        RsData<Article> rsData = articleService.modify(article, modifyForm.getSubject(), modifyForm.getBody());
+
+        return rq.redirectOrBack("/usr/article/%s/detail/%d".formatted(board.getCode(), rsData.getData().getId()), rsData);
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class ArticleModifyForm {
+        @NotBlank
+        private String subject;
+        @NotBlank
+        private String body;
+    }
+
     @GetMapping("/{boardCode}/detail/{id}")
     public String showDetail(
             Model model,
@@ -98,5 +158,27 @@ public class ArticleController {
         model.addAttribute("article", article);
 
         return "usr/article/detail";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{boardCode}/remove/{id}")
+    public String remove(
+            @PathVariable String boardCode,
+            @PathVariable long id
+    ) {
+        Board board = boardService.findByCode(boardCode).get();
+        Article article = articleService.findById(id).get();
+
+        articleService
+                .checkActorCanDelete(rq.getMember(), article)
+                .optional()
+                .filter(RsData::isFail)
+                .ifPresent(rsData -> {
+                    throw new NeedHistoryBackException(rsData);
+                });
+
+        RsData<?> rsData = articleService.remove(article);
+
+        return rq.redirectOrBack("/usr/article/%s/list".formatted(board.getCode()), rsData);
     }
 }
