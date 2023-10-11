@@ -1,5 +1,6 @@
 package com.sbs.demo5.standard.util;
 
+import com.sbs.demo5.base.app.AppConfig;
 import org.apache.tika.Tika;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,6 +64,29 @@ public class Ut {
             moveFile(filePath, file.getAbsolutePath());
         }
 
+        public static boolean exists(String sourceFile) {
+            return new File(sourceFile).exists();
+        }
+
+        public static String tempCopy(String sourceFile) {
+            String tempPath = AppConfig.getTempDirPath() + "/" + getFileName(sourceFile);
+            copy(sourceFile, tempPath);
+
+            return tempPath;
+        }
+
+        private static String getFileName(String sourceFile) {
+            return Paths.get(sourceFile).getFileName().toString();
+        }
+
+        private static void copy(String sourceFile, String tempDirPath) {
+            try {
+                Files.copy(Paths.get(sourceFile), Paths.get(tempDirPath), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         public static class DownloadFileFailException extends RuntimeException {
 
         }
@@ -108,8 +132,6 @@ public class Ut {
             if (fileExt.isEmpty()) {
                 fileExt = "tmp";
             }
-
-            new File(outputDir).mkdirs();
 
             String tempFileName = UUID.randomUUID() + ORIGIN_FILE_NAME_SEPARATOR + originFileName + "." + fileExt;
             String filePath = outputDir + "/" + tempFileName;
@@ -251,7 +273,7 @@ public class Ut {
 
     public static class str {
         public static boolean hasLength(String string) {
-            return string != null && !string.isEmpty();
+            return string != null && !string.trim().isEmpty();
         }
 
         public static boolean isBlank(String string) {
