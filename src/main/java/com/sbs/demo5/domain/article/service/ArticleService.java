@@ -30,11 +30,17 @@ public class ArticleService {
 
     @Transactional
     public RsData<Article> write(Board board, Member author, String subject, String body) {
+        return write(board, author, subject, body, Ut.markdown.toHtml(body));
+    }
+
+    @Transactional
+    public RsData<Article> write(Board board, Member author, String subject, String body, String bodyHtml) {
         Article article = Article.builder()
                 .board(board)
                 .author(author)
                 .subject(subject)
                 .body(body)
+                .bodyHtml(bodyHtml)
                 .build();
 
         articleRepository.save(article);
@@ -63,9 +69,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public RsData<Article> modify(Article article, String subject, String body) {
+    public RsData<Article> modify(Article article, String subject, String body, String bodyHtml) {
         article.setSubject(subject);
         article.setBody(body);
+        article.setBodyHtml(bodyHtml);
 
         return new RsData<>("S-1", article.getId() + "번 게시물이 수정되었습니다.", article);
     }

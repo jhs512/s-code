@@ -8,6 +8,7 @@ import com.sbs.demo5.domain.base.exception.NeedHistoryBackException;
 import com.sbs.demo5.domain.board.entity.Board;
 import com.sbs.demo5.domain.board.service.BoardService;
 import com.sbs.demo5.domain.genFile.entity.GenFile;
+import com.sbs.demo5.standard.util.Ut;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -77,11 +78,11 @@ public class ArticleController {
     ) {
         Board board = boardService.findByCode(boardCode).get();
 
-        RsData<Article> rsData = articleService.write(board, rq.getMember(), writeForm.getSubject(), writeForm.getBody());
+        RsData<Article> rsData = articleService.write(board, rq.getMember(), writeForm.getSubject(), writeForm.getBody(), writeForm.getBodyHtml());
 
-        if (writeForm.getAttachment__1() != null)
+        if (Ut.file.exists(writeForm.getAttachment__1()))
             articleService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__1(), 1);
-        if (writeForm.getAttachment__2() != null)
+        if (Ut.file.exists(writeForm.getAttachment__1()))
             articleService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__2(), 2);
 
         return rq.redirectOrBack("/usr/article/%s/detail/%d".formatted(board.getCode(), rsData.getData().getId()), rsData);
@@ -94,6 +95,8 @@ public class ArticleController {
         private String subject;
         @NotBlank
         private String body;
+        @NotBlank
+        private String bodyHtml;
         private MultipartFile attachment__1;
         private MultipartFile attachment__2;
     }
@@ -144,7 +147,7 @@ public class ArticleController {
                     throw new NeedHistoryBackException(rsData);
                 });
 
-        RsData<Article> rsData = articleService.modify(article, modifyForm.getSubject(), modifyForm.getBody());
+        RsData<Article> rsData = articleService.modify(article, modifyForm.getSubject(), modifyForm.getBody(), modifyForm.getBodyHtml());
 
         if (modifyForm.attachmentRemove__1)
             articleService.removeAttachmentFile(rsData.getData(), 1);
@@ -152,9 +155,9 @@ public class ArticleController {
         if (modifyForm.attachmentRemove__2)
             articleService.removeAttachmentFile(rsData.getData(), 2);
 
-        if (modifyForm.getAttachment__1() != null && !modifyForm.getAttachment__1().isEmpty())
+        if (Ut.file.exists(modifyForm.getAttachment__1()))
             articleService.saveAttachmentFile(rsData.getData(), modifyForm.getAttachment__1(), 1);
-        if (modifyForm.getAttachment__2() != null && !modifyForm.getAttachment__2().isEmpty())
+        if (Ut.file.exists(modifyForm.getAttachment__2()))
             articleService.saveAttachmentFile(rsData.getData(), modifyForm.getAttachment__2(), 2);
 
         return rq.redirectOrBack("/usr/article/%s/detail/%d".formatted(board.getCode(), rsData.getData().getId()), rsData);
@@ -167,6 +170,8 @@ public class ArticleController {
         private String subject;
         @NotBlank
         private String body;
+        @NotBlank
+        private String bodyHtml;
         private MultipartFile attachment__1;
         private MultipartFile attachment__2;
         private boolean attachmentRemove__1;
