@@ -58,6 +58,21 @@ public class ArticleController {
         return "usr/article/list";
     }
 
+    @GetMapping("/listByTag/{tagContent}")
+    public String showList(
+            Model model,
+            @PathVariable String tagContent,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        Page<Article> articlePage = articleService.findByTag(tagContent, pageable);
+        model.addAttribute("articlePage", articlePage);
+
+        return "usr/article/listByTag";
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{boardCode}/write")
     public String showWrite(
@@ -79,7 +94,7 @@ public class ArticleController {
     ) {
         Board board = boardService.findByCode(boardCode).get();
 
-        RsData<Article> rsData = articleService.write(board, rq.getMember(), writeForm.getSubject(), writeForm.getBody(), writeForm.getBodyHtml());
+        RsData<Article> rsData = articleService.write(board, rq.getMember(), writeForm.getSubject(), writeForm.getTagsStr(), writeForm.getBody(), writeForm.getBodyHtml());
 
         if (Ut.file.exists(writeForm.getAttachment__1()))
             articleService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__1(), 1);
@@ -94,6 +109,7 @@ public class ArticleController {
     public static class ArticleWriteForm {
         @NotBlank
         private String subject;
+        private String tagsStr;
         @NotBlank
         private String body;
         @NotBlank
@@ -148,7 +164,7 @@ public class ArticleController {
                     throw new NeedHistoryBackException(rsData);
                 });
 
-        RsData<Article> rsData = articleService.modify(article, modifyForm.getSubject(), modifyForm.getBody(), modifyForm.getBodyHtml());
+        RsData<Article> rsData = articleService.modify(article, modifyForm.getSubject(), modifyForm.getTagsStr(), modifyForm.getBody(), modifyForm.getBodyHtml());
 
         if (modifyForm.attachmentRemove__1)
             articleService.removeAttachmentFile(rsData.getData(), 1);
@@ -169,6 +185,7 @@ public class ArticleController {
     public static class ArticleModifyForm {
         @NotBlank
         private String subject;
+        private String tagsStr;
         @NotBlank
         private String body;
         @NotBlank

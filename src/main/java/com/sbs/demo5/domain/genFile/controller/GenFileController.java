@@ -39,7 +39,7 @@ public class GenFileController {
 
         if (contentType == null) contentType = "application/octet-stream";
 
-        String fileName = Ut.url.encode(genFile.getOriginFileName()).replaceAll("\\+", " ");
+        String fileName = Ut.url.encode(genFile.getOriginFileName()).replace("%20", " ");
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")

@@ -30,12 +30,12 @@ public class ArticleService {
     private final GenFileService genFileService;
 
     @Transactional
-    public RsData<Article> write(Board board, Member author, String subject, String body) {
-        return write(board, author, subject, body, Ut.markdown.toHtml(body));
+    public RsData<Article> write(Board board, Member author, String subject, String tagsStr, String body) {
+        return write(board, author, subject, tagsStr, body, Ut.markdown.toHtml(body));
     }
 
     @Transactional
-    public RsData<Article> write(Board board, Member author, String subject, String body, String bodyHtml) {
+    public RsData<Article> write(Board board, Member author, String subject, String tagsStr, String body, String bodyHtml) {
         Article article = Article.builder()
                 .board(board)
                 .author(author)
@@ -45,6 +45,10 @@ public class ArticleService {
                 .build();
 
         articleRepository.save(article);
+
+        article.addTags(tagsStr);
+
+        System.out.println("article.getArticleTags() :" + article.getArticleTags());
 
         updateTempGenFilesToInBody(article);
 
@@ -72,7 +76,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public RsData<Article> modify(Article article, String subject, String body, String bodyHtml) {
+    public RsData<Article> modify(Article article, String subject, String tagsStr, String body, String bodyHtml) {
+
+        article.modifyTags(tagsStr);
+
         article.setSubject(subject);
         article.setBody(body);
         article.setBodyHtml(bodyHtml);
@@ -136,5 +143,9 @@ public class ArticleService {
     @Transactional
     public void removeAttachmentFile(Article article, long fileNo) {
         genFileService.remove(article.getModelName(), article.getId(), "common", "attachment", fileNo);
+    }
+
+    public Page<Article> findByTag(String tagContent, Pageable pageable) {
+        return articleRepository.findByArticleTags_content(tagContent, pageable);
     }
 }

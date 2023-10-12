@@ -32,7 +32,7 @@ public class Ut {
     public static class markdown {
 
         public static String toHtml(String body) {
-            return body.replaceAll("\r\n", "<br>");
+            return body.replace("\r\n", "<br>");
         }
     }
 
@@ -115,8 +115,8 @@ public class Ut {
                 return null;
             }
 
-            String ext = mimeType.replaceAll("image/", "");
-            ext = ext.replaceAll("jpeg", "jpg");
+            String ext = mimeType.replace("image/", "");
+            ext = ext.replace("jpeg", "jpg");
 
             return ext.toLowerCase();
         }
@@ -171,7 +171,7 @@ public class Ut {
                     throw new DownloadFileFailException();
                 }
 
-                String newFilePath = filePath.replaceAll("\\.tmp", "\\." + ext);
+                String newFilePath = filePath.replace(".tmp", "." + ext);
                 moveFile(filePath, newFilePath);
                 filePath = newFilePath;
             }
@@ -228,7 +228,11 @@ public class Ut {
     public static class url {
 
         public static String encode(String message) {
-            return URLEncoder.encode(message, StandardCharsets.UTF_8);
+            String tempReplacement = "TEMP_PLUS";
+            message = message.replace("+", tempReplacement);
+            String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8);
+            return encodedMessage.replace("+", "%20")
+                    .replace(tempReplacement, "+");
         }
 
         public static String modifyQueryParam(String url, String paramName, String paramValue) {
@@ -344,7 +348,7 @@ public class Ut {
         private static String getFirstStrOrEmpty(List<String> requestParameterValues) {
             return Optional.ofNullable(requestParameterValues)
                     .filter(values -> !values.isEmpty())
-                    .map(values -> values.get(0).replaceAll("%20", "").trim())
+                    .map(values -> values.get(0).replace("%20", "").trim())
                     .orElse("");
         }
 
