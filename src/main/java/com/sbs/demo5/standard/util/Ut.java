@@ -294,8 +294,20 @@ public class Ut {
             return !hasLength(string);
         }
 
-        public static String tempPassword(int i) {
+        public static String tempPassword(int len) {
             String passwordSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+            StringBuilder password = new StringBuilder();
+
+            for (int x = 0; x < len; x++) {
+                int random = (int) (Math.random() * passwordSet.length());
+                password.append(passwordSet.charAt(random));
+            }
+
+            return password.toString();
+        }
+
+        public static String randomNumStr(int i) {
+            String passwordSet = "0123456789";
             StringBuilder password = new StringBuilder();
 
             for (int x = 0; x < i; x++) {

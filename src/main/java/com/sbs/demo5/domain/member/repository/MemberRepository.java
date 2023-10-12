@@ -15,4 +15,6 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
     Optional<Member> findByUsernameAndEmail(String username, String email);
 
     Page<Member> findAll(Pageable pageable);
+
+    Optional<Member> findByNickname(String nickname);
 }

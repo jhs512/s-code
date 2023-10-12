@@ -79,6 +79,8 @@ public class MemberService {
         if (findByEmail(email).isPresent())
             return RsData.of("F-2", "%s(은)는 사용중인 이메일 입니다.".formatted(username));
 
+        nickname = genUniqueNicknameIfNeed(nickname);
+
         Member member = Member
                 .builder()
                 .username(username)
@@ -95,6 +97,28 @@ public class MemberService {
         sendEmailVerificationEmail(member);
 
         return RsData.of("S-1", "회원가입이 완료되었습니다.", member);
+    }
+
+    private String genUniqueNicknameIfNeed(String nickname) {
+        int appenderStrBaseLen = 3;
+        int appenderStrAddiLen;
+        String appendStr = "";
+
+        int loopCount = 0;
+
+        while (true) {
+            Optional<Member> optMember = memberRepository.findByNickname(nickname + appendStr);
+
+            if (optMember.isEmpty()) return nickname + appendStr;
+
+            nickname = nickname.split("#", 2)[0];
+
+            loopCount++;
+
+            appenderStrAddiLen = loopCount / 10;
+
+            appendStr = '#' + Ut.str.randomNumStr(appenderStrBaseLen + appenderStrAddiLen);
+        }
     }
 
     @Transactional
@@ -196,7 +220,8 @@ public class MemberService {
         Member member = findById(memberId).get();
 
         if (Ut.str.hasLength(password)) member.setPassword(passwordEncoder.encode(password));
-        if (Ut.str.hasLength(nickname)) member.setNickname(nickname);
+        if (Ut.str.hasLength(nickname) && !member.getNickname().equals(nickname))
+            member.setNickname(genUniqueNicknameIfNeed(nickname));
         if (profileImg != null) saveProfileImg(member, profileImg);
 
         return RsData.of("S-1", "회원정보가 수정되었습니다.", member);

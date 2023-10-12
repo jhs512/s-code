@@ -28,6 +28,7 @@
                         <span th:if="${UtThy.hasText(param.kw)}">`<span class="normal-case"
                                                                         th:text="${param.kw}"></span>`</span>
                     </button>
+
                     <a th:if="${UtThy.hasText(param.kw)}" th:href="${@rq.currentUrlPath}"
                        class="btn btn-sm btn-outline">
                         <i class="fa-solid fa-xmark"></i>
