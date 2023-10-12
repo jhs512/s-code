@@ -26,10 +26,16 @@ public class Member extends BaseEntity {
     private String password;
     @Column(unique = true)
     private String nickname;
+    @Column(unique = true)
+    private String producerName;
     private String email;
 
     public boolean isAdmin() {
         return "admin".equals(username);
+    }
+
+    public boolean isProducer() {
+        return producerName != null;
     }
 
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
@@ -39,9 +45,8 @@ public class Member extends BaseEntity {
         grantedAuthorities.add(new SimpleGrantedAuthority("member"));
 
         // username이 admin인 회원은 추가로 admin 권한도 가진다.
-        if (isAdmin()) {
-            grantedAuthorities.add(new SimpleGrantedAuthority("admin"));
-        }
+        if (isAdmin()) grantedAuthorities.add(new SimpleGrantedAuthority("admin"));
+        if (isProducer()) grantedAuthorities.add(new SimpleGrantedAuthority("producer"));
 
         return grantedAuthorities;
     }
