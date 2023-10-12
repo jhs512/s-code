@@ -4,6 +4,7 @@ import com.sbs.demo5.base.jpa.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -13,12 +14,16 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Table(
+        // 변수명이 같은 데이터 생성되는것을 막는 역할
+        // 특정 변수명으로 검색했을 때 초고속 검색이 되도록
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {
+                        "relId", "relTypeCode", "typeCode", "type2Code"
+                }
+        ),
         indexes = {
-                // 변수명이 같은 데이터 생성되는것을 막는 역할
-                // 특정 변수명으로 검색했을 때 초고속 검색이 되도록
-                @Index(name = "idx1", columnList = "relId, relTypeCode, typeCode, type2Code", unique = true),
                 // 특정 그룹의 데이터들을 불러올 때
-                @Index(name = "idx2", columnList = "relTypeCode, typeCode, type2Code")
+                @Index(name = "idx1", columnList = "relTypeCode, typeCode, type2Code")
         }
 )
 @Setter

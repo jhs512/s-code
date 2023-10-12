@@ -9,6 +9,7 @@ import com.sbs.demo5.domain.board.entity.Board;
 import com.sbs.demo5.domain.board.service.BoardService;
 import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.standard.util.Ut;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -74,7 +75,7 @@ public class ArticleController {
     @PostMapping("/{boardCode}/write")
     public String write(
             @PathVariable String boardCode,
-            ArticleWriteForm writeForm
+            @Valid ArticleWriteForm writeForm
     ) {
         Board board = boardService.findByCode(boardCode).get();
 

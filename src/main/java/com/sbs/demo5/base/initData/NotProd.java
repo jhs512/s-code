@@ -48,8 +48,8 @@ public class NotProd {
 
             String file1Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.css");
             String file2Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.js");
-            articleService.saveAttachmentFile(article1, file1Path, 1);
-            articleService.saveAttachmentFile(article1, file2Path, 2);
+            articleService.saveAttachmentFile(article1, file1Path, 1L);
+            articleService.saveAttachmentFile(article1, file2Path, 2L);
         };
     }
 }

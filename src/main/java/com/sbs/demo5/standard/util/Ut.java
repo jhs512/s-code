@@ -24,6 +24,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Ut {
     public static class markdown {
@@ -249,7 +252,7 @@ public class Ut {
             return url;
         }
 
-        private static String deleteQueryParam(String url, String paramName) {
+        public static String deleteQueryParam(String url, String paramName) {
             int startPoint = url.indexOf(paramName + "=");
             if (startPoint == -1) return url;
 
@@ -301,6 +304,27 @@ public class Ut {
             }
 
             return password.toString();
+        }
+
+        public static String replace(String input, String regex, Function<String, String> replacer) {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(input);
+
+            StringBuilder result = new StringBuilder();
+
+            while (matcher.find()) {
+                String replacement = replacer.apply(matcher.group(1));
+                matcher.appendReplacement(result, replacement);
+            }
+            matcher.appendTail(result);
+
+            return result.toString();
+        }
+
+        public static String ucfirst(String str) {
+            if (str == null || str.isEmpty()) return str;
+
+            return Character.toUpperCase(str.charAt(0)) + str.substring(1);
         }
     }
 

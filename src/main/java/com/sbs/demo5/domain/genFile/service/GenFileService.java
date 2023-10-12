@@ -1,8 +1,10 @@
 package com.sbs.demo5.domain.genFile.service;
 
 import com.sbs.demo5.base.app.AppConfig;
+import com.sbs.demo5.domain.article.entity.Article;
 import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.genFile.repository.GenFileRepository;
+import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,22 +25,23 @@ public class GenFileService {
     private final GenFileRepository genFileRepository;
 
     // 조회
-    public Optional<GenFile> findBy(String relTypeCode, Long relId, String typeCode, String type2Code, int fileNo) {
+    public Optional<GenFile> findBy(String relTypeCode, Long relId, String typeCode, String type2Code, long fileNo) {
         return genFileRepository.findByRelTypeCodeAndRelIdAndTypeCodeAndType2CodeAndFileNo(relTypeCode, relId, typeCode, type2Code, fileNo);
     }
 
     @Transactional
-    public GenFile save(String relTypeCode, Long relId, String typeCode, String type2Code, int fileNo, MultipartFile sourceFile) {
+    public GenFile save(String relTypeCode, Long relId, String typeCode, String type2Code, long fileNo, MultipartFile sourceFile) {
         String sourceFilePath = Ut.file.toFile(sourceFile, AppConfig.getTempDirPath());
         return save(relTypeCode, relId, typeCode, type2Code, fileNo, sourceFilePath);
     }
 
     // 명령
     @Transactional
-    public GenFile save(String relTypeCode, Long relId, String typeCode, String type2Code, int fileNo, String sourceFile) {
+    public GenFile save(String relTypeCode, Long relId, String typeCode, String type2Code, long fileNo, String sourceFile) {
         if (!Ut.file.exists(sourceFile)) return null;
 
-        remove(relTypeCode, relId, typeCode, type2Code, fileNo);
+        // fileNo 가 0 이면, 이 파일은 로직상 무조건 새 파일이다.
+        if (fileNo > 0) remove(relTypeCode, relId, typeCode, type2Code, fileNo);
 
         String originFileName = Ut.file.getOriginFileName(sourceFile);
         String fileExt = Ut.file.getExt(originFileName);
@@ -46,21 +50,35 @@ public class GenFileService {
         long fileSize = new File(sourceFile).length();
         String fileDir = getCurrentDirName(relTypeCode);
 
-        GenFile genFile = GenFile.builder()
-                .relTypeCode(relTypeCode)
-                .relId(relId)
-                .typeCode(typeCode)
-                .type2Code(type2Code)
-                .fileExtTypeCode(fileExtTypeCode)
-                .fileExtType2Code(fileExtType2Code)
-                .originFileName(originFileName)
-                .fileSize(fileSize)
-                .fileNo(fileNo)
-                .fileExt(fileExt)
-                .fileDir(fileDir)
-                .build();
+        int maxTryCount = 3;
 
-        genFileRepository.save(genFile);
+        GenFile genFile = null;
+
+        for (int tryCount = 1; tryCount <= maxTryCount; tryCount++) {
+            try {
+                if (fileNo == 0) fileNo = genNextFileNo(relTypeCode, relId, typeCode, type2Code);
+
+                genFile = GenFile.builder()
+                        .relTypeCode(relTypeCode)
+                        .relId(relId)
+                        .typeCode(typeCode)
+                        .type2Code(type2Code)
+                        .fileExtTypeCode(fileExtTypeCode)
+                        .fileExtType2Code(fileExtType2Code)
+                        .originFileName(originFileName)
+                        .fileSize(fileSize)
+                        .fileNo(fileNo)
+                        .fileExt(fileExt)
+                        .fileDir(fileDir)
+                        .build();
+
+                genFileRepository.save(genFile);
+
+                break;
+            } catch (Exception ignored) {
+
+            }
+        }
 
         File file = new File(genFile.getFilePath());
 
@@ -70,6 +88,13 @@ public class GenFileService {
         Ut.file.remove(sourceFile);
 
         return genFile;
+    }
+
+    private long genNextFileNo(String relTypeCode, Long relId, String typeCode, String type2Code) {
+        return genFileRepository
+                .findTop1ByRelTypeCodeAndRelIdAndTypeCodeAndType2CodeOrderByFileNoDesc(relTypeCode, relId, typeCode, type2Code)
+                .map(genFile -> genFile.getFileNo() + 1)
+                .orElse(1L);
     }
 
     private String getCurrentDirName(String relTypeCode) {
@@ -92,7 +117,7 @@ public class GenFileService {
     }
 
     @Transactional
-    public void remove(String relTypeCode, long relId, String typeCode, String type2Code, int fileNo) {
+    public void remove(String relTypeCode, long relId, String typeCode, String type2Code, long fileNo) {
         findBy(relTypeCode, relId, typeCode, type2Code, fileNo).ifPresent(this::remove);
     }
 
@@ -100,9 +125,39 @@ public class GenFileService {
     public void remove(GenFile genFile) {
         Ut.file.remove(genFile.getFilePath());
         genFileRepository.delete(genFile);
+        genFileRepository.flush();
     }
 
     public List<GenFile> findByRelId(String modelName, Long relId) {
         return genFileRepository.findByRelTypeCodeAndRelId(modelName, relId);
+    }
+
+    @Transactional
+    public GenFile saveTempFile(Member actor, MultipartFile file) {
+        return save("temp_" + actor.getModelName(), actor.getId(), "common", "editorUpload", 0, file);
+    }
+
+    @Transactional
+    public GenFile tempToFile(String url, Article article, String typeCode, String type2Code, long fileNo) {
+        String fileName = Ut.file.getFileNameFromUrl(url);
+        String fileExt = Ut.file.getFileExt(fileName);
+
+        long genFileId = Long.parseLong(fileName.replaceAll("." + fileExt, ""));
+        GenFile tempGenFile = findById(genFileId).get();
+
+        GenFile newGenFile = save(article.getModelName(), article.getId(), typeCode, type2Code, fileNo, tempGenFile.getFilePath());
+
+        remove(tempGenFile);
+
+        return newGenFile;
+    }
+
+    public void removeOldTempFiles() {
+        findOldTempFiles().forEach(this::remove);
+    }
+
+    private List<GenFile> findOldTempFiles() {
+        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+        return genFileRepository.findByRelTypeCodeAndCreateDateBefore("temp", oneDayAgo);
     }
 }

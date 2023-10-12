@@ -1,5 +1,7 @@
 package com.sbs.demo5.domain.genFile.controller;
 
+import com.sbs.demo5.base.rq.Rq;
+import com.sbs.demo5.base.rsData.RsData;
 import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.genFile.service.GenFileService;
 import com.sbs.demo5.standard.util.Ut;
@@ -10,10 +12,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +25,7 @@ import java.io.FileNotFoundException;
 @RequiredArgsConstructor
 @RequestMapping("/usr/genFile")
 public class GenFileController {
+    private final Rq rq;
     private final GenFileService genFileService;
 
     @GetMapping("/download/{id}")
@@ -41,5 +44,19 @@ public class GenFileController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .contentType(MediaType.parseMediaType(contentType)).body(resource);
+    }
+
+    // 위 주석문을 처리할 수 있는 액션 만들어줘
+    @PostMapping("/temp")
+    @ResponseBody
+    public RsData<String> temp(@RequestParam("file") MultipartFile file) {
+        GenFile savedFile = genFileService.saveTempFile(rq.getMember(), file);
+
+        return RsData.of("S-1", "임시 파일이 생성되었습니다.", savedFile.getUrl());
+    }
+
+    @Scheduled(cron = "0 0 4 * * ?")
+    public void removeOldTempFiles() {
+        genFileService.removeOldTempFiles();
     }
 }

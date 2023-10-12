@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,6 +45,8 @@ public class ArticleService {
                 .build();
 
         articleRepository.save(article);
+
+        updateTempGenFilesToInBody(article);
 
         return new RsData<>("S-1", article.getId() + "번 게시물이 생성되었습니다.", article);
     }
@@ -74,7 +77,30 @@ public class ArticleService {
         article.setBody(body);
         article.setBodyHtml(bodyHtml);
 
+        updateTempGenFilesToInBody(article);
+
         return new RsData<>("S-1", article.getId() + "번 게시물이 수정되었습니다.", article);
+    }
+
+    private void updateTempGenFilesToInBody(Article article) {
+        Map<String, String> urlsMap = new HashMap<>();
+
+        String newBody = Ut.str.replace(article.getBody(), "\\(/gen/temp_member/([^)]+)\\?type=temp\\)", (String url) -> {
+            url = "/gen/temp_member/" + url;
+            String newUrl = genFileService.tempToFile(url, article, "common", "inBody", 0).getUrl();
+            urlsMap.put(url, newUrl);
+            return "(" + newUrl + ")";
+        });
+
+        article.setBody(newBody);
+
+        String newBodyHtml = Ut.str.replace(article.getBodyHtml(), "=\"/gen/temp_member/([^\" ]+)\\?type=temp\"", (String url) -> {
+            url = "/gen/temp_member/" + url;
+            String newUrl = urlsMap.get(url);
+            return "=\"" + newUrl + "\"";
+        });
+
+        article.setBodyHtml(newBodyHtml);
     }
 
     @Transactional
@@ -91,13 +117,13 @@ public class ArticleService {
     }
 
     @Transactional
-    public RsData<GenFile> saveAttachmentFile(Article article, MultipartFile attachmentFile, int fileNo) {
+    public RsData<GenFile> saveAttachmentFile(Article article, MultipartFile attachmentFile, long fileNo) {
         String attachmentFilePath = Ut.file.toFile(attachmentFile, AppConfig.getTempDirPath());
         return saveAttachmentFile(article, attachmentFilePath, fileNo);
     }
 
     @Transactional
-    public RsData<GenFile> saveAttachmentFile(Article article, String attachmentFile, int fileNo) {
+    public RsData<GenFile> saveAttachmentFile(Article article, String attachmentFile, long fileNo) {
         GenFile genFile = genFileService.save(article.getModelName(), article.getId(), "common", "attachment", fileNo, attachmentFile);
 
         return new RsData<>("S-1", genFile.getId() + "번 파일이 생성되었습니다.", genFile);
@@ -108,7 +134,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public void removeAttachmentFile(Article article, int fileNo) {
+    public void removeAttachmentFile(Article article, long fileNo) {
         genFileService.remove(article.getModelName(), article.getId(), "common", "attachment", fileNo);
     }
 }

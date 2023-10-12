@@ -5,6 +5,7 @@ import com.sbs.demo5.base.jpa.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,9 +20,17 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @SuperBuilder
 @ToString(callSuper = true)
-@Table(indexes = {
-        @Index(name = "idx1", columnList = "relId,relTypeCode,typeCode,type2Code")
-})
+@Table(
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {
+                        "relId", "relTypeCode", "typeCode", "type2Code", "fileNo"
+                }
+        ),
+        indexes = {
+                // 특정 그룹의 데이터들을 불러올 때
+                @Index(name = "idx2", columnList = "relTypeCode, typeCode, type2Code")
+        }
+)
 public class GenFile extends BaseEntity {
     private String relTypeCode;
     private long relId;
@@ -30,7 +39,7 @@ public class GenFile extends BaseEntity {
     private String fileExtTypeCode;
     private String fileExtType2Code;
     private long fileSize;
-    private int fileNo;
+    private long fileNo;
     private String fileExt;
     private String fileDir;
     private String originFileName;

@@ -331,6 +331,28 @@
                     height: $node.attr('height') ?? "100%",
                     language: "ko-KR",
                     useCommandShortcut: true,
+                    hooks: {
+                        addImageBlobHook: function (blob, callback) {
+                            const csrfToken = $("meta[name='_csrf']").attr("content");
+                            const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+                            const formData = new FormData();
+                            formData.append('file', blob);
+
+                            fetch('/usr/genFile/temp', {
+                                method: 'POST',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    [csrfHeader]: csrfToken
+                                },
+                                body: formData
+                            }).then(function (response) {
+                                return response.json();
+                            }).then(function (myJson) {
+                                callback(myJson.data + "?type=temp");
+                            });
+                        }
+                    },
                     placeholder: $node.attr('placeholder') ?? "Please enter text.",
                     autofocus: $node.attr('autofocus') == 'autofocus',
                     plugins: [
