@@ -51,6 +51,11 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
+    private Optional<Member> findByProducerName(String producerName) {
+        return memberRepository.findByProducerName(producerName);
+
+    }
+
     public Optional<String> findProfileImgUrl(Member member) {
         return genFileService.findBy(
                         member.getModelName(), member.getId(), "common", "profileImg", 1
@@ -68,6 +73,16 @@ public class MemberService {
         if (findByEmail(email).isPresent()) return RsData.of("F-1", "%s(은)는 사용중인 이메일입니다.".formatted(email));
 
         return RsData.of("S-1", "%s(은)는 사용 가능한 이메일 입니다.".formatted(email), email);
+    }
+
+    public RsData<String> checkProducerNameDup(Member actor, String producerName) {
+        if (producerName.equals(actor.getProducerName()))
+            return RsData.of("S-1", "%s(은)는 사용 가능한 활동명입니다.".formatted(producerName), producerName);
+
+        if (findByProducerName(producerName).isPresent())
+            return RsData.of("F-1", "%s(은)는 사용중인 활동명입니다.".formatted(producerName));
+
+        return RsData.of("S-1", "%s(은)는 사용 가능한 활동명입니다.".formatted(producerName), producerName);
     }
 
     // 명령
@@ -241,7 +256,7 @@ public class MemberService {
     }
 
     public RsData<?> checkCheckPasswordAuthCode(Member member, String checkPasswordAuthCode) {
-        if (checkPasswordAuthCode == null) return RsData.of("F-1", "checkPasswordAuthCode를 입력해주세요.");
+        if (Ut.str.isBlank(checkPasswordAuthCode)) return RsData.of("F-1", "checkPasswordAuthCode를 입력해주세요.");
 
         if (attrService.get("member__%d__extra__checkPasswordAuthCode".formatted(member.getId()), "").equals(checkPasswordAuthCode))
             return RsData.of("S-1", "유효한 코드입니다.");
@@ -268,5 +283,15 @@ public class MemberService {
         String filePath = Ut.str.hasLength(profileImgUrl) ? Ut.file.downloadFileByHttp(profileImgUrl, AppConfig.getTempDirPath()) : "";
 
         return join(username, "", nickname, "", filePath).getData();
+    }
+
+    @Transactional
+    public RsData<Member> beProducer(long memberId, String producerName) {
+        memberRepository.findById(memberId)
+                .ifPresent(member -> {
+                    member.setProducerName(producerName);
+                });
+
+        return RsData.of("S-1", "활동명이 적용되었습니다.");
     }
 }

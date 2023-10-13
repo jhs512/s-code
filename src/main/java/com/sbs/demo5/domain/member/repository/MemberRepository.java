@@ -17,4 +17,6 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
     Page<Member> findAll(Pageable pageable);
 
     Optional<Member> findByNickname(String nickname);
+
+    Optional<Member> findByProducerName(String producerName);
 }

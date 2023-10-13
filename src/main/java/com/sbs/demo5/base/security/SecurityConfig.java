@@ -1,5 +1,7 @@
 package com.sbs.demo5.base.security;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -8,28 +10,36 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultHttpSecurityExpressionHandler;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.stream.Stream;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final ApplicationContext context;
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(
+                .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                .requestMatchers(
-                                        new AntPathRequestMatcher("/usr/member/notVerified")
+                                .requestMatchers(of("/usr/member/notVerified")
                                 )
                                 .permitAll()
                                 .requestMatchers(
-                                        new AntPathRequestMatcher("/"),
-                                        new AntPathRequestMatcher("/usr/**")
-                                ).access("isAnonymous() or @memberController.assertCurrentMemberVerified()")
+                                        of("/usr/member/beProducer", "/usr/member/modify")
+                                ).access(expressionString("@memberController.assertCheckPasswordAuthCodeVerified()"))
                                 .requestMatchers(
-                                        new AntPathRequestMatcher("/adm/**")
+                                        of("/", "/usr/**")
+                                ).access(expressionString("isAnonymous() or @memberController.assertCurrentMemberVerified()"))
+                                .requestMatchers(
+                                        of("/adm/**")
                                 )
                                 .hasAuthority("admin")
                                 .anyRequest().permitAll()
@@ -58,6 +68,21 @@ public class SecurityConfig {
                         .invalidateHttpSession(true))
         ;
         return http.build();
+    }
+
+    private WebExpressionAuthorizationManager expressionString(String expressionString) {
+        DefaultHttpSecurityExpressionHandler expressionHandler = new DefaultHttpSecurityExpressionHandler();
+        expressionHandler.setApplicationContext(context);
+        WebExpressionAuthorizationManager authorization = new WebExpressionAuthorizationManager(expressionString);
+        authorization.setExpressionHandler(expressionHandler);
+
+        return authorization;
+    }
+
+    private AntPathRequestMatcher[] of(String... patterns) {
+        return Stream.of(patterns)
+                .map(AntPathRequestMatcher::new)
+                .toArray(AntPathRequestMatcher[]::new);
     }
 
     @Bean
