@@ -1,7 +1,7 @@
 <html layout:decorate="~{usr/common/layout}">
 
 <head>
-    <title th:text="|글 - ${article.subject}|"></title>
+    <title th:text="|글 - ${post.subject}|"></title>
 </head>
 
 <body>
@@ -12,7 +12,7 @@
     <div class="container w-full px-4">
         <h1 class="mb-4">
             <i class="fa-solid fa-pen"></i>
-            <span th:text="|${board.name} 게시글|"></span>
+            <span th:text="|내 글|"></span>
         </h1>
 
         <div class="card bg-base-100 shadow-xl">
@@ -20,37 +20,37 @@
                 <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-3">
                     <div class="form-control">
                         <label class="label">
-                            <span class="label-text">게시물번호</span>
+                            <span class="label-text">번호</span>
                         </label>
-                        <div th:text="${article.id}"></div>
+                        <div th:text="${post.id}"></div>
                     </div>
 
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">작성일</span>
                         </label>
-                        <div th:text="${#temporals.format(article.createDate, 'yy.MM.dd')}"></div>
+                        <div th:text="${#temporals.format(post.createDate, 'yy.MM.dd')}"></div>
                     </div>
 
                     <div class="form-control">
                         <label class="label">
                             <span class="label-text">작성자</span>
                         </label>
-                        <div th:text="${article.author.nickname}"></div>
+                        <div th:text="${post.author.nickname}"></div>
                     </div>
 
                     <div class="form-control col-span-full">
                         <label class="label">
                             <span class="label-text">제목</span>
                         </label>
-                        <div th:text="${article.subject}"></div>
+                        <div th:text="${post.subject}"></div>
                     </div>
 
                     <div class="form-control col-span-full">
                         <label class="label">
                             <span class="label-text">태그</span>
                         </label>
-                        <div th:utext="${article.getTagLinks('<a class=`link` href=`%s`>#%s</a>', '/usr/article/listByTag/%s')}"></div>
+                        <div th:utext="${post.getTagLinks('<a class=`link` href=`%s`>#%s</a>', '/usr/post/listByTag/%s')}"></div>
                     </div>
 
                     <div class="form-control col-span-full">
@@ -59,7 +59,7 @@
                         </label>
                         <div class="toastui-editor-contents"
                              style="overflow-wrap: break-word;"
-                             th:utext="${article.bodyHtmlForPrint}">
+                             th:utext="${post.bodyHtmlForPrint}">
                         </div>
                     </div>
 
@@ -80,14 +80,15 @@
 
                 <div class="mt-6">
                     <div class="text-center">
-                        <a th:if="${@articleService.checkActorCanModify(@rq.member, article).success}"
+                        <a th:if="${@postService.checkActorCanModify(@rq.member, post).success}"
                            class="btn btn-link"
-                           th:href="|/usr/article/${board.code}/modify/${article.id}|">수정</a>
+                           th:href="|/usr/post/modify/${post.id}|">수정</a>
                         <a onclick="return confirm('정말로 삭제하시겠습니까?');"
-                           th:if="${@articleService.checkActorCanDelete(@rq.member, article).success}"
+                           th:if="${@postService.checkActorCanDelete(@rq.member, post).success}"
                            class="btn btn-link"
-                           th:href="|/usr/article/${board.code}/remove/${article.id}|" method="POST">삭제</a>
-                        <a class="btn btn-link" th:href="|/usr/article/${board.code}/list|">목록</a>
+                           th:href="|/usr/post/remove/${post.id}|" method="POST">삭제</a>
+                        <a th:with="listUrl = ${param.listUrl != null ? param.listUrl : '/usr/post/myList'}"
+                           class="btn btn-link" th:href="${listUrl}">목록</a>
                     </div>
                 </div>
             </div>

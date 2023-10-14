@@ -6,8 +6,6 @@ import com.sbs.demo5.domain.email.repository.SendEmailLogRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -22,21 +20,21 @@ import java.util.concurrent.CompletableFuture;
 public class EmailService {
     private final SendEmailLogRepository emailLogRepository;
     private final JavaMailSender mailSender;
-    @Autowired
-    @Lazy
-    private EmailService self;
 
-    // 명령
     @Async
     @Transactional
-    public CompletableFuture<RsData> send(String to, String subject, String body) {
+    public CompletableFuture<RsData> sendAsync(String to, String subject, String body) {
+        return CompletableFuture.completedFuture(send(to, subject, body));
+    }
+
+    public RsData<?> send(String to, String subject, String body) {
         SendEmailLog sendEmailLog = saveSendEmailLog(to, subject, body);
 
-        if (isTestEmail(to)) return CompletableFuture.supplyAsync(() -> {
-            RsData rs = RsData.of("S-2", "메일이 발송되었습니다.(테스트 메일)");
-            self.setCompleted(sendEmailLog.getId(), rs);
+        if (isTestEmail(to)) {
+            RsData<?> rs = RsData.of("S-2", "메일이 발송되었습니다.(테스트 메일)");
+            setCompleted(sendEmailLog.getId(), rs);
             return rs;
-        });
+        }
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
 
@@ -47,26 +45,21 @@ public class EmailService {
             mimeMessageHelper.setText(body, true); // 메일 본문 내용, HTML 여부
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            return CompletableFuture.supplyAsync(() -> {
-                RsData rs = RsData.of("F-1", "메일이 발송되지 않았습니다.");
-                self.setCompleted(sendEmailLog.getId(), rs);
-                return rs;
-            });
+            RsData<?> rs = RsData.of("F-1", "메일이 발송되지 않았습니다.");
+            setCompleted(sendEmailLog.getId(), rs);
+            return rs;
         }
 
-        return CompletableFuture.supplyAsync(() -> {
-            RsData rs = RsData.of("S-1", "메일이 발송되었습니다.");
-            self.setCompleted(sendEmailLog.getId(), rs);
-            return rs;
-        });
+        RsData<?> rs = RsData.of("S-1", "메일이 발송되었습니다.");
+        setCompleted(sendEmailLog.getId(), rs);
+        return rs;
     }
 
     private boolean isTestEmail(String email) {
         return email.endsWith("@test.com");
     }
 
-    @Transactional
-    public void setCompleted(Long id, RsData rs) {
+    private void setCompleted(Long id, RsData rs) {
         SendEmailLog sendEmailLog = emailLogRepository.findById(id).orElseThrow();
         sendEmailLog.setCompleted(rs);
     }

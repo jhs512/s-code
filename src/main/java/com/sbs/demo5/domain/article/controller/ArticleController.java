@@ -148,10 +148,9 @@ public class ArticleController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{boardCode}/modify/{id}")
     public String modify(
-            Model model,
             @PathVariable String boardCode,
             @PathVariable long id,
-            ArticleModifyForm modifyForm
+            @Valid ArticleModifyForm modifyForm
     ) {
         Board board = boardService.findByCode(boardCode).get();
         Article article = articleService.findById(id).get();

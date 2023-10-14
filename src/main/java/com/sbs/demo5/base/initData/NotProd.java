@@ -7,6 +7,7 @@ import com.sbs.demo5.domain.board.entity.Board;
 import com.sbs.demo5.domain.board.service.BoardService;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.service.MemberService;
+import com.sbs.demo5.domain.post.service.PostService;
 import com.sbs.demo5.standard.util.Ut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,8 @@ public class NotProd {
     private MemberService memberService;
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private PostService postService;
 
     @Bean
     public ApplicationRunner initNotProd() {
@@ -67,6 +70,14 @@ public class NotProd {
         String file2Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.js");
         articleService.saveAttachmentFile(article1, file1Path, 1L);
         articleService.saveAttachmentFile(article1, file2Path, 2L);
+
+        postService.write(member1, "제목 1", "#자바 #HTML", "내용 1");
+        postService.write(member1, "제목 2", "#CSS #HTML #Python", "내용 2");
+        postService.write(member1, "제목 3", "#Java", "내용 3");
+        postService.write(member2, "제목 4", "#Python #Script", "내용 4");
+        postService.write(member2, "제목 5", "#Java #JSP", "내용 5");
+        postService.write(member2, "제목 6", "#CSS #Hungry", "내용 6");
+
     }
 
     @Transactional

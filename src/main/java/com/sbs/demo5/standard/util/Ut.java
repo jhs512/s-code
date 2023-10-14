@@ -367,5 +367,9 @@ public class Ut {
         public static String value(List<String> requestParameterValues) {
             return getFirstStrOrEmpty(requestParameterValues);
         }
+
+        public static String toHref(List<String> requestParameterValues) {
+            return "HI";
+        }
     }
 }

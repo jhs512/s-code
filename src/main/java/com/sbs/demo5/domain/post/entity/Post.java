@@ -1,9 +1,9 @@
-package com.sbs.demo5.domain.article.entity;
+package com.sbs.demo5.domain.post.entity;
+
 
 import com.sbs.demo5.base.jpa.baseEntity.BaseEntity;
-import com.sbs.demo5.domain.articleTag.entity.ArticleTag;
-import com.sbs.demo5.domain.board.entity.Board;
 import com.sbs.demo5.domain.member.entity.Member;
+import com.sbs.demo5.domain.postTag.entity.PostTag;
 import com.sbs.demo5.domain.textEditor.standard.TextEditorPost;
 import com.sbs.demo5.standard.util.Ut;
 import jakarta.persistence.*;
@@ -24,12 +24,9 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @SuperBuilder
 @ToString(callSuper = true)
-public class Article extends BaseEntity implements TextEditorPost {
+public class Post extends BaseEntity implements TextEditorPost {
     @ManyToOne
     private Member author;
-
-    @ManyToOne
-    private Board board;
 
     private String subject;
 
@@ -39,33 +36,33 @@ public class Article extends BaseEntity implements TextEditorPost {
     @Column(columnDefinition = "TEXT")
     private String bodyHtml;
 
-    @OneToMany(mappedBy = "article", orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = {CascadeType.ALL})
     @Builder.Default
     @ToString.Exclude
-    private Set<ArticleTag> articleTags = new HashSet<>();
+    private Set<PostTag> postTags = new HashSet<>();
 
     public String getTagsStr() {
-        if (articleTags.isEmpty()) return "";
+        if (postTags.isEmpty()) return "";
 
-        return "#" + articleTags
+        return "#" + postTags
                 .stream()
-                .map(ArticleTag::getContent)
+                .map(PostTag::getContent)
                 .collect(Collectors.joining(" #"));
     }
 
     public void addTag(String tagContent) {
-        ArticleTag articleTag = ArticleTag
+        PostTag postTag = PostTag
                 .builder()
-                .article(this)
+                .post(this)
                 .author(this.author)
                 .content(tagContent)
                 .build();
 
-        articleTags.add(articleTag);
+        postTags.add(postTag);
     }
 
     public void removeTag(String tagContent) {
-        articleTags.removeIf(articleTag -> articleTag.getContent().equals(tagContent));
+        postTags.removeIf(postTag -> postTag.getContent().equals(tagContent));
     }
 
     public String getBodyForEditor() {
@@ -92,22 +89,23 @@ public class Article extends BaseEntity implements TextEditorPost {
                 .filter(tag -> !tag.isEmpty())
                 .collect(Collectors.toSet());
 
-        // articleTags 에서 newTagsStr 에 없는 것들은 삭제
-        articleTags.removeIf(articleTag -> !newTags.contains(articleTag.getContent()));
+        // postTags 에서 newTagsStr 에 없는 것들은 삭제
+        postTags.removeIf(postTag -> !newTags.contains(postTag.getContent()));
 
         addTags(newTagsStr);
     }
 
     public String getTagLinks(String linkTemplate, String urlTemplate) {
-        if (articleTags.isEmpty()) return "-";
+        if (postTags.isEmpty()) return "-";
 
         final String finaLinkTemplate = linkTemplate.replace("`", "\"");
 
-        return articleTags
+        return postTags
                 .stream()
-                .map(articleTag -> finaLinkTemplate
-                        .formatted(urlTemplate.formatted(Ut.url.encode(articleTag.getContent())), articleTag.getContent()))
+                .map(postTag -> finaLinkTemplate
+                        .formatted(urlTemplate.formatted(Ut.url.encode(postTag.getContent())), postTag.getContent()))
                 .sorted()
                 .collect(Collectors.joining(" "));
     }
 }
+

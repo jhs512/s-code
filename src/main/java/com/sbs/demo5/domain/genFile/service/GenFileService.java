@@ -1,7 +1,7 @@
 package com.sbs.demo5.domain.genFile.service;
 
 import com.sbs.demo5.base.app.AppConfig;
-import com.sbs.demo5.domain.article.entity.Article;
+import com.sbs.demo5.base.jpa.baseEntity.BaseEntity;
 import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.genFile.repository.GenFileRepository;
 import com.sbs.demo5.domain.member.entity.Member;
@@ -138,14 +138,14 @@ public class GenFileService {
     }
 
     @Transactional
-    public GenFile tempToFile(String url, Article article, String typeCode, String type2Code, long fileNo) {
+    public GenFile tempToFile(String url, BaseEntity entity, String typeCode, String type2Code, long fileNo) {
         String fileName = Ut.file.getFileNameFromUrl(url);
         String fileExt = Ut.file.getFileExt(fileName);
 
         long genFileId = Long.parseLong(fileName.replace("." + fileExt, ""));
         GenFile tempGenFile = findById(genFileId).get();
 
-        GenFile newGenFile = save(article.getModelName(), article.getId(), typeCode, type2Code, fileNo, tempGenFile.getFilePath());
+        GenFile newGenFile = save(entity.getModelName(), entity.getId(), typeCode, type2Code, fileNo, tempGenFile.getFilePath());
 
         remove(tempGenFile);
 

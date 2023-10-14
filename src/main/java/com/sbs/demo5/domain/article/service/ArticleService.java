@@ -9,6 +9,7 @@ import com.sbs.demo5.domain.board.entity.Board;
 import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.genFile.service.GenFileService;
 import com.sbs.demo5.domain.member.entity.Member;
+import com.sbs.demo5.domain.textEditor.service.TextEditorService;
 import com.sbs.demo5.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +28,7 @@ import java.util.Optional;
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final GenFileService genFileService;
+    private final TextEditorService textEditorService;
 
     @Transactional
     public RsData<Article> write(Board board, Member author, String subject, String tagsStr, String body) {
@@ -48,9 +49,7 @@ public class ArticleService {
 
         article.addTags(tagsStr);
 
-        System.out.println("article.getArticleTags() :" + article.getArticleTags());
-
-        updateTempGenFilesToInBody(article);
+        textEditorService.updateTempGenFilesToInBody(article);
 
         return new RsData<>("S-1", article.getId() + "번 게시물이 생성되었습니다.", article);
     }
@@ -84,30 +83,9 @@ public class ArticleService {
         article.setBody(body);
         article.setBodyHtml(bodyHtml);
 
-        updateTempGenFilesToInBody(article);
+        textEditorService.updateTempGenFilesToInBody(article);
 
         return new RsData<>("S-1", article.getId() + "번 게시물이 수정되었습니다.", article);
-    }
-
-    private void updateTempGenFilesToInBody(Article article) {
-        Map<String, String> urlsMap = new HashMap<>();
-
-        String newBody = Ut.str.replace(article.getBody(), "\\(/gen/temp_member/([^)]+)\\?type=temp\\)", (String url) -> {
-            url = "/gen/temp_member/" + url;
-            String newUrl = genFileService.tempToFile(url, article, "common", "inBody", 0).getUrl();
-            urlsMap.put(url, newUrl);
-            return "(" + newUrl + ")";
-        });
-
-        article.setBody(newBody);
-
-        String newBodyHtml = Ut.str.replace(article.getBodyHtml(), "=\"/gen/temp_member/([^\" ]+)\\?type=temp\"", (String url) -> {
-            url = "/gen/temp_member/" + url;
-            String newUrl = urlsMap.get(url);
-            return "=\"" + newUrl + "\"";
-        });
-
-        article.setBodyHtml(newBodyHtml);
     }
 
     @Transactional

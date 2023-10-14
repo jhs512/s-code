@@ -208,7 +208,6 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/beProducer")
     public String showBeProducer() {
-        if (true) throw new AccessDeniedException("올바르지 않은 접근입니다.");
         return "usr/member/beProducer";
     }
 
