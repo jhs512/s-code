@@ -75,14 +75,6 @@ public class Post extends BaseEntity implements TextEditorPost {
                 .replace("toastui-editor-ww-code-block-highlighting", "");
     }
 
-    public void addTags(String tagsStr) {
-        Arrays.stream(tagsStr.split("#|,"))
-                .map(String::trim)
-                .filter(tag -> !tag.isEmpty())
-                .collect(Collectors.toSet())
-                .forEach(this::addTag);
-    }
-
     public void modifyTags(String newTagsStr) {
         Set<String> newTags = Arrays.stream(newTagsStr.split("#|,"))
                 .map(String::trim)
@@ -93,6 +85,14 @@ public class Post extends BaseEntity implements TextEditorPost {
         postTags.removeIf(postTag -> !newTags.contains(postTag.getContent()));
 
         addTags(newTagsStr);
+    }
+
+    public void addTags(String tagsStr) {
+        Arrays.stream(tagsStr.split("#|,"))
+                .map(String::trim)
+                .filter(tag -> !tag.isEmpty())
+                .collect(Collectors.toSet())
+                .forEach(this::addTag);
     }
 
     public String getTagLinks(String linkTemplate, String urlTemplate) {

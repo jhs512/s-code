@@ -69,7 +69,7 @@ public class PostController {
     }
 
     @GetMapping("/listByTag/{tagContent}")
-    public String showList(
+    public String showListByTag(
             Model model,
             @PathVariable String tagContent,
             @RequestParam(defaultValue = "1") int page
@@ -78,6 +78,21 @@ public class PostController {
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
         Page<Post> postPage = postService.findByTag(tagContent, pageable);
+        model.addAttribute("postPage", postPage);
+
+        return "usr/post/listByTag";
+    }
+
+    @GetMapping("/myListByTag/{tagContent}")
+    public String showMyListByTag(
+            Model model,
+            @PathVariable String tagContent,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        Page<Post> postPage = postService.findByTag(rq.getMember(), tagContent, pageable);
         model.addAttribute("postPage", postPage);
 
         return "usr/post/listByTag";

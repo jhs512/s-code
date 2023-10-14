@@ -123,4 +123,8 @@ public class PostService {
     public Page<Post> findByTag(String tagContent, Pageable pageable) {
         return postRepository.findByPostTags_content(tagContent, pageable);
     }
+
+    public Page<Post> findByTag(Member author, String tagContent, Pageable pageable) {
+        return postRepository.findByAuthorAndPostTags_content(author, tagContent, pageable);
+    }
 }

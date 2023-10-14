@@ -62,7 +62,7 @@ public class ArticleController {
     }
 
     @GetMapping("/listByTag/{tagContent}")
-    public String showList(
+    public String showListByTag(
             Model model,
             @NotBlank @PathVariable String tagContent,
             @RequestParam(defaultValue = "1") int page

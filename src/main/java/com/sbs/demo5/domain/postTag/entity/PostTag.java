@@ -28,6 +28,8 @@ public class PostTag extends BaseEntity {
 
     private String content;
 
+    private int sortNo;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

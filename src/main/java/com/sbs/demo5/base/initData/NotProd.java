@@ -73,11 +73,10 @@ public class NotProd {
 
         postService.write(member1, "제목 1", "#자바 #HTML", "내용 1");
         postService.write(member1, "제목 2", "#CSS #HTML #Python", "내용 2");
-        postService.write(member1, "제목 3", "#Java", "내용 3");
+        postService.write(member1, "제목 3", "#Java #HTML", "내용 3");
         postService.write(member2, "제목 4", "#Python #Script", "내용 4");
         postService.write(member2, "제목 5", "#Java #JSP", "내용 5");
-        postService.write(member2, "제목 6", "#CSS #Hungry", "내용 6");
-
+        postService.write(member2, "제목 6", "#CSS #Hungry #Python", "내용 6");
     }
 
     @Transactional
