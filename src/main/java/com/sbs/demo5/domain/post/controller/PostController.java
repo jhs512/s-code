@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +32,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/usr/post")
 @RequiredArgsConstructor
+@Validated
 public class PostController {
     private final PostService postService;
     private final Rq rq;
@@ -105,6 +108,7 @@ public class PostController {
     @Getter
     public static class PostWriteForm {
         @NotBlank
+        @Length(min = 2)
         private String subject;
         private String tagsStr;
         @NotBlank
@@ -175,6 +179,7 @@ public class PostController {
     @Setter
     public static class PostModifyForm {
         @NotBlank
+        @Length(min = 2)
         private String subject;
         private String tagsStr;
         @NotBlank
