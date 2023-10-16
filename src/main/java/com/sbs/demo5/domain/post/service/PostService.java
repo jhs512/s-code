@@ -7,6 +7,8 @@ import com.sbs.demo5.domain.genFile.service.GenFileService;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.post.entity.Post;
 import com.sbs.demo5.domain.post.repository.PostRepository;
+import com.sbs.demo5.domain.postKeyword.repository.PostKeywordRepository;
+import com.sbs.demo5.domain.postTag.entity.PostKeyword;
 import com.sbs.demo5.domain.textEditor.service.TextEditorService;
 import com.sbs.demo5.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +18,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostService {
     private final PostRepository postRepository;
+    private final PostKeywordRepository postKeywordRepository;
     private final GenFileService genFileService;
     private final TextEditorService textEditorService;
 
@@ -44,7 +49,8 @@ public class PostService {
 
         postRepository.save(post);
 
-        post.addTags(tagsStr);
+        Map<String, PostKeyword> postKeywordsMap = findPostKeywordsMap(author, tagsStr);
+        post.addTags(tagsStr, postKeywordsMap);
 
         textEditorService.updateTempGenFilesToInBody(post);
 
@@ -74,7 +80,8 @@ public class PostService {
     @Transactional
     public RsData<Post> modify(Post post, String subject, String tagsStr, String body, String bodyHtml) {
 
-        post.modifyTags(tagsStr);
+        Map<String, PostKeyword> postKeywordsMap = findPostKeywordsMap(post.getAuthor(), tagsStr);
+        post.modifyTags(tagsStr, postKeywordsMap);
 
         post.setSubject(subject);
         post.setBody(body);
@@ -83,6 +90,18 @@ public class PostService {
         textEditorService.updateTempGenFilesToInBody(post);
 
         return new RsData<>("S-1", post.getId() + "번 글이 수정되었습니다.", post);
+    }
+
+    private Map<String, PostKeyword> findPostKeywordsMap(Member author, String tagsStr) {
+        return Arrays.stream(tagsStr.split("#|,"))
+                .map(String::trim)
+                .filter(tag -> !tag.isEmpty())
+                .map(tag -> postKeywordRepository.findByAuthorAndContent(author, tag)
+                        .orElseGet(() -> postKeywordRepository.save(PostKeyword.builder()
+                                .author(author)
+                                .content(tag)
+                                .build())))
+                .collect(Collectors.toMap(PostKeyword::getContent, postKeyword -> postKeyword));
     }
 
     @Transactional

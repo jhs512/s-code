@@ -1,8 +1,9 @@
-package com.sbs.demo5.domain.postTag.entity;
+package com.sbs.demo5.domain.postKeyword.entity;
 
 import com.sbs.demo5.base.jpa.baseEntity.BaseEntity;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.post.entity.Post;
+import com.sbs.demo5.domain.postTag.entity.PostKeyword;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
@@ -25,6 +26,9 @@ public class PostTag extends BaseEntity {
 
     @ManyToOne
     private Post post;
+
+    @ManyToOne
+    private PostKeyword postKeyword;
 
     private String content;
 

@@ -3,7 +3,8 @@ package com.sbs.demo5.domain.post.entity;
 
 import com.sbs.demo5.base.jpa.baseEntity.BaseEntity;
 import com.sbs.demo5.domain.member.entity.Member;
-import com.sbs.demo5.domain.postTag.entity.PostTag;
+import com.sbs.demo5.domain.postKeyword.entity.PostTag;
+import com.sbs.demo5.domain.postTag.entity.PostKeyword;
 import com.sbs.demo5.domain.textEditor.standard.TextEditorPost;
 import com.sbs.demo5.standard.util.Ut;
 import jakarta.persistence.*;
@@ -12,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,13 +52,15 @@ public class Post extends BaseEntity implements TextEditorPost {
                 .collect(Collectors.joining(" #"));
     }
 
-    public void addTag(String tagContent) {
+    public void addTag(String tagContent, Map<String, PostKeyword> postKeywordsMap) {
         PostTag postTag = PostTag
                 .builder()
                 .post(this)
                 .author(this.author)
                 .content(tagContent)
                 .build();
+
+        postTag.setPostKeyword(postKeywordsMap.get(tagContent));
 
         postTags.add(postTag);
     }
@@ -75,7 +79,7 @@ public class Post extends BaseEntity implements TextEditorPost {
                 .replace("toastui-editor-ww-code-block-highlighting", "");
     }
 
-    public void modifyTags(String newTagsStr) {
+    public void modifyTags(String newTagsStr, Map<String, PostKeyword> postKeywordsMap) {
         Set<String> newTags = Arrays.stream(newTagsStr.split("#|,"))
                 .map(String::trim)
                 .filter(tag -> !tag.isEmpty())
@@ -84,15 +88,15 @@ public class Post extends BaseEntity implements TextEditorPost {
         // postTags 에서 newTagsStr 에 없는 것들은 삭제
         postTags.removeIf(postTag -> !newTags.contains(postTag.getContent()));
 
-        addTags(newTagsStr);
+        addTags(newTagsStr, postKeywordsMap);
     }
 
-    public void addTags(String tagsStr) {
+    public void addTags(String tagsStr, Map<String, PostKeyword> postKeywordsMap) {
         Arrays.stream(tagsStr.split("#|,"))
                 .map(String::trim)
                 .filter(tag -> !tag.isEmpty())
                 .collect(Collectors.toSet())
-                .forEach(this::addTag);
+                .forEach(tag -> addTag(tag, postKeywordsMap));
     }
 
     public String getTagLinks(String linkTemplate, String urlTemplate) {
