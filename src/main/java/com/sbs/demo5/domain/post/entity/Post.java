@@ -3,8 +3,9 @@ package com.sbs.demo5.domain.post.entity;
 
 import com.sbs.demo5.base.jpa.baseEntity.BaseEntity;
 import com.sbs.demo5.domain.member.entity.Member;
-import com.sbs.demo5.domain.postKeyword.entity.PostTag;
-import com.sbs.demo5.domain.postTag.entity.PostKeyword;
+import com.sbs.demo5.domain.post.service.PostService;
+import com.sbs.demo5.domain.postKeyword.entity.PostKeyword;
+import com.sbs.demo5.domain.postTag.entity.PostTag;
 import com.sbs.demo5.domain.textEditor.standard.TextEditorPost;
 import com.sbs.demo5.standard.util.Ut;
 import jakarta.persistence.*;
@@ -12,7 +13,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,7 +42,8 @@ public class Post extends BaseEntity implements TextEditorPost {
     @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = {CascadeType.ALL})
     @Builder.Default
     @ToString.Exclude
-    private Set<PostTag> postTags = new HashSet<>();
+    @OrderBy("id ASC")
+    private Set<PostTag> postTags = new LinkedHashSet<>();
 
     public String getTagsStr() {
         if (postTags.isEmpty()) return "";
@@ -49,6 +51,17 @@ public class Post extends BaseEntity implements TextEditorPost {
         return "#" + postTags
                 .stream()
                 .map(PostTag::getContent)
+                .sorted()
+                .collect(Collectors.joining(" #"));
+    }
+
+    public String getTagsWithSortNoStr() {
+        if (postTags.isEmpty()) return "";
+
+        return "#" + postTags
+                .stream()
+                .map(postTag -> postTag.getContent() + "[" + postTag.getSortNo() + "/" + postTag.getPostKeyword().getTotal() + "]")
+                .sorted()
                 .collect(Collectors.joining(" #"));
     }
 
@@ -59,9 +72,7 @@ public class Post extends BaseEntity implements TextEditorPost {
                 .author(this.author)
                 .content(tagContent)
                 .build();
-
-        postTag.setPostKeyword(postKeywordsMap.get(tagContent));
-
+        postKeywordsMap.get(tagContent).addTag(postTag);
         postTags.add(postTag);
     }
 
@@ -80,23 +91,73 @@ public class Post extends BaseEntity implements TextEditorPost {
     }
 
     public void modifyTags(String newTagsStr, Map<String, PostKeyword> postKeywordsMap) {
-        Set<String> newTags = Arrays.stream(newTagsStr.split("#|,"))
+        String inputedNewTagsStr = newTagsStr;
+        newTagsStr = newTagsStr.replaceAll(PostService.tagsStrSortRegex, "");
+
+        Set<String> newTags = Arrays.stream(newTagsStr.split(PostService.tagsStrDivisorRegex))
                 .map(String::trim)
-                .filter(tag -> !tag.isEmpty())
+                .map(String::toUpperCase)
+                .filter(tagContent -> !tagContent.isEmpty())
                 .collect(Collectors.toSet());
 
         // postTags 에서 newTagsStr 에 없는 것들은 삭제
-        postTags.removeIf(postTag -> !newTags.contains(postTag.getContent()));
+        postTags.removeIf(postTag -> {
+            boolean remove = !newTags.contains(postTag.getContent());
 
-        addTags(newTagsStr, postKeywordsMap);
+            if (remove) postTag.getPostKeyword().removeTag(postTag);
+
+            return remove;
+        });
+
+        addTags(inputedNewTagsStr, postKeywordsMap);
     }
 
     public void addTags(String tagsStr, Map<String, PostKeyword> postKeywordsMap) {
-        Arrays.stream(tagsStr.split("#|,"))
+        String inputedTagsStr = tagsStr;
+        tagsStr = tagsStr.replaceAll(PostService.tagsStrSortRegex, "");
+
+        Arrays.stream(tagsStr.split(PostService.tagsStrDivisorRegex))
                 .map(String::trim)
-                .filter(tag -> !tag.isEmpty())
-                .collect(Collectors.toSet())
-                .forEach(tag -> addTag(tag, postKeywordsMap));
+                .map(String::toUpperCase)
+                .filter(tagContent -> !tagContent.isEmpty())
+                .distinct()
+                .forEach(tagContent -> addTag(tagContent, postKeywordsMap));
+
+        Arrays.stream(inputedTagsStr.split(PostService.tagsStrDivisorRegex))
+                .map(String::trim)
+                .map(String::toUpperCase)
+                .filter(tagContent -> !tagContent.isEmpty())
+                .distinct()
+                .forEach(tagContent -> {
+                    String[] tagContentBits = tagContent.split("\\[", 2);
+
+                    if (tagContentBits.length == 1) return;
+
+                    tagContent = tagContentBits[0];
+
+                    tagContentBits = tagContentBits[1].split("/", 2);
+
+                    long newSortNo = 0;
+
+                    try {
+                        newSortNo = Long.parseLong(tagContentBits[0].replace("]", "").trim());
+                    } catch (Exception ignored) {
+                        return;
+                    }
+
+                    if (newSortNo < 1) newSortNo = 1;
+                    if (newSortNo > postKeywordsMap.get(tagContent).getTotal())
+                        newSortNo = postKeywordsMap.get(tagContent).getTotal();
+
+                    final long _newSortNo = newSortNo;
+                    final String _tagContent = tagContent;
+
+                    postTags
+                            .stream()
+                            .filter(postTag -> postTag.getContent().equals(_tagContent))
+                            .findFirst()
+                            .ifPresent(postTag -> postTag.applySortNo(_newSortNo));
+                });
     }
 
     public String getTagLinks(String linkTemplate, String urlTemplate) {

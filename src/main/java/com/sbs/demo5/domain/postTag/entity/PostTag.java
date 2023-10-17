@@ -1,9 +1,9 @@
-package com.sbs.demo5.domain.postKeyword.entity;
+package com.sbs.demo5.domain.postTag.entity;
 
 import com.sbs.demo5.base.jpa.baseEntity.BaseEntity;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.post.entity.Post;
-import com.sbs.demo5.domain.postTag.entity.PostKeyword;
+import com.sbs.demo5.domain.postKeyword.entity.PostKeyword;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
@@ -32,7 +32,7 @@ public class PostTag extends BaseEntity {
 
     private String content;
 
-    private int sortNo;
+    private long sortNo;
 
     @Override
     public boolean equals(Object o) {
@@ -51,5 +51,11 @@ public class PostTag extends BaseEntity {
         result = 31 * result + (post != null ? post.hashCode() : 0);
         result = 31 * result + (content != null ? content.hashCode() : 0);
         return result;
+    }
+
+    public void applySortNo(long newSortNo) {
+        if (sortNo == newSortNo) return;
+
+        postKeyword.applySortNo(this, newSortNo);
     }
 }

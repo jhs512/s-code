@@ -7,8 +7,8 @@ import com.sbs.demo5.domain.genFile.service.GenFileService;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.post.entity.Post;
 import com.sbs.demo5.domain.post.repository.PostRepository;
+import com.sbs.demo5.domain.postKeyword.entity.PostKeyword;
 import com.sbs.demo5.domain.postKeyword.repository.PostKeywordRepository;
-import com.sbs.demo5.domain.postTag.entity.PostKeyword;
 import com.sbs.demo5.domain.textEditor.service.TextEditorService;
 import com.sbs.demo5.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostService {
+    public final static String tagsStrSortRegex = "\\[-?\\d*\\/?-?\\d*\\]";
+    public final static String tagsStrDivisorRegex = "#|,";
     private final PostRepository postRepository;
     private final PostKeywordRepository postKeywordRepository;
     private final GenFileService genFileService;
@@ -93,9 +95,13 @@ public class PostService {
     }
 
     private Map<String, PostKeyword> findPostKeywordsMap(Member author, String tagsStr) {
-        return Arrays.stream(tagsStr.split("#|,"))
+        tagsStr = tagsStr.replaceAll(PostService.tagsStrSortRegex, "");
+
+        return Arrays.stream(tagsStr.split(PostService.tagsStrDivisorRegex))
                 .map(String::trim)
+                .map(String::toUpperCase)
                 .filter(tag -> !tag.isEmpty())
+                .distinct()
                 .map(tag -> postKeywordRepository.findByAuthorAndContent(author, tag)
                         .orElseGet(() -> postKeywordRepository.save(PostKeyword.builder()
                                 .author(author)
