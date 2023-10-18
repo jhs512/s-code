@@ -84,7 +84,7 @@
                            class="btn btn-link"
                            th:href="|/usr/article/${board.code}/modify/${article.id}|">수정</a>
                         <a onclick="return confirm('정말로 삭제하시겠습니까?');"
-                           th:if="${@articleService.checkActorCanDelete(@rq.member, article).success}"
+                           th:if="${@articleService.checkActorCanRemove(@rq.member, article).success}"
                            class="btn btn-link"
                            th:href="|/usr/article/${board.code}/remove/${article.id}|" method="POST">삭제</a>
                         <a class="btn btn-link" th:href="|/usr/article/${board.code}/list|">목록</a>

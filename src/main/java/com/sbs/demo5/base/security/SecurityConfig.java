@@ -33,6 +33,15 @@ public class SecurityConfig {
                                 )
                                 .permitAll()
                                 .requestMatchers(
+                                        requestMatchersOf("/usr/article/*/write")
+                                ).access(accessOf("@articleController.assertActorCanWrite()"))
+                                .requestMatchers(
+                                        requestMatchersOf("/usr/article/*/modify/*")
+                                ).access(accessOf("@articleController.assertActorCanModify()"))
+                                .requestMatchers(
+                                        requestMatchersOf("/usr/article/*/remove/*")
+                                ).access(accessOf("@articleController.assertActorCanRemove()"))
+                                .requestMatchers(
                                         requestMatchersOf("/usr/member/beProducer", "/usr/member/modify")
                                 ).access(accessOf("@memberController.assertCheckPasswordAuthCodeVerified()"))
                                 .requestMatchers(

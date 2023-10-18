@@ -6,6 +6,7 @@ import com.sbs.demo5.base.rsData.RsData;
 import com.sbs.demo5.domain.article.entity.Article;
 import com.sbs.demo5.domain.article.repository.ArticleRepository;
 import com.sbs.demo5.domain.board.entity.Board;
+import com.sbs.demo5.domain.board.service.BoardService;
 import com.sbs.demo5.domain.document.service.DocumentService;
 import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.genFile.service.GenFileService;
@@ -29,6 +30,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final GenFileService genFileService;
     private final DocumentService documentService;
+    private final BoardService boardService;
 
     @Transactional
     public RsData<Article> write(Board board, Member author, String subject, String tagsStr, String body) {
@@ -62,6 +64,18 @@ public class ArticleService {
         return articleRepository.findById(id);
     }
 
+    public RsData<?> checkActorCanWrite(Member actor, Board board) {
+        if (actor == null) {
+            return new RsData<>("F-1", "로그인 후 이용해주세요.", null);
+        }
+
+        if (board.isAdminOnlyWritable() && !actor.isAdmin()) {
+            return new RsData<>("F-2", "관리자만 작성이 가능합니다.", null);
+        }
+
+        return new RsData<>("S-1", "가능합니다.", null);
+    }
+
     public RsData<?> checkActorCanModify(Member actor, Article article) {
         if (actor == null || !actor.equals(article.getAuthor())) {
             return new RsData<>("F-1", "권한이 없습니다.", null);
@@ -70,7 +84,7 @@ public class ArticleService {
         return new RsData<>("S-1", "가능합니다.", null);
     }
 
-    public RsData<?> checkActorCanDelete(Member actor, Article article) {
+    public RsData<?> checkActorCanRemove(Member actor, Article article) {
         return checkActorCanModify(actor, article);
     }
 

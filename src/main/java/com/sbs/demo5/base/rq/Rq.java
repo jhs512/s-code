@@ -247,4 +247,12 @@ public class Rq {
 
         return value;
     }
+
+    public String getPathVariable(int index) {
+        return getCurrentUrlPath().split("/")[index + 1];
+    }
+
+    public long getPathVariableAsLong(int index) {
+        return Long.parseLong(getPathVariable(index));
+    }
 }

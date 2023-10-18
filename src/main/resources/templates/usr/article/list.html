@@ -35,7 +35,8 @@
                         검색조건 지우기
                     </a>
 
-                    <a th:if="${@rq.login}" class="btn btn-sm btn-outline" th:href="|/usr/article/${board.code}/write|">
+                    <a th:if="${@articleService.checkActorCanWrite(@rq.member, board).success}"
+                       class="btn btn-sm btn-outline" th:href="|/usr/article/${board.code}/write|">
                         <i class="fa-solid fa-pen"></i>
                         글쓰기
                     </a>
