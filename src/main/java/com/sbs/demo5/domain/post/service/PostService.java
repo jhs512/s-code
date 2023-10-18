@@ -58,6 +58,10 @@ public class PostService {
         return new RsData<Post>("S-1", post.getId() + "번 글이 생성되었습니다.", post);
     }
 
+    public Page<Post> findByKw(String kwType, String kw, boolean isPublic, Pageable pageable) {
+        return postRepository.findByKw(kwType, kw, isPublic, pageable);
+    }
+
     public Page<Post> findByKw(Member author, String kwType, String kw, Pageable pageable) {
         return postRepository.findByKw(author, kwType, kw, pageable);
     }
@@ -74,7 +78,7 @@ public class PostService {
         return new RsData<>("S-1", "가능합니다.", null);
     }
 
-    public RsData<?> checkActorCanDelete(Member actor, Post post) {
+    public RsData<?> checkActorCanRemove(Member actor, Post post) {
         return checkActorCanModify(actor, post);
     }
 
@@ -144,8 +148,8 @@ public class PostService {
         genFileService.remove(post.getModelName(), post.getId(), "common", "attachment", fileNo);
     }
 
-    public Page<Post> findByTag(String tagContent, Pageable pageable) {
-        return postRepository.findByPostTags_content(tagContent, pageable);
+    public Page<Post> findByTag(String tagContent, boolean isPublic, Pageable pageable) {
+        return postRepository.findByPostTags_contentAndIsPublic(tagContent, isPublic, pageable);
     }
 
     public Page<Post> findByTag(Member author, String tagContent, Pageable pageable) {

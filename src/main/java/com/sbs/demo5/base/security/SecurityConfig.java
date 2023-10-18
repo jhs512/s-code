@@ -30,8 +30,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers(requestMatchersOf("/usr/member/notVerified")
-                                )
-                                .permitAll()
+                                ).permitAll()
+                                .requestMatchers(
+                                        requestMatchersOf("/usr/post/modify/*")
+                                ).access(accessOf("@postController.assertActorCanModify()"))
+                                .requestMatchers(
+                                        requestMatchersOf("/usr/post/remove/*")
+                                ).access(accessOf("@postController.assertActorCanRemove()"))
                                 .requestMatchers(
                                         requestMatchersOf("/usr/article/*/write")
                                 ).access(accessOf("@articleController.assertActorCanWrite()"))

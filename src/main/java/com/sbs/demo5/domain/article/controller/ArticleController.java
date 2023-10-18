@@ -229,9 +229,6 @@ public class ArticleController {
     }
 
     public boolean assertActorCanModify() {
-        String boardCode = rq.getPathVariable(2);
-        Board board = boardService.findByCode(boardCode).get();
-
         long articleId = rq.getPathVariableAsLong(4);
         Article article = articleService.findById(articleId).get();
 
@@ -246,9 +243,6 @@ public class ArticleController {
     }
 
     public boolean assertActorCanRemove() {
-        String boardCode = rq.getPathVariable(2);
-        Board board = boardService.findByCode(boardCode).get();
-
         long articleId = rq.getPathVariableAsLong(4);
         Article article = articleService.findById(articleId).get();
 

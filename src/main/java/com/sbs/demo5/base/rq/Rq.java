@@ -231,10 +231,12 @@ public class Rq {
     }
 
     private String getCurrentUrl() {
-        return req.getRequestURI() + "?" + req.getQueryString();
+        String queryString = req.getQueryString();
+        return req.getRequestURI() + (Ut.str.hasLength(queryString) ? "?" + queryString : "");
     }
 
     public String getEncodedCurrentUrl() {
+
         return Ut.url.encode(getCurrentUrl());
     }
 
@@ -254,5 +256,21 @@ public class Rq {
 
     public long getPathVariableAsLong(int index) {
         return Long.parseLong(getPathVariable(index));
+    }
+
+    public String suitableListByTagPageBaseUrlByCurrentUrl() {
+        String currentUrl = getCurrentUrlPath();
+
+        String listByTagPageBaseUrl = "/usr/post/listByTag";
+
+        if (currentUrl.startsWith("/usr/post/list")) return listByTagPageBaseUrl;
+        if (currentUrl.startsWith("/usr/post/listByTag")) return listByTagPageBaseUrl;
+
+        String listUrl = getParam("listUrl", "");
+
+        if (listUrl.startsWith("/usr/post/list")) return listByTagPageBaseUrl;
+        if (listUrl.startsWith("/usr/post/listByTag")) return listByTagPageBaseUrl;
+
+        return "/usr/post/myListByTag";
     }
 }
