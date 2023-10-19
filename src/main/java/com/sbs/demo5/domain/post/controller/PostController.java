@@ -8,7 +8,6 @@ import com.sbs.demo5.domain.post.service.PostService;
 import com.sbs.demo5.standard.util.Ut;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -125,7 +124,7 @@ public class PostController {
     public String write(
             @Valid PostController.PostWriteForm writeForm
     ) {
-        RsData<Post> rsData = postService.write(rq.getMember(), writeForm.getSubject(), writeForm.getTagsStr(), writeForm.getBody(), writeForm.getBodyHtml());
+        RsData<Post> rsData = postService.write(rq.getMember(), writeForm.getSubject(), writeForm.getTagsStr(), writeForm.getBody(), writeForm.getBodyHtml(), writeForm.isPublic());
 
         if (Ut.file.exists(writeForm.getAttachment__1()))
             postService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__1(), 1);
@@ -135,9 +134,10 @@ public class PostController {
         return rq.redirectOrBack("/usr/post/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
-    @AllArgsConstructor
     @Getter
+    @Setter
     public static class PostWriteForm {
+        private boolean isPublic;
         @NotBlank
         @Length(min = 2)
         private String subject;
@@ -174,7 +174,7 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        RsData<Post> rsData = postService.modify(post, modifyForm.getSubject(), modifyForm.getTagsStr(), modifyForm.getBody(), modifyForm.getBodyHtml());
+        RsData<Post> rsData = postService.modify(post, modifyForm.getSubject(), modifyForm.getTagsStr(), modifyForm.getBody(), modifyForm.getBodyHtml(), modifyForm.isPublic());
 
         if (modifyForm.attachmentRemove__1)
             postService.removeAttachmentFile(rsData.getData(), 1);
@@ -201,6 +201,7 @@ public class PostController {
         private String body;
         @NotBlank
         private String bodyHtml;
+        private boolean isPublic;
         private MultipartFile attachment__1;
         private MultipartFile attachment__2;
         private boolean attachmentRemove__1;
