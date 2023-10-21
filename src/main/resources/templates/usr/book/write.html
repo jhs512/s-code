@@ -28,7 +28,8 @@
 
                 <select name="postKeywordId" class="select select-bordered">
                     <option selected disabled>-- 책 본문 --</option>
-                    <option th:each="postKeyword : ${postKeywords}" th:value="${postKeyword.id}" th:text="|${postKeyword.content}(${postKeyword.total})|"></option>
+                    <option th:each="postKeyword : ${postKeywords}" th:value="${postKeyword.id}"
+                            th:text="|${postKeyword.content}(${postKeyword.total})|"></option>
                 </select>
             </div>
 

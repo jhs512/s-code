@@ -11,4 +11,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
     Page<Post> findByAuthorAndPostTags_content(Member author, String tagContent, Pageable pageable);
 
     Page<Post> findByPostTags_contentAndIsPublic(String tagContent, Boolean isPublic, Pageable pageable);
+
+    Page<Post> findByAuthorAndPostTags_contentAndIsPublic(Member author, String tagContent, boolean isPublic, Pageable pageable);
 }

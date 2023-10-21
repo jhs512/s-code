@@ -57,7 +57,7 @@
                         <label class="label">
                             <span class="label-text">태그</span>
                         </label>
-                        <div th:utext="${post.getTagLinks('<a class=`link` href=`%s`>#%s</a>', @rq.suitableListByTagPageBaseUrlByCurrentUrl + '/%s')}"></div>
+                        <div th:utext="${post.getTagLinks('<a class=`link` href=`%s`>#%s</a>', @rq.getSuitableListByTagPageBaseUrlByCurrentUrl('post') + '/%s')}"></div>
                     </div>
 
                     <div class="form-control col-span-full">

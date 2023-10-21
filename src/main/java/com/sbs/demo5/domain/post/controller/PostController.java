@@ -5,6 +5,7 @@ import com.sbs.demo5.base.rsData.RsData;
 import com.sbs.demo5.domain.genFile.entity.GenFile;
 import com.sbs.demo5.domain.post.entity.Post;
 import com.sbs.demo5.domain.post.service.PostService;
+import com.sbs.demo5.domain.postKeyword.entity.PostKeyword;
 import com.sbs.demo5.standard.util.Ut;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -83,6 +84,25 @@ public class PostController {
         return "usr/post/detail";
     }
 
+    @GetMapping("/listByKeyword/{postKeywordId}")
+    public String showListByTag(
+            Model model,
+            @PathVariable long postKeywordId,
+            @RequestParam(defaultValue = "1") int page
+    ) {
+        PostKeyword postKeyword = postService.findPostKeywordById(postKeywordId).get();
+
+        model.addAttribute("author", postKeyword.getAuthor());
+        model.addAttribute("tagContent", postKeyword.getContent());
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("postTags.sortNo"));
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        Page<Post> postPage = postService.findByTag(postKeyword.getAuthor(), postKeyword.getContent(), true, pageable);
+        model.addAttribute("postPage", postPage);
+
+        return "usr/post/listByKeyword";
+    }
+
     @GetMapping("/listByTag/{tagContent}")
     public String showListByTag(
             Model model,
@@ -105,7 +125,7 @@ public class PostController {
             @RequestParam(defaultValue = "1") int page
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("id"));
+        sorts.add(Sort.Order.desc("postTags.sortNo"));
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
         Page<Post> postPage = postService.findByTag(rq.getMember(), tagContent, pageable);
         model.addAttribute("postPage", postPage);
