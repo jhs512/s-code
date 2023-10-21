@@ -5,10 +5,12 @@ import com.sbs.demo5.domain.article.entity.Article;
 import com.sbs.demo5.domain.article.service.ArticleService;
 import com.sbs.demo5.domain.board.entity.Board;
 import com.sbs.demo5.domain.board.service.BoardService;
+import com.sbs.demo5.domain.book.service.BookService;
 import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.service.MemberService;
 import com.sbs.demo5.domain.post.entity.Post;
 import com.sbs.demo5.domain.post.service.PostService;
+import com.sbs.demo5.domain.postKeyword.entity.PostKeyword;
 import com.sbs.demo5.standard.util.Ut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +39,8 @@ public class NotProd {
     private ArticleService articleService;
     @Autowired
     private PostService postService;
+    @Autowired
+    private BookService bookService;
 
     @Bean
     public ApplicationRunner initNotProd() {
@@ -60,6 +64,9 @@ public class NotProd {
         memberService.setEmailVerified(member2);
         memberService.setEmailVerified(member3);
 
+        memberService.beProducer(member1.getId(), "장필우");
+        memberService.beProducer(member2.getId(), "고니");
+
         Member memberByKakao = memberService.whenSocialLogin("KAKAO", "KAKAO__%s".formatted(kakaoDevUserOAuthId), "홍길동", "");
 
         Article article1 = articleService.write(board1, member1, "제목 1", "#자바 #HTML", "내용 1").getData();
@@ -74,6 +81,13 @@ public class NotProd {
 
         Post post1 = postService.write(member1, "제목 1", "#자바 #HTML", "내용 1", true).getData();
 
+        PostKeyword postKeywordHtml = post1.getPostTags()
+                .stream()
+                .filter(postTag -> postTag.getContent().equals("HTML"))
+                .map(postTag -> postTag.getPostKeyword())
+                .findFirst()
+                .get();
+
         String file3Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.css");
         String file4Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.js");
         postService.saveAttachmentFile(post1, file3Path, 1L);
@@ -84,6 +98,8 @@ public class NotProd {
         Post post4 = postService.write(member2, "제목 4", "#Python #Script", "내용 4", false).getData();
         Post post5 = postService.write(member2, "제목 5", "#Java #JSP", "내용 5", false).getData();
         Post post6 = postService.write(member2, "제목 6", "#CSS #Hungry #Python", "내용 6", true).getData();
+
+        bookService.write(member1, postKeywordHtml, "HTML 기초", "#HTML #프론트 엔드", "내용 1", Ut.markdown.toHtml("내용 1"), true);
     }
 
     @Transactional
