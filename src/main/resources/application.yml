@@ -6,6 +6,7 @@ spring:
       max-file-size: 100MB
       max-request-size: ${spring.servlet.multipart.max-file-size}
   profiles:
+    active: dev
     include: secret
   mail:
     host: smtp.gmail.com
@@ -21,32 +22,20 @@ spring:
   thymeleaf:
     cache: false
     prefix: file:src/main/resources/templates/
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
   output:
     ansi:
       enabled: always
   datasource:
-    url: jdbc:mariadb://localhost:3306/demo5
+    url: jdbc:mariadb://localhost:3306/s_code_dev
     username: root
     password:
     driver-class-name: org.mariadb.jdbc.Driver
-  #    url: jdbc:mysql://localhost:3306/demo5
-  #    username: root
-  #    password:
-  #    driver-class-name: com.mysql.cj.jdbc.Driver
-  #    url: jdbc:h2:mem:testdb
-  #    username: sa
-  #    password:
-  #    driver-class-name: org.h2.Driver
   security:
     oauth2:
       client:
         registration:
           kakao:
-            clientId: 885746661f07f72c78c8731b5313eb97
+            clientId: NEED_TO_INPUT_ON_SECRET
             scope: profile_nickname, profile_image
             client-name: Kakao
             authorization-grant-type: authorization_code
@@ -73,12 +62,12 @@ logging:
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
 custom:
-  tempDirPath: c:/temp/demo5/temp
+  tempDirPath: c:/temp/s_code/temp
   site:
     name: 바로잡다
     baseUrl: "http://localhost:8090"
   genFile:
-    dirPath: c:/temp/demo5
+    dirPath: c:/temp/s_code
   security:
     oauth2:
       client:

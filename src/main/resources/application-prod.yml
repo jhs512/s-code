@@ -1,0 +1,30 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: ${spring.servlet.multipart.max-file-size}
+  thymeleaf:
+    cache: true
+  output:
+    ansi:
+      enabled: always
+  datasource:
+    url: jdbc:mariadb://172.17.0.1:3306/s_code_prod
+    username: root
+    password:
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+logging:
+  level:
+    org.hibernate.SQL: INFO
+    org.hibernate.orm.jdbc.bind: INFO
+    org.hibernate.orm.jdbc.extract: INFO
+    org.springframework.transaction.interceptor: INFO
+custom:
+  tempDirPath: /gen/temp
+  site:
+    baseUrl: "https://s-code.io"
+  genFile:
+    dirPath: /gen

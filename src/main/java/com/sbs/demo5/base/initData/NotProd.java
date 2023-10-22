@@ -55,31 +55,31 @@ public class NotProd {
         Board board1 = boardService.make("notice1", "공지사항", "<i class=\"fa-regular fa-flag\"></i>").getData();
         Board board2 = boardService.make("free1", "자유", "<i class=\"fa-solid fa-face-grin-tears\"></i>").getData();
 
-        Member member1 = memberService.join("admin", "1234", "admin", "admin@test.com", "").getData();
-        Member member2 = memberService.join("user1", "1234", "nickname1", "user1@test.com", "").getData();
-        Member member3 = memberService.join("user2", "1234", "nickname2", "user2@test.com", "").getData();
-        Member member4 = memberService.join("user3", "1234", "nickname3", "user3@test.com", "").getData();
+        Member member2 = memberService.join("admin", "1234", "admin", "admin@test.com", "").getData();
+        Member member3 = memberService.join("user1", "1234", "nickname1", "user1@test.com", "").getData();
+        Member member4 = memberService.join("user2", "1234", "nickname2", "user2@test.com", "").getData();
+        Member member5 = memberService.join("user3", "1234", "nickname3", "user3@test.com", "").getData();
 
-        memberService.setEmailVerified(member1);
         memberService.setEmailVerified(member2);
         memberService.setEmailVerified(member3);
+        memberService.setEmailVerified(member4);
 
-        memberService.beProducer(member1.getId(), "장필우");
-        memberService.beProducer(member2.getId(), "고니");
+        memberService.beProducer(member2.getId(), "장필우");
+        memberService.beProducer(member3.getId(), "고니");
 
         Member memberByKakao = memberService.whenSocialLogin("KAKAO", "KAKAO__%s".formatted(kakaoDevUserOAuthId), "홍길동", "");
 
-        Article article1 = articleService.write(board1, member1, "제목 1", "#자바 #HTML", "내용 1").getData();
-        Article article2 = articleService.write(board1, member2, "제목 2", "#CSS #HTML #홍길동", "내용 2").getData();
-        Article article3 = articleService.write(board2, member1, "제목 3", "#자바의 정석", "내용 3").getData();
-        Article article4 = articleService.write(board2, member2, "제목 4", "#홍길동", "내용 4").getData();
+        Article article1 = articleService.write(board1, member2, "제목 1", "#자바 #HTML", "내용 1").getData();
+        Article article2 = articleService.write(board1, member3, "제목 2", "#CSS #HTML #홍길동", "내용 2").getData();
+        Article article3 = articleService.write(board2, member2, "제목 3", "#자바의 정석", "내용 3").getData();
+        Article article4 = articleService.write(board2, member3, "제목 4", "#홍길동", "내용 4").getData();
 
         String file1Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.css");
         String file2Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.js");
         articleService.saveAttachmentFile(article1, file1Path, 1L);
         articleService.saveAttachmentFile(article1, file2Path, 2L);
 
-        Post post1 = postService.write(member1, "제목 1", "#자바 #HTML", "내용 1", true).getData();
+        Post post1 = postService.write(member2, "제목 1", "#자바 #HTML", "내용 1", true).getData();
 
         PostKeyword postKeywordHtml = post1.getPostTags()
                 .stream()
@@ -93,13 +93,13 @@ public class NotProd {
         postService.saveAttachmentFile(post1, file3Path, 1L);
         postService.saveAttachmentFile(post1, file4Path, 2L);
 
-        Post post2 = postService.write(member1, "제목 2", "#CSS #HTML #Python", "내용 2", true).getData();
-        Post post3 = postService.write(member1, "제목 3", "#Java #HTML", "내용 3", true).getData();
-        Post post4 = postService.write(member2, "제목 4", "#Python #Script", "내용 4", false).getData();
-        Post post5 = postService.write(member2, "제목 5", "#Java #JSP", "내용 5", false).getData();
-        Post post6 = postService.write(member2, "제목 6", "#CSS #Hungry #Python", "내용 6", true).getData();
+        Post post2 = postService.write(member2, "제목 2", "#CSS #HTML #Python", "내용 2", true).getData();
+        Post post3 = postService.write(member2, "제목 3", "#Java #HTML", "내용 3", true).getData();
+        Post post4 = postService.write(member3, "제목 4", "#Python #Script", "내용 4", false).getData();
+        Post post5 = postService.write(member3, "제목 5", "#Java #JSP", "내용 5", false).getData();
+        Post post6 = postService.write(member3, "제목 6", "#CSS #Hungry #Python", "내용 6", true).getData();
 
-        bookService.write(member1, postKeywordHtml, "HTML 기초", "#HTML #프론트 엔드", "내용 1", Ut.markdown.toHtml("내용 1"), true);
+        bookService.write(member2, postKeywordHtml, "HTML 기초", "#HTML #프론트 엔드", "내용 1", Ut.markdown.toHtml("내용 1"), true);
     }
 
     @Transactional
