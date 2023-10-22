@@ -103,7 +103,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        instance-ids: "i-0b8e42da5df454090"
-        working-directory: /
-        command: docker rm -f s_code_1 && docker run --name=s_code_1 -p 8081:8080 -v /docker_projects/s_code_1/volumes/gen:/gen --restart unless-stopped -e TZ=Asia/Seoul --pull always -d ghcr.io/jhs512/s-code-1
-        comment: reboot s_code_1
+          instance-ids: "i-0b8e42da5df454090"
+          working-directory: /
+          command: docker rm -f s_code_1 && docker run --name=s_code_1 -p 8081:8080 -v /docker_projects/s_code_1/volumes/gen:/gen --restart unless-stopped -e TZ=Asia/Seoul --pull always -d ghcr.io/jhs512/s-code-1
+          comment: reboot s_code_1
