@@ -52,8 +52,8 @@ public class NotProd {
 
     @Transactional
     public void work1() {
-        Board board1 = boardService.make("notice1", "공지사항", "<i class=\"fa-regular fa-flag\"></i>").getData();
-        Board board2 = boardService.make("free1", "자유", "<i class=\"fa-solid fa-face-grin-tears\"></i>").getData();
+        Board board1 = boardService.findByCode("notice1").get();
+        Board board2 = boardService.findByCode("free1").get();
 
         Member member2 = memberService.join("admin", "1234", "admin", "admin@test.com", "").getData();
         Member member3 = memberService.join("user1", "1234", "nickname1", "user1@test.com", "").getData();
