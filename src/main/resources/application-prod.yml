@@ -10,8 +10,8 @@ spring:
       enabled: always
   datasource:
     url: jdbc:mariadb://172.17.0.1:3306/s_code_prod
-    username: root
-    password:
+    username: lldjlocal
+    password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
