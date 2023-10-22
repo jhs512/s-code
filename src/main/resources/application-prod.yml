@@ -20,6 +20,6 @@ logging:
 custom:
   tempDirPath: /gen/temp
   site:
-    baseUrl: "https://s-code.io"
+    baseUrl: "https://www.s-code.io"
   genFile:
     dirPath: /gen

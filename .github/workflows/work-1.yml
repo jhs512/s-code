@@ -92,18 +92,18 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
   deploy:
-    name: 쿠버네티스 배포
-    needs: [ tag, docker ]
     runs-on: ubuntu-latest
     steps:
-      - uses: azure/k8s-set-context@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
-      - name: set lower case owner name
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Connect to EC2 instance using SSM
         run: |
-          echo "OWNER_LC=${OWNER,,}" >> ${GITHUB_ENV}
-        env:
-          OWNER: '${{ github.repository_owner }}'
-      - run: |
-          kubectl set image deployment.apps/s-code-1 s-code-1=ghcr.io/${{ env.OWNER_LC }}/s-code-1:${{ needs.tag.outputs.tag_name }}
+          instance_id="i-0b8e42da5df454090"
+          command="docker run --name=s_code_1 -p 8081:8080 -v /docker_projects/s_code_1/volumes/gen:/gen --restart unless-stopped -e TZ=Asia/Seoul --pull always -d ghcr.io/jhs512/s-code-1"
+          aws ssm start-session --target $instance_id --document-name AWS-RunShellScript --parameters commands="$command"
