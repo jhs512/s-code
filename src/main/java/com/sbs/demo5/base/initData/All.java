@@ -34,9 +34,12 @@ public class All {
     @Transactional
     public void work1() {
         new File(AppConfig.getTempDirPath()).mkdirs();
-        Member member1 = memberService.join("system", "1234", "Tltmxpa2313", "system@system.com", "").getData();
+        Member member1 = memberService.findByUsername("system")
+                .orElseGet(() -> memberService.join("system", "1234", "Tltmxpa2313", "system@system.com", "").getData());
 
-        Board board1 = boardService.make("notice1", "공지사항", "<i class=\"fa-regular fa-flag\"></i>").getData();
-        Board board2 = boardService.make("free1", "자유", "<i class=\"fa-solid fa-face-grin-tears\"></i>").getData();
+        Board board1 = boardService.findByCode("notice1")
+                .orElseGet(() -> boardService.make("notice1", "공지사항", "<i class=\"fa-regular fa-flag\"></i>").getData());
+        Board board2 = boardService.findByCode("free1")
+                .orElseGet(() -> boardService.make("free1", "자유", "<i class=\"fa-solid fa-face-grin-tears\"></i>").getData());
     }
 }
