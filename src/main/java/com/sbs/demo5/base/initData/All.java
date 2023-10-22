@@ -22,6 +22,7 @@ public class All {
 
     @Autowired
     private MemberService memberService;
+    @Autowired
     private BoardService boardService;
 
     @Bean
