@@ -17,12 +17,6 @@ spring:
           auth: true
           starttls:
             enable: true
-  thymeleaf:
-    cache: false
-    prefix: file:src/main/resources/templates/
-  output:
-    ansi:
-      enabled: always
   datasource:
     url: jdbc:mariadb://localhost:3306/s_code_dev
     username: root
