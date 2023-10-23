@@ -36,7 +36,7 @@ public class All {
     public void work1() {
         new File(AppConfig.getTempDirPath()).mkdirs();
         Member member1 = memberService.findByUsername("system")
-                .orElseGet(() -> memberService.join("system", "1234", "Tltmxpa2313", "system@system.com", "").getData());
+                .orElseGet(() -> memberService.join("system", "1234", "시스템", "system@system.com", "").getData());
 
         Board board1 = boardService.findByCode("notice1")
                 .orElseGet(() -> boardService.make("notice1", "공지사항", "<i class=\"fa-regular fa-flag\"></i>").getData());

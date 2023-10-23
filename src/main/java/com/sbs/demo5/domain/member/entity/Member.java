@@ -28,6 +28,7 @@ public class Member extends BaseEntity {
     private String nickname;
     @Column(unique = true)
     private String producerName;
+    @Column(unique = true)
     private String email;
 
     public boolean isAdmin() {

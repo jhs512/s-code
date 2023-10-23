@@ -53,7 +53,6 @@ public class MemberService {
 
     private Optional<Member> findByProducerName(String producerName) {
         return memberRepository.findByProducerName(producerName);
-
     }
 
     public Optional<String> findProfileImgUrl(Member member) {
@@ -91,7 +90,7 @@ public class MemberService {
         if (findByUsername(username).isPresent())
             return RsData.of("F-1", "%s(은)는 사용중인 아이디 입니다.".formatted(username));
 
-        if (findByEmail(email).isPresent())
+        if (email != null && findByEmail(email).isPresent())
             return RsData.of("F-2", "%s(은)는 사용중인 이메일 입니다.".formatted(username));
 
         nickname = genUniqueNicknameIfNeed(nickname);
@@ -282,7 +281,7 @@ public class MemberService {
 
         String filePath = Ut.str.hasLength(profileImgUrl) ? Ut.file.downloadFileByHttp(profileImgUrl, AppConfig.getTempDirPath()) : "";
 
-        return join(username, "", nickname, "", filePath).getData();
+        return join(username, "", nickname, null, filePath).getData();
     }
 
     @Transactional
