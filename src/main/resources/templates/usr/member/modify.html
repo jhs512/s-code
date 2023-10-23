@@ -44,20 +44,23 @@
                 <div class="badge badge-lg badge-ghost" th:text="${@rq.member.username}"></div>
             </div>
 
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text">새 비밀번호</span>
-                </label>
-                <input class="input input-bordered" maxlength="30" name="password" placeholder="새 비밀번호" type="password">
-            </div>
+            <th:block th:if="${@rq.member.modifyPasswordAvailable}">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">새 비밀번호</span>
+                    </label>
+                    <input class="input input-bordered" maxlength="30" name="password" placeholder="새 비밀번호"
+                           type="password">
+                </div>
 
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text">새 비밀번호 확인</span>
-                </label>
-                <input class="input input-bordered" maxlength="30" name="passwordConfirm" placeholder="새 비밀번호 확인"
-                       type="password">
-            </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">새 비밀번호 확인</span>
+                    </label>
+                    <input class="input input-bordered" maxlength="30" name="passwordConfirm" placeholder="새 비밀번호 확인"
+                           type="password">
+                </div>
+            </th:block>
 
             <div class="form-control">
                 <label class="label">
@@ -71,7 +74,7 @@
                 <label class="label">
                     <span class="label-text">이메일</span>
                 </label>
-                <div class="badge badge-lg badge-ghost" th:text="${@rq.member.email}"></div>
+                <div class="badge badge-lg badge-ghost" th:text="${@rq.member.emailForPrint}"></div>
             </div>
 
             <div>

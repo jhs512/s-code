@@ -57,6 +57,10 @@ public class Member extends BaseEntity {
     }
 
     public boolean isModifyAvailable() {
+        return true;
+    }
+
+    public boolean isModifyPasswordAvailable() {
         return !isSocialMember();
     }
 

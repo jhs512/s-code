@@ -176,7 +176,15 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/checkPassword")
-    public String showCheckPassword() {
+    public String showCheckPassword(@NotBlank String redirectUrl) {
+        if ( rq.getMember().isSocialMember() ) {
+            String code = memberService.genCheckPasswordAuthCode(rq.getMember());
+
+            redirectUrl = Ut.url.modifyQueryParam(redirectUrl, "checkPasswordAuthCode", code);
+
+            return rq.redirect(redirectUrl);
+        }
+
         return "usr/member/checkPassword";
     }
 
