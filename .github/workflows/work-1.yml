@@ -7,6 +7,7 @@ on:
       - 'build.gradle'
       - 'Dockerfile'
       - 'readme.md'
+      - 'zero_downtime_deploy.sh'
     branches:
       - 'main'
 jobs:
@@ -106,7 +107,7 @@ jobs:
           instance-ids: "i-0b8e42da5df454090"
           working-directory: /
           comment: Deploy s_code_1
-          commands: |
+          command: |
             curl -o /docker_projects/s_code_1/zero_downtime_deploy.sh https://raw.githubusercontent.com/jhs512/s-code/main/zero_downtime_deploy.sh
             chmod +x /docker_projects/s_code_1/zero_downtime_deploy.sh
             /docker_projects/s_code_1/zero_downtime_deploy.sh
