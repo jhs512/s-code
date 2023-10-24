@@ -7,7 +7,7 @@ services=(
 )
 
 SOCAT_PORT=8081
-SLEEP_DURATION=120
+SLEEP_DURATION=10
 
 current_service=$(ps aux | grep "socat TCP-LISTEN:$SOCAT_PORT" | grep -v grep | awk '{print $NF}')
 
