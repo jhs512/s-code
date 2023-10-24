@@ -7,7 +7,7 @@ services=(
 )
 
 SOCAT_PORT=8081
-SLEEP_DURATION=10
+SLEEP_DURATION=60
 
 current_service=$(ps aux | grep "socat TCP-LISTEN:$SOCAT_PORT" | grep -v grep | awk '{print $NF}')
 
@@ -43,8 +43,8 @@ done
 next_port="${services[$next_name]}"
 
 # 다음 서비스 업데이트 및 재시작
-docker stop "$next_name"
-docker rm -f "$next_name"
+docker stop "$next_name" # 필요 : 이건 실패해도 오류 안나게
+docker rm -f "$next_name" # 필요 : 이건 실패해도 오류 안나게
 docker run --name="$next_name" -p "$next_port":8080 -v /docker_projects/s_code_1/volumes/gen:/gen --restart unless-stopped -e TZ=Asia/Seoul --pull always -d ghcr.io/jhs512/s-code-1
 
 # 다음 서비스가 완전히 실행될 때까지 기다림
