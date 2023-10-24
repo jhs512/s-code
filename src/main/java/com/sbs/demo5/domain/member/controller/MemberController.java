@@ -212,7 +212,7 @@ public class MemberController {
         @Length(min = 4)
         private String username;
         @NotBlank
-        @Length(min = 4)
+        @Length(min = 2)
         private String nickname;
         @NotBlank
         @Length(min = 4)
@@ -228,7 +228,7 @@ public class MemberController {
     @ToString
     public static class ModifyForm {
         @NotBlank
-        @Length(min = 4)
+        @Length(min = 2)
         private String nickname;
         @Length(min = 4)
         private String password;
