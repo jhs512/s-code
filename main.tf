@@ -177,6 +177,7 @@ resource "aws_iam_instance_profile" "instance_profile_1" {
 locals {
   ec2_user_data_base = <<-END_OF_FILE
 #!/bin/bash
+yum install socat -y
 yum install mlocate docker -y
 systemctl enable docker
 systemctl start docker
