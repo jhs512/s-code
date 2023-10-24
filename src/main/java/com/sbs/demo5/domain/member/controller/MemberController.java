@@ -69,6 +69,8 @@ public class MemberController {
     public RsData<String> checkEmailDup(
             @NotBlank @Length(min = 4) String email
     ) {
+        email = email.replace(" ", "+");
+
         return memberService.checkEmailDup(email);
     }
 
@@ -177,7 +179,7 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/checkPassword")
     public String showCheckPassword(@NotBlank String redirectUrl) {
-        if ( rq.getMember().isSocialMember() ) {
+        if (rq.getMember().isSocialMember()) {
             String code = memberService.genCheckPasswordAuthCode(rq.getMember());
 
             redirectUrl = Ut.url.modifyQueryParam(redirectUrl, "checkPasswordAuthCode", code);
