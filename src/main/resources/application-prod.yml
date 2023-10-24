@@ -1,4 +1,11 @@
+server:
+  shutdown: graceful
 spring:
+  data:
+    redis:
+      host: 172.17.0.1
+  autoconfigure:
+    exclude:
   servlet:
     multipart:
       max-file-size: 100MB
