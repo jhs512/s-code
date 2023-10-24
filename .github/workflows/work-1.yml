@@ -105,5 +105,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           instance-ids: "i-0b8e42da5df454090"
           working-directory: /
-          command: docker rm -f s_code_1 && docker run --name=s_code_1 -p 8081:8080 -v /docker_projects/s_code_1/volumes/gen:/gen --restart unless-stopped -e TZ=Asia/Seoul --pull always -d ghcr.io/jhs512/s-code-1
-          comment: reboot s_code_1
+          comment: Deploy s_code_1
+          commands: |
+            curl -o /docker_projects/s_code_1/zero_downtime_deploy.sh https://raw.githubusercontent.com/jhs512/s-code/main/zero_downtime_deploy.sh
+            chmod +x /docker_projects/s_code_1/zero_downtime_deploy.sh
+            /docker_projects/s_code_1/zero_downtime_deploy.sh
