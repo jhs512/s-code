@@ -51,6 +51,8 @@ public class DocumentService {
             return "=\"" + newUrl + "\"";
         });
 
+        newBodyHtml = newBodyHtml.replace("<li><p><br></p><ul><li", "<li><ul><li");
+
         doc.setBodyHtml(newBodyHtml);
     }
 }

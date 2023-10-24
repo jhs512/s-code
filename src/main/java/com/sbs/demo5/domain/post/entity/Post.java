@@ -29,11 +29,14 @@ public class Post extends BaseEntity implements DocumentHavingSortableTags {
 
     private String subject;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String body;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String bodyHtml;
+
+    private String addi1;
+    private String addi2;
 
     private boolean isPublic;
 

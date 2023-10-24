@@ -1,0 +1,28 @@
+<html layout:decorate="~{common/layout}">
+
+<head>
+    <title th:text="|글 ${post.id}|"></title>
+</head>
+
+<body>
+
+<div class="flex-1 mx-4" layout:fragment="content">
+    <th:block th:replace="common/fragments :: toastuiEidtorLib"></th:block>
+
+    <h1 class="font-bold" th:text="${post.subject}"></h1>
+
+    <div class="mt-2" th:utext="${post.getTagLinks('<a class=`link` href=`%s`>#%s</a>', @rq.getSuitableListByTagPageBaseUrlByCurrentUrl('post') + '/%s')}"></div>
+
+    <div th:if="${post.bodyHtmlForPrint.equals('')}" class="toast-ui-viewer">
+        <script type="text/x-template" th:utext="${post.bodyForEditor.replace('$$ppt', '$$config')}"></script>
+    </div>
+
+    <div th:unless="${post.bodyHtmlForPrint.equals('')}" class="toastui-editor-contents"
+         style="overflow-wrap: break-word;"
+         th:utext="${post.bodyHtmlForPrint}">
+    </div>
+</div>
+
+</body>
+
+</html>

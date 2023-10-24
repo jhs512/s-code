@@ -19,6 +19,7 @@ html > body .ProseMirror,
 html > body .toastui-editor-contents,
 html > body .toastui-editor-defaultUI {
     font-family: var(--base-font-family);
+    font-size: 1rem;
 }
 
 /*
