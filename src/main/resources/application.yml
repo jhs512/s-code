@@ -60,7 +60,7 @@ logging:
 custom:
   tempDirPath: c:/temp/s_code/temp
   site:
-    name: 바로잡다
+    name: S-CODE
     baseUrl: "http://localhost:8090"
   genFile:
     dirPath: c:/temp/s_code
