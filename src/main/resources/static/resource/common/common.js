@@ -86,3 +86,25 @@ $(function () {
         $(el).attr('onclick-after', onclick);
     });
 });
+
+function getUrlParams() {
+    const search = window.location.search.substring(1);
+    const params = search.split('&');
+    const result = {};
+
+    params.forEach(param => {
+        const [key, value] = param.split('=');
+        result[decodeURIComponent(key)] = decodeURIComponent(value || '');
+    });
+
+    return result;
+}
+
+function getUrlVariables() {
+    const path = window.location.pathname;
+    const variables = path.split('/');
+
+    variables.shift();
+
+    return variables;
+}

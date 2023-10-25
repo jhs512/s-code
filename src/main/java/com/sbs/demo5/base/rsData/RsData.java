@@ -31,4 +31,8 @@ public class RsData<T> {
     public Optional<RsData<T>> optional() {
         return Optional.of(this);
     }
+
+    public <T> RsData<T> newDataOf(T data) {
+        return new RsData<T>(getResultCode(), getMsg(), data);
+    }
 }

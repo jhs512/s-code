@@ -1,0 +1,88 @@
+<html layout:decorate="~{common/layout}">
+
+<head>
+    <title th:text="|글수정|"></title>
+</head>
+
+<body>
+
+<div layout:fragment="content" class="-my-4">
+    <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+
+    <th:block th:replace="common/fragments :: toastuiEidtorLib"></th:block>
+
+    <script type="text/javascript">
+        let Post__editor = null;
+
+        let Post__lastBody = null;
+        let Post__lastBodyHtml = null;
+
+        $(function () {
+            Post__editor = $("#body-editor").data("data-toast-editor")
+            Post__lastBody = Post__editor.getMarkdown().trim();
+            Post__lastBodyHtml = Post__editor.getHTML().trim();
+        });
+
+        function Post__modifyBody() {
+            const body = Post__editor.getMarkdown().trim();
+            const bodyHtml = Post__editor.getHTML().trim();
+
+            if (Post__lastBody == body && Post__lastBodyHtml == bodyHtml) return;
+
+            const action = "/usr/post/modifyBody/" + urlPathVariables[3];
+            const csrfTokenHeaderName = $("meta[name='_csrf_header']").attr("content");
+            const csfTokenValue = $("meta[name='_csrf']").attr("content");
+
+            // POST 방식으로 /usr/post/doModifyBody fetch
+            fetch(action, {
+                method: 'POST',
+                body: JSON.stringify({
+                    body,
+                    bodyHtml
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfTokenHeaderName]: csfTokenValue
+                }
+            }).then(function (res) {
+                return res.json();
+            }).then(function (rs) {
+                Post__lastBody = rs.data.body;
+                Post__lastBodyHtml = rs.data.bodyHtml;
+
+                if (rs.msg) {
+                    toastMsg(rs.success, rs.msg);
+                }
+            });
+        }
+
+        const Post__modifyBodyDebounce = _.debounce(() => Post__modifyBody(), 500);
+
+        hotkeys('ctrl+alt+q,command+alt+q', function (event, handler) {
+            Post__switchTab();
+        });
+
+        hotkeys('ctrl+alt+s,command+alt+s', function (event, handler) {
+            Post__save();
+        });
+
+        function Post__switchTab() {
+            $('#body-editor .toastui-editor-tabs > .tab-item:not(.active)').click();
+        }
+
+        function Post__save() {
+            Post__modifyBodyDebounce();
+        }
+    </script>
+
+    <div id="body-editor" ctrl-alt-q-func-name="Post__switchTab" ctrl-alt-s-func-name="Post__save" preview-style="tab"
+         class="toast-ui-editor" height="calc(100vh)" placeholder="내용">
+        <script type="text/x-template" th:utext="${post.bodyForEditor}"></script>
+    </div>
+</div>
+</div>
+
+</body>
+
+</html>

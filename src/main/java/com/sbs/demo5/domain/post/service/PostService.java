@@ -90,11 +90,8 @@ public class PostService {
         post.modifyTags(tagsStr, postKeywordsMap);
 
         post.setSubject(subject);
-        post.setBody(body);
-        post.setBodyHtml(bodyHtml);
+        modifyBody(post, body, bodyHtml);
         post.setPublic(isPublic);
-
-        documentService.updateTempGenFilesToInBody(post);
 
         return new RsData<>("S-1", post.getId() + "번 글이 수정되었습니다.", post);
     }
@@ -172,5 +169,15 @@ public class PostService {
 
     public Optional<PostKeyword> findPostKeywordById(long postKeywordId) {
         return postKeywordRepository.findById(postKeywordId);
+    }
+
+    @Transactional
+    public RsData<Post> modifyBody(Post post, String body, String bodyHtml) {
+        post.setBody(body);
+        post.setBodyHtml(bodyHtml);
+
+        documentService.updateTempGenFilesToInBody(post);
+
+        return new RsData<>("S-1", post.getId() + "번 글의 내용이 수정되었습니다.", post);
     }
 }

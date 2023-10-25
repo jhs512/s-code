@@ -9,6 +9,7 @@ import com.sbs.demo5.domain.postKeyword.entity.PostKeyword;
 import com.sbs.demo5.standard.util.Ut;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -168,6 +169,59 @@ public class PostController {
         private String bodyHtml;
         private MultipartFile attachment__1;
         private MultipartFile attachment__2;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modifyMode2/{id}")
+    public String showModifyMode2(
+            Model model,
+            @PathVariable long id
+    ) {
+        Post post = postService.findById(id).get();
+
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
+
+        model.addAttribute("post", post);
+
+        return "usr/post/modifyMode2";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modifyBody/{id}")
+    @ResponseBody
+    public RsData<ModifyBodyResponseBody> modifyBody(
+            Model model,
+            @PathVariable long id,
+            @RequestBody @Valid ModifyBodyForm form
+    ) {
+        Post post = postService.findById(id).get();
+
+        RsData<Post> rsData = postService.modifyBody(post, form.getBody(), form.getBodyHtml());
+
+        return rsData.newDataOf(
+                new ModifyBodyResponseBody(
+                        rsData.getData().getBody(),
+                        rsData.getData().getBodyHtml()
+                )
+        );
+    }
+
+    @Getter
+    @Setter
+    public static class ModifyBodyForm {
+        @NotBlank
+        private String body;
+        @NotBlank
+        private String bodyHtml;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    class ModifyBodyResponseBody {
+        @NotBlank
+        private String body;
+        @NotBlank
+        private String bodyHtml;
     }
 
     @PreAuthorize("isAuthenticated()")
