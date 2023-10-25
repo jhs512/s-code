@@ -30,6 +30,8 @@
         </div>
 
         <script th:inline="javascript">
+            $('.toastui-editor-contents a').attr('target', '_blank');
+
             let Post__lastModified = /*[[${post.modifyDate}]]*/ null;
 
             function Post__loadLastestBody() {
@@ -48,6 +50,7 @@
 
                             Post__lastModified = rs.data.modifyDate;
                             $('.toastui-editor-contents').html(rs.data.bodyHtml);
+                            $('.toastui-editor-contents a').attr('target', '_blank');
                         }
 
                         setTimeout(Post__loadLastestBody, 7000);
