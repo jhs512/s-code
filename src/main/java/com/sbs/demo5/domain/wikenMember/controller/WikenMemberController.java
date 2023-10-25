@@ -13,10 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/usr/wikenMember")
@@ -65,6 +62,7 @@ public class WikenMemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/itsMine/{id}")
+    @ResponseBody
     @Transactional
     public RsData<?> itsMine(
             @PathVariable @NotNull Long id
