@@ -11,7 +11,7 @@ spring:
       max-file-size: 100MB
       max-request-size: ${spring.servlet.multipart.max-file-size}
   datasource:
-    url: jdbc:mariadb://172.17.0.1:3306/s_code_prod
+    url: jdbc:mariadb://172.17.0.1:3306/s_code_prod?useUnicode=true&characterEncoding=utf8mb4&collation=utf8mb4_unicode_ci
     username: lldjlocal
     password: 1234
     driver-class-name: org.mariadb.jdbc.Driver
