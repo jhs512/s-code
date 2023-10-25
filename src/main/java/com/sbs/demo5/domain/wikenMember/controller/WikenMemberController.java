@@ -67,6 +67,10 @@ public class WikenMemberController {
     public RsData<?> itsMine(
             @PathVariable @NotNull Long id
     ) {
+        if (rq.getMember().getId() != 4) {
+            return RsData.of("F-1", "권한이 없습니다.");
+        }
+
         postService.findById(id)
                 .ifPresent(post -> {
                     if (post.getAuthor().getUsername().equals("garage")) post.setAuthor(rq.getMember());
