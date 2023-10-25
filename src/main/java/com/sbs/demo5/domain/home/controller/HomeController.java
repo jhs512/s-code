@@ -9,4 +9,9 @@ public class HomeController {
     public String showMain() {
         return "usr/home/main";
     }
+
+    @GetMapping("/ken")
+    public String goToMain() {
+        return "redirect:/";
+    }
 }
