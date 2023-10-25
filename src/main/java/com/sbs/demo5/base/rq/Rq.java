@@ -274,4 +274,16 @@ public class Rq {
 
         return "/usr/post/myListByTag";
     }
+
+    public long getFirstNumberPathVariableAsLong(long defaultValue) {
+        String[] pathVariables = getCurrentUrlPath().split("/");
+
+        for (String pathVariable : pathVariables) {
+            if (Ut.str.isNumeric(pathVariable)) {
+                return Long.parseLong(pathVariable);
+            }
+        }
+
+        return defaultValue;
+    }
 }

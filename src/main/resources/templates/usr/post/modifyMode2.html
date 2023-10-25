@@ -73,6 +73,15 @@
         function Post__save() {
             Post__modifyBodyDebounce();
         }
+
+        $(window).bind('beforeunload', function() {
+            const body = Post__editor.getMarkdown().trim();
+            const bodyHtml = Post__editor.getHTML().trim();
+
+            if (Post__lastBody == body && Post__lastBodyHtml == bodyHtml) return;
+
+            return '변경된 사항이 있습니다. 페이지에서 나가시겠습니까?';
+        });
     </script>
 
     <div id="body-editor" ctrl-alt-shift-w-func-name="goToPostWritePageUrl"

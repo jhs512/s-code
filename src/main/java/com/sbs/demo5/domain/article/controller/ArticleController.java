@@ -229,7 +229,7 @@ public class ArticleController {
     }
 
     public boolean assertActorCanModify() {
-        long articleId = rq.getPathVariableAsLong(4);
+        long articleId = rq.getFirstNumberPathVariableAsLong(0);
         Article article = articleService.findById(articleId).get();
 
         articleService.checkActorCanModify(rq.getMember(), article)
@@ -243,7 +243,7 @@ public class ArticleController {
     }
 
     public boolean assertActorCanRemove() {
-        long articleId = rq.getPathVariableAsLong(4);
+        long articleId = rq.getFirstNumberPathVariableAsLong(0);
         Article article = articleService.findById(articleId).get();
 
         articleService.checkActorCanRemove(rq.getMember(), article)

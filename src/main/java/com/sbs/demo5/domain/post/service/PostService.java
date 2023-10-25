@@ -180,4 +180,8 @@ public class PostService {
 
         return new RsData<>("S-1", post.getId() + "번 글의 내용이 수정되었습니다.", post);
     }
+
+    public List<Post> findByAddi2(String username) {
+        return postRepository.findByAddi2(username);
+    }
 }

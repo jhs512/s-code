@@ -295,7 +295,7 @@ public class PostController {
     }
 
     public boolean assertActorCanModify() {
-        long postId = rq.getPathVariableAsLong(3);
+        long postId = rq.getFirstNumberPathVariableAsLong(0);
         Post post = postService.findById(postId).get();
 
         postService.checkActorCanModify(rq.getMember(), post)
@@ -309,7 +309,7 @@ public class PostController {
     }
 
     public boolean assertActorCanRemove() {
-        long postId = rq.getPathVariableAsLong(3);
+        long postId = rq.getFirstNumberPathVariableAsLong(0);
         Post post = postService.findById(postId).get();
 
         postService.checkActorCanRemove(rq.getMember(), post)

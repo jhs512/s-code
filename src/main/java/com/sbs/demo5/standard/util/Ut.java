@@ -346,6 +346,33 @@ public class Ut {
 
             return Character.toUpperCase(str.charAt(0)) + str.substring(1);
         }
+
+        public static boolean isNumeric(Object value) {
+            return !isNan(value);
+        }
+
+        public static boolean isNan(Object value) {
+            if (value == null) {
+                return true;
+            }
+
+            if (value instanceof Double ||
+                    value instanceof Float ||
+                    value instanceof Long ||
+                    value instanceof Integer ||
+                    value instanceof Short ||
+                    value instanceof Byte) {
+                return false;
+            }
+
+            if (value instanceof String) {
+                // 숫자로 파싱 가능한지 확인
+                String str = (String) value;
+                return !str.matches("-?\\d+(\\.\\d+)?");
+            }
+
+            return true;
+        }
     }
 
     public static class thy {

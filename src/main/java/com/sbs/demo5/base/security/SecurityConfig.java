@@ -32,7 +32,7 @@ public class SecurityConfig {
                                 .requestMatchers(requestMatchersOf("/usr/member/notVerified")
                                 ).permitAll()
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/post/modify/*")
+                                        requestMatchersOf("/usr/post/modify/*", "/usr/post/modifyMode2/*")
                                 ).access(accessOf("@postController.assertActorCanModify()"))
                                 .requestMatchers(
                                         requestMatchersOf("/usr/post/remove/*")

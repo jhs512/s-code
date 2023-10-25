@@ -196,7 +196,7 @@ public class BookController {
     }
 
     public boolean assertActorCanModify() {
-        long bookId = rq.getPathVariableAsLong(3);
+        long bookId = rq.getFirstNumberPathVariableAsLong(0);
         Book book = bookService.findById(bookId).get();
 
         bookService.checkActorCanModify(rq.getMember(), book)
@@ -210,7 +210,7 @@ public class BookController {
     }
 
     public boolean assertActorCanRemove() {
-        long bookId = rq.getPathVariableAsLong(3);
+        long bookId = rq.getFirstNumberPathVariableAsLong(0);
         Book book = bookService.findById(bookId).get();
 
         bookService.checkActorCanRemove(rq.getMember(), book)

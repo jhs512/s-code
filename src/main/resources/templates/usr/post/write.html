@@ -94,7 +94,7 @@
                     <span class="label-text">내용</span>
                 </label>
 
-                <div class="toast-ui-editor" height="calc(100vh - 200px)" placeholder="내용"></div>
+                <div id="body-editor" class="toast-ui-editor" height="calc(100vh - 200px)" placeholder="내용"></div>
             </div>
 
             <div th:each="i : ${#numbers.sequence(1, 2)}" class="form-control">
@@ -141,11 +141,11 @@
 
                 const editor = $(form).find(".toast-ui-editor").data("data-toast-editor");
 
-                const markdown = editor.getMarkdown().trim();
-                const html = editor.getHTML().trim();
+                const body = editor.getMarkdown().trim();
+                const bodyHtml = editor.getHTML().trim();
 
-                form.body.value = markdown;
-                form.bodyHtml.value = html;
+                form.body.value = body;
+                form.bodyHtml.value = bodyHtml;
 
                 if (form.body.value.length == 0 || form.bodyHtml.value.length == 0) {
                     toastWarning("내용을 입력해주세요");
@@ -172,6 +172,16 @@
                 form.submit();
                 submitWriteFormDone = true;
             }
+
+            $(window).bind('beforeunload', function() {
+                const editor = $("#body-editor").data("data-toast-editor");
+
+                const body = editor.getMarkdown().trim();
+
+                if (body.length == 0) return;
+
+                return '변경된 사항이 있습니다. 페이지에서 나가시겠습니까?';
+            });
         </script>
     </div>
 </div>
