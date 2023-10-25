@@ -7,6 +7,7 @@ import com.sbs.demo5.domain.member.entity.Member;
 import com.sbs.demo5.domain.member.service.MemberService;
 import com.sbs.demo5.domain.post.service.PostService;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -66,7 +67,7 @@ public class WikenMemberController {
     @GetMapping("/itsMine/{id}")
     @Transactional
     public RsData<?> itsMine(
-            @PathVariable @NotBlank Long id
+            @PathVariable @NotNull Long id
     ) {
         postService.findById(id)
                 .ifPresent(post -> {

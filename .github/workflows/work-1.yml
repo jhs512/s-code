@@ -108,6 +108,7 @@ jobs:
           working-directory: /
           comment: Deploy s_code_1
           command: |
+            mkdir -p /docker_projects/s_code_1
             curl -o /docker_projects/s_code_1/zero_downtime_deploy.sh https://raw.githubusercontent.com/jhs512/s-code/main/zero_downtime_deploy.sh
             chmod +x /docker_projects/s_code_1/zero_downtime_deploy.sh
             /docker_projects/s_code_1/zero_downtime_deploy.sh
