@@ -152,8 +152,9 @@
                     i++;
                 }
 
-                form.submit();
                 submitModifyFormDone = true;
+
+                form.submit();
             }
 
             let bodyOrigin = null;
@@ -163,6 +164,8 @@
             });
 
             $(window).bind('beforeunload', function () {
+                if (submitModifyFormDone) return;
+
                 const editor = $("#body-editor").data("data-toast-editor");
 
                 const body = editor.getMarkdown().trim();

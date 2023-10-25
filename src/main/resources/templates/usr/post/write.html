@@ -169,11 +169,14 @@
                     i++;
                 }
 
-                form.submit();
                 submitWriteFormDone = true;
+
+                form.submit();
             }
 
             $(window).bind('beforeunload', function() {
+                if ( submitWriteFormDone ) return;
+
                 const editor = $("#body-editor").data("data-toast-editor");
 
                 const body = editor.getMarkdown().trim();
