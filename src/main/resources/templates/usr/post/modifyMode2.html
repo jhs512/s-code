@@ -7,7 +7,6 @@
 <body>
 
 <div layout:fragment="content" class="-my-4">
-    <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
 
     <th:block th:replace="common/fragments :: toastuiEidtorLib"></th:block>
@@ -76,7 +75,13 @@
         }
     </script>
 
-    <div id="body-editor" ctrl-alt-q-func-name="Post__switchTab" ctrl-alt-s-func-name="Post__save" preview-style="tab"
+    <div id="body-editor" ctrl-alt-shift-w-func-name="goToPostWritePageUrl"
+         ctrl-alt-shift-d-func-name="goToPostDetailPageUrl"
+         ctrl-alt-shift-r-func-name="goToPostDetailMode2PageUrl"
+         ctrl-alt-shift-l-func-name="goToPostDetailMode2LivePageUrl"
+         ctrl-alt-shift-m-func-name="goToPostModifyPageUrl"
+         ctrl-alt-shift-f-func-name="goToPostModifyMode2PageUrl"
+         ctrl-alt-q-func-name="Post__switchTab" ctrl-alt-s-func-name="Post__save" preview-style="tab"
          class="toast-ui-editor" height="calc(100vh)" placeholder="내용">
         <script type="text/x-template" th:utext="${post.bodyForEditor}"></script>
     </div>

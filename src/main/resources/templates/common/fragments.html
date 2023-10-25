@@ -327,6 +327,13 @@
                 const ctrlAltSFuncName = $(node).attr('ctrl-alt-s-func-name');
                 const ctrlAltQFuncName = $(node).attr('ctrl-alt-q-func-name');
 
+                const ctrlAltShiftWFuncName = $(node).attr('ctrl-alt-shift-w-func-name');
+                const ctrlAltShiftDFuncName = $(node).attr('ctrl-alt-shift-d-func-name');
+                const ctrlAltShiftRFuncName = $(node).attr('ctrl-alt-shift-r-func-name');
+                const ctrlAltShiftLFuncName = $(node).attr('ctrl-alt-shift-l-func-name');
+                const ctrlAltShiftMFuncName = $(node).attr('ctrl-alt-shift-m-func-name');
+                const ctrlAltShiftFFuncName = $(node).attr('ctrl-alt-shift-f-func-name');
+
                 const editor = new toastui.Editor({
                     el: node,
                     previewStyle: $node.attr('preview-style') ?? "vertical",
@@ -336,15 +343,58 @@
                     useCommandShortcut: true,
                     events: {
                         keydown: function (mode, event) {
-                            if ( ctrlAltSFuncName ) {
-                                if ( event.isComposing == false && event.isTrusted && event.altKey && event.ctrlKey && event.key == 's' ) {
-                                    window[ctrlAltSFuncName]();
+                            if (event.isComposing == false && event.isTrusted && event.altKey && event.ctrlKey) {
+                                if (ctrlAltSFuncName) {
+                                    if (event.key == 's') {
+                                        eval(ctrlAltSFuncName + "()");
+                                        return;
+                                    }
                                 }
-                            }
 
-                            if ( ctrlAltQFuncName ) {
-                                if ( event.isComposing == false && event.isTrusted && event.altKey && event.ctrlKey && event.key == 'q' ) {
-                                    window[ctrlAltQFuncName]();
+                                if (ctrlAltQFuncName) {
+                                    if (event.key == 'q') {
+                                        eval(ctrlAltQFuncName + "()");
+                                        return;
+                                    }
+                                }
+
+                                if (event.shiftKey) {
+                                    if (ctrlAltShiftWFuncName) {
+                                        console.log(event.key);
+                                        if (event.key == 'w' || event.key == 'W') {
+                                            eval(ctrlAltShiftWFuncName + "()");
+                                        }
+                                    }
+
+                                    if (ctrlAltShiftDFuncName) {
+                                        if (event.key == 'd' || event.key == 'D') {
+                                            eval(ctrlAltShiftDFuncName + "()");
+                                        }
+                                    }
+
+                                    if (ctrlAltShiftRFuncName) {
+                                        if (event.key == 'r' || event.key == 'R') {
+                                            eval(ctrlAltShiftRFuncName + "()");
+                                        }
+                                    }
+
+                                    if (ctrlAltShiftLFuncName) {
+                                        if (event.key == 'l' || event.key == 'L') {
+                                            eval(ctrlAltShiftLFuncName + "()");
+                                        }
+                                    }
+
+                                    if (ctrlAltShiftMFuncName) {
+                                        if (event.key == 'm' || event.key == 'M') {
+                                            eval(ctrlAltShiftMFuncName + "()");
+                                        }
+                                    }
+
+                                    if (ctrlAltShiftFFuncName) {
+                                        if (event.key == 'f' || event.key == 'F') {
+                                            eval(ctrlAltShiftFFuncName + "()");
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -408,7 +458,7 @@
                 });
 
                 // 키보드 이벤트 리스너 추가
-                document.addEventListener('keydown', function(event) {
+                document.addEventListener('keydown', function (event) {
                     // 예: Ctrl + B를 누르면 bold 기능 실행
                     if (event.ctrlKey && event.key === 'b') {
                         editor.exec('bold');

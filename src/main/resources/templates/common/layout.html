@@ -29,12 +29,47 @@
 <link href="https://cdn.jsdelivr.net/npm/daisyui@3.7.7/dist/full.css" rel="stylesheet" type="text/css"/>
 <script src="https://cdn.tailwindcss.com"></script>
 
+<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+
 <link href="/resource/common/common.css" rel="stylesheet">
 <script src="/resource/common/common.js"></script>
 
 <script>
     const urlPathVariables = getUrlVariables();
     const urlParams = getUrlParams();
+
+    const isPostWritePage = urlPathVariables[1] === "post" && urlPathVariables[2] === "write";
+    const isPostDetailPage = urlPathVariables[1] === "post" && urlPathVariables[2] === "detail";
+    const isPostDetailMode2Page = urlPathVariables[1] === "p";
+    const isPostDetailMode2LivePage = urlPathVariables[1] === "p" && urlPathVariables[3] === "live";
+    const isPostModifyPage = urlPathVariables[1] === "post" && urlPathVariables[2] === "modify";
+    const isPostModifyMode2Page = urlPathVariables[1] === "post" && urlPathVariables[3] === "modifyMode2";
+
+    const postId = isPostWritePage ? null : !isNaN(urlPathVariables[2]) ? parseInt(urlPathVariables[2]) : parseInt(urlPathVariables[3]);
+
+    const postWritePageUrl = "/usr/post/write";
+    const postDetailPageUrl = "/usr/post/detail/" + postId;
+    const postDetailMode2PageUrl = "/usr/p/" + postId;
+    const postDetailMode2LivePageUrl = "/usr/p/" + postId + "/live";
+    const postModifyPageUrl = "/usr/post/modify/" + postId;
+    const postModifyMode2PageUrl = "/usr/post/modifyMode2/" + postId;
+
+    const goToPostWritePageUrl = () => location.href = postWritePageUrl;
+    const goToPostDetailPageUrl = () => location.href = postDetailPageUrl;
+    const goToPostDetailMode2PageUrl = () => location.href = postDetailMode2PageUrl;
+    const goToPostDetailMode2LivePageUrl = () => location.href = postDetailMode2LivePageUrl;
+    const goToPostModifyPageUrl = () => location.href = postModifyPageUrl;
+    const goToPostModifyMode2PageUrl = () => location.href = postModifyMode2PageUrl;
+
+    hotkeys('ctrl+alt+shift+w,command+alt+shift+w', () => goToPostWritePageUrl());
+
+    if (postId) {
+        hotkeys('ctrl+alt+shift+d,command+alt+shift+d', () => goToPostDetailPageUrl());
+        hotkeys('ctrl+alt+shift+r,command+alt+shift+r', () => goToPostDetailMode2PageUrl());
+        hotkeys('ctrl+alt+shift+l,command+alt+shift+l', () => goToPostDetailMode2LivePageUrl());
+        hotkeys('ctrl+alt+shift+m,command+alt+shift+m', () => goToPostModifyPageUrl());
+        hotkeys('ctrl+alt+shift+f,command+alt+shift+f', () => goToPostModifyMode2PageUrl());
+    }
 </script>
 
 <div class="min-h-screen flex flex-col">
