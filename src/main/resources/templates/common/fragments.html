@@ -327,6 +327,7 @@
                 const ctrlAltSFuncName = $(node).attr('ctrl-alt-s-func-name');
                 const ctrlAltQFuncName = $(node).attr('ctrl-alt-q-func-name');
 
+                const ctrlAltShiftIFuncName = $(node).attr('ctrl-alt-shift-i-func-name');
                 const ctrlAltShiftWFuncName = $(node).attr('ctrl-alt-shift-w-func-name');
                 const ctrlAltShiftDFuncName = $(node).attr('ctrl-alt-shift-d-func-name');
                 const ctrlAltShiftRFuncName = $(node).attr('ctrl-alt-shift-r-func-name');
@@ -359,8 +360,13 @@
                                 }
 
                                 if (event.shiftKey) {
+                                    if (ctrlAltShiftIFuncName) {
+                                        if (event.key == 'i' || event.key == 'I') {
+                                            eval(ctrlAltShiftIFuncName + "()");
+                                        }
+                                    }
+
                                     if (ctrlAltShiftWFuncName) {
-                                        console.log(event.key);
                                         if (event.key == 'w' || event.key == 'W') {
                                             eval(ctrlAltShiftWFuncName + "()");
                                         }

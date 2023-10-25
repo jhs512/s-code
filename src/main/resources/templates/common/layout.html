@@ -48,6 +48,7 @@
     const postId = isPostWritePage ? null : !isNaN(urlPathVariables[2]) ? parseInt(urlPathVariables[2]) : parseInt(urlPathVariables[3]);
 
     const postWritePageUrl = "/usr/post/write";
+    const postMyListPageUrl = "/usr/post/myList";
     const postDetailPageUrl = "/usr/post/detail/" + postId;
     const postDetailMode2PageUrl = "/usr/p/" + postId;
     const postDetailMode2LivePageUrl = "/usr/p/" + postId + "/live";
@@ -55,12 +56,14 @@
     const postModifyMode2PageUrl = "/usr/post/modifyMode2/" + postId;
 
     const goToPostWritePageUrl = () => location.href = postWritePageUrl;
+    const goToPostMyListPageUrl = () => location.href = postMyListPageUrl;
     const goToPostDetailPageUrl = () => location.href = postDetailPageUrl;
     const goToPostDetailMode2PageUrl = () => location.href = postDetailMode2PageUrl;
     const goToPostDetailMode2LivePageUrl = () => location.href = postDetailMode2LivePageUrl;
     const goToPostModifyPageUrl = () => location.href = postModifyPageUrl;
     const goToPostModifyMode2PageUrl = () => location.href = postModifyMode2PageUrl;
 
+    hotkeys('ctrl+alt+shift+i,command+alt+shift+i', () => goToPostMyListPageUrl());
     hotkeys('ctrl+alt+shift+w,command+alt+shift+w', () => goToPostWritePageUrl());
 
     if (postId) {
