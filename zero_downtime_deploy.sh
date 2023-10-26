@@ -14,12 +14,14 @@ current_service=$(ps aux | grep "socat -t0 TCP-LISTEN:$SOCAT_PORT" | grep -v gre
 # 현재 서비스가 없으면 초기 서비스 설정
 if [[ -z "$current_service" ]]; then
   echo "No current service running. Setting up initial service."
-  initial_name="s_code_1_1"
-  initial_port="${services[$initial_name]}"
-  docker run --name="$initial_name" -p "$initial_port":8080 -v /docker_projects/s_code_1/volumes/gen:/gen --restart unless-stopped -e TZ=Asia/Seoul --pull always -d ghcr.io/jhs512/s-code-1
-  nohup socat -t0 "TCP-LISTEN:$SOCAT_PORT,fork,reuseaddr" "TCP:localhost:$initial_port" &
-  echo "Initial service set up successfully!"
-  exit 0
+  port="${services[$name]}"
+  current_service="TCP:localhost:${port}"
+
+  # 혹시나
+  for name in "${!services[@]}"; do
+    docker stop "$name"
+    docker rm -f "$name"
+  done
 fi
 
 # 현재 서비스의 이름과 포트 찾기
@@ -43,8 +45,8 @@ done
 next_port="${services[$next_name]}"
 
 # 다음 서비스 업데이트 및 재시작
-docker stop "$next_name" # 필요 : 이건 실패해도 오류 안나게
-docker rm -f "$next_name" # 필요 : 이건 실패해도 오류 안나게
+docker stop "$next_name"
+docker rm -f "$next_name"
 docker run --name="$next_name" -p "$next_port":8080 -v /docker_projects/s_code_1/volumes/gen:/gen --restart unless-stopped -e TZ=Asia/Seoul --pull always -d ghcr.io/jhs512/s-code-1
 
 # 다음 서비스가 완전히 실행될 때까지 기다림
