@@ -14,6 +14,7 @@ current_service=$(ps aux | grep "socat -t0 TCP-LISTEN:$SOCAT_PORT" | grep -v gre
 # 현재 서비스가 없으면 초기 서비스 설정
 if [[ -z "$current_service" ]]; then
   echo "No current service running. Setting up initial service."
+  name="s_code_1_2"
   port="${services[$name]}"
   current_service="TCP:localhost:${port}"
 
