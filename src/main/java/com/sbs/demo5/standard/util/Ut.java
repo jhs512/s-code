@@ -1,6 +1,6 @@
 package com.sbs.demo5.standard.util;
 
-import com.sbs.demo5.base.app.AppConfig;
+import com.sbs.demo5.global.app.AppConfig;
 import org.apache.tika.Tika;
 import org.springframework.web.multipart.MultipartFile;
 

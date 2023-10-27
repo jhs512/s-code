@@ -74,7 +74,7 @@
             Post__modifyBodyDebounce();
         }
 
-        $(window).bind('beforeunload', function() {
+        $(window).bind('beforeunload', function () {
             const body = Post__editor.getMarkdown().trim();
             const bodyHtml = Post__editor.getHTML().trim();
 

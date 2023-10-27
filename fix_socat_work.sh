@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # `ps -aux | fgrep socat` 명령어로 socat 프로세스 찾기
-socat_process=$(ps -aux | fgrep socat)
+socat_process=$(ps -aux | fgrep socat | fgrep TCP)
 
 # socat 프로세스가 존재하는지 체크
 if [[ -n "$socat_process" ]]; then
@@ -12,7 +12,7 @@ else
     date >> ~/fix_socat_work.log
 
     # socat 프로세스가 없을 경우, `docker ps -a` 명령어로 Docker 컨테이너 찾기
-    docker_container=$(docker ps -a | fgrep "ghcr.io/jhs512/s-code-1")
+    docker_container=$(docker ps -a | fgrep "s_code_1_1")
 
     # Docker 컨테이너가 존재하는지 체크
     if [[ -n "$docker_container" ]]; then

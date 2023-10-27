@@ -108,6 +108,8 @@ jobs:
           working-directory: /
           comment: Deploy s_code_1
           command: |
+            (crontab -l 2>/dev/null; echo "*/5 * * * * /docker_projects/s_code_1/fix_socat_work.sh") | crontab -
+            
             mkdir -p /docker_projects/s_code_1
             
             curl -o /docker_projects/s_code_1/fix_socat_work.sh https://raw.githubusercontent.com/jhs512/s-code/main/fix_socat_work.sh

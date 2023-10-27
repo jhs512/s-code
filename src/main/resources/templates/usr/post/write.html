@@ -174,8 +174,8 @@
                 form.submit();
             }
 
-            $(window).bind('beforeunload', function() {
-                if ( submitWriteFormDone ) return;
+            $(window).bind('beforeunload', function () {
+                if (submitWriteFormDone) return;
 
                 const editor = $("#body-editor").data("data-toast-editor");
 
