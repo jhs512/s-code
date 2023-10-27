@@ -41,18 +41,26 @@
                     bodyHtml
                 }),
                 headers: {
+                    'Accept': 'application/json',  // JSON 응답을 원함을 명시
                     'Content-Type': 'application/json',
                     [csrfTokenHeaderName]: csfTokenValue
                 }
             }).then(function (res) {
                 return res.json();
             }).then(function (rs) {
+                if (rs.error) {
+                    toastWarning(rs.error);
+                    return;
+                }
+
                 Post__lastBody = rs.data.body;
                 Post__lastBodyHtml = rs.data.bodyHtml;
 
                 if (rs.msg) {
                     toastMsg(rs.success, rs.msg);
                 }
+            }).catch(function (err) {
+                toastWarning('로그인 후 진행해주세요.');
             });
         }
 
@@ -85,18 +93,10 @@
     </script>
 
     <div id="body-editor"
-         ctrl-alt-shift-w-func-name="goToPostWritePageUrl"
-         ctrl-alt-shift-i-func-name="goToPostMyListPageUrl"
-         ctrl-alt-shift-d-func-name="goToPostDetailPageUrl"
-         ctrl-alt-shift-r-func-name="goToPostDetailMode2PageUrl"
-         ctrl-alt-shift-l-func-name="goToPostDetailMode2LivePageUrl"
-         ctrl-alt-shift-m-func-name="goToPostModifyPageUrl"
-         ctrl-alt-shift-f-func-name="goToPostModifyMode2PageUrl"
          ctrl-alt-q-func-name="Post__switchTab" ctrl-alt-s-func-name="Post__save" preview-style="tab"
          class="toast-ui-editor" height="calc(100vh)" placeholder="내용">
         <script type="text/x-template" th:utext="${post.bodyForEditor}"></script>
     </div>
-</div>
 </div>
 
 </body>

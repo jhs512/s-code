@@ -327,14 +327,6 @@
                 const ctrlAltSFuncName = $(node).attr('ctrl-alt-s-func-name');
                 const ctrlAltQFuncName = $(node).attr('ctrl-alt-q-func-name');
 
-                const ctrlAltShiftIFuncName = $(node).attr('ctrl-alt-shift-i-func-name');
-                const ctrlAltShiftWFuncName = $(node).attr('ctrl-alt-shift-w-func-name');
-                const ctrlAltShiftDFuncName = $(node).attr('ctrl-alt-shift-d-func-name');
-                const ctrlAltShiftRFuncName = $(node).attr('ctrl-alt-shift-r-func-name');
-                const ctrlAltShiftLFuncName = $(node).attr('ctrl-alt-shift-l-func-name');
-                const ctrlAltShiftMFuncName = $(node).attr('ctrl-alt-shift-m-func-name');
-                const ctrlAltShiftFFuncName = $(node).attr('ctrl-alt-shift-f-func-name');
-
                 const editor = new toastui.Editor({
                     el: node,
                     previewStyle: $node.attr('preview-style') ?? "vertical",
@@ -356,50 +348,6 @@
                                     if (event.key == 'q') {
                                         eval(ctrlAltQFuncName + "()");
                                         return;
-                                    }
-                                }
-
-                                if (event.shiftKey) {
-                                    if (ctrlAltShiftIFuncName) {
-                                        if (event.key == 'i' || event.key == 'I') {
-                                            eval(ctrlAltShiftIFuncName + "()");
-                                        }
-                                    }
-
-                                    if (ctrlAltShiftWFuncName) {
-                                        if (event.key == 'w' || event.key == 'W') {
-                                            eval(ctrlAltShiftWFuncName + "()");
-                                        }
-                                    }
-
-                                    if (ctrlAltShiftDFuncName) {
-                                        if (event.key == 'd' || event.key == 'D') {
-                                            eval(ctrlAltShiftDFuncName + "()");
-                                        }
-                                    }
-
-                                    if (ctrlAltShiftRFuncName) {
-                                        if (event.key == 'r' || event.key == 'R') {
-                                            eval(ctrlAltShiftRFuncName + "()");
-                                        }
-                                    }
-
-                                    if (ctrlAltShiftLFuncName) {
-                                        if (event.key == 'l' || event.key == 'L') {
-                                            eval(ctrlAltShiftLFuncName + "()");
-                                        }
-                                    }
-
-                                    if (ctrlAltShiftMFuncName) {
-                                        if (event.key == 'm' || event.key == 'M') {
-                                            eval(ctrlAltShiftMFuncName + "()");
-                                        }
-                                    }
-
-                                    if (ctrlAltShiftFFuncName) {
-                                        if (event.key == 'f' || event.key == 'F') {
-                                            eval(ctrlAltShiftFFuncName + "()");
-                                        }
                                     }
                                 }
                             }
