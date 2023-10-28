@@ -72,15 +72,15 @@
         return true;
     }
 
-    hotkeys('ctrl+alt+shift+i,command+alt+shift+i', () => goToPostMyListPageUrl());
-    hotkeys('ctrl+alt+shift+w,command+alt+shift+w', () => goToPostWritePageUrl());
+    hotkeys('ctrl+alt+shift+i', () => goToPostMyListPageUrl());
+    hotkeys('ctrl+alt+shift+w', () => goToPostWritePageUrl());
 
     if (postId) {
-        hotkeys('ctrl+alt+shift+d,command+alt+shift+d', () => goToPostDetailPageUrl());
-        hotkeys('ctrl+alt+shift+r,command+alt+shift+r', () => goToPostDetailMode2PageUrl());
-        hotkeys('ctrl+alt+shift+l,command+alt+shift+l', () => goToPostDetailMode2LivePageUrl());
-        hotkeys('ctrl+alt+shift+m,command+alt+shift+m', () => goToPostModifyPageUrl());
-        hotkeys('ctrl+alt+shift+f,command+alt+shift+f', () => goToPostModifyMode2PageUrl());
+        hotkeys('ctrl+alt+shift+d', () => goToPostDetailPageUrl());
+        hotkeys('ctrl+alt+shift+r', () => goToPostDetailMode2PageUrl());
+        hotkeys('ctrl+alt+shift+l', () => goToPostDetailMode2LivePageUrl());
+        hotkeys('ctrl+alt+shift+m', () => goToPostModifyPageUrl());
+        hotkeys('ctrl+alt+shift+f', () => goToPostModifyMode2PageUrl());
     }
 </script>
 
