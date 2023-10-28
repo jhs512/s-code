@@ -36,7 +36,7 @@ class SocatManager:
             log_file.write(message + "\n")
 
     def fix_socat(self):
-        socat_process = self.find_process("socat TCP")
+        socat_process = self.find_process("socat -t0 TCP")
         if socat_process is not None:
             print("socat is running")
         else:
