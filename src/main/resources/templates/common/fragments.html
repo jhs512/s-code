@@ -329,6 +329,17 @@
 
                 const editor = new toastui.Editor({
                     el: node,
+                    customHTMLRenderer: {
+                        heading(node, { entering, getChildrenText }) {
+                            return {
+                                type: entering ? 'openTag' : 'closeTag',
+                                tagName: `h${node.level}`,
+                                attributes: {
+                                    id: getChildrenText(node).trim()
+                                }
+                            }
+                        },
+                    },
                     previewStyle: $node.attr('preview-style') ?? "vertical",
                     initialValue: initialValue,
                     height: $node.attr('height') ?? "100%",
@@ -437,6 +448,17 @@
 
                 const viewer = new toastui.Editor.factory({
                     el: node,
+                    customHTMLRenderer: {
+                        heading(node, { entering, getChildrenText }) {
+                            return {
+                                type: entering ? 'openTag' : 'closeTag',
+                                tagName: `h${node.level}`,
+                                attributes: {
+                                    id: getChildrenText(node).trim()
+                                }
+                            }
+                        },
+                    },
                     initialValue: initialValue,
                     viewer: true,
                     plugins: [

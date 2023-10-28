@@ -43,9 +43,9 @@
     const isPostDetailMode2Page = urlPathVariables[1] === "p";
     const isPostDetailMode2LivePage = urlPathVariables[1] === "p" && urlPathVariables[3] === "live";
     const isPostModifyPage = urlPathVariables[1] === "post" && urlPathVariables[2] === "modify";
-    const isPostModifyMode2Page = urlPathVariables[1] === "post" && urlPathVariables[3] === "modifyMode2";
+    const isPostModifyMode2Page = urlPathVariables[1] === "post" && urlPathVariables[2] === "modifyMode2";
 
-    const postId = isPostDetailPage || isPostDetailMode2Page || isPostDetailMode2LivePage || isPostModifyPage || isPostModifyMode2Page ? !isNaN(urlPathVariables[2]) ? parseInt(urlPathVariables[2]) : parseInt(urlPathVariables[3]) : null;
+    const postId = isPostDetailPage || isPostDetailMode2Page || isPostDetailMode2LivePage || isPostModifyPage || isPostModifyMode2Page ? (!isNaN(urlPathVariables[2]) ? parseInt(urlPathVariables[2]) : parseInt(urlPathVariables[3])) : null;
 
     const postWritePageUrl = "/usr/post/write";
     const postMyListPageUrl = "/usr/post/myList";
