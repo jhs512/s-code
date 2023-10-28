@@ -118,4 +118,4 @@ jobs:
             
             curl -o /docker_projects/s_code_1/zero_downtime_deploy.py https://raw.githubusercontent.com/jhs512/s-code/main/zero_downtime_deploy.sh
             chmod +x /docker_projects/s_code_1/zero_downtime_deploy.py
-            /docker_projects/s_code_1/zero_downtime_deploy.sh
+            /docker_projects/s_code_1/zero_downtime_deploy.py
