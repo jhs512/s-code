@@ -28,7 +28,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Ut {
+    private Ut() {
+    }
+
     public static class markdown {
+        private markdown() {
+        }
+
         // 오직 초기 데이터를 생성하는데만 사용된다.
         // 운영모드에서는 사용되지 않는다.
         public static String toHtml(String body) {
@@ -37,6 +43,9 @@ public class Ut {
     }
 
     public static class date {
+        private date() {
+        }
+
         public static String getCurrentDateFormatted(String pattern) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             return simpleDateFormat.format(new Date());
@@ -44,6 +53,9 @@ public class Ut {
     }
 
     public static class file {
+        private file() {
+        }
+
         private static final String ORIGIN_FILE_NAME_SEPARATOR;
 
         static {
@@ -231,6 +243,9 @@ public class Ut {
 
     public static class url {
 
+        private url() {
+        }
+
         public static String encode(String message) {
             String tempReplacement = "TEMP_PLUS";
             message = message.replace("+", tempReplacement);
@@ -294,6 +309,9 @@ public class Ut {
     }
 
     public static class str {
+        private str() {
+        }
+
         public static boolean hasLength(String string) {
             return string != null && !string.trim().isEmpty();
         }
@@ -376,6 +394,9 @@ public class Ut {
     }
 
     public static class thy {
+        private thy() {
+        }
+
         private static String getFirstStrOrEmpty(List<String> requestParameterValues) {
             return Optional.ofNullable(requestParameterValues)
                     .filter(values -> !values.isEmpty())

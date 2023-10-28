@@ -109,9 +109,9 @@ jobs:
           working-directory: /
           comment: Deploy s_code_1
           command: |
-            (crontab -l 2>/dev/null | grep -v '/docker_projects/s_code_1/fix_socat_work.py'; echo "*/5 * * * * /docker_projects/s_code_1/fix_socat_work.py") | crontab -
-            
             mkdir -p /docker_projects/s_code_1
+            
+            (crontab -l 2>/dev/null | grep -v '/docker_projects/s_code_1/fix_socat_work.py'; echo "*/5 * * * * /docker_projects/s_code_1/fix_socat_work.py") | crontab -
             
             curl -o /docker_projects/s_code_1/fix_socat_work.py https://raw.githubusercontent.com/jhs512/s-code/main/fix_socat_work.py
             chmod +x /docker_projects/s_code_1/fix_socat_work.py

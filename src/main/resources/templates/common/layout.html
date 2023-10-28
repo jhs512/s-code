@@ -35,6 +35,11 @@
 <script src="/resource/common/common.js"></script>
 
 <script>
+    hotkeys('ctrl+s', function (event, handler) {
+        // Prevent the default save action
+        event.preventDefault();
+    });
+
     const urlPathVariables = getUrlVariables();
     const urlParams = getUrlParams();
 

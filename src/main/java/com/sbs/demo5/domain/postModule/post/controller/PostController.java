@@ -54,6 +54,7 @@ public class PostController {
         return "usr/post/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/myList")
     public String showMyList(
             Model model,
