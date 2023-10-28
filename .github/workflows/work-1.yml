@@ -109,13 +109,13 @@ jobs:
           working-directory: /
           comment: Deploy s_code_1
           command: |
-            (crontab -l 2>/dev/null | grep -v '/docker_projects/s_code_1/fix_socat_work.sh'; echo "*/5 * * * * /docker_projects/s_code_1/fix_socat_work.sh") | crontab -
+            (crontab -l 2>/dev/null | grep -v '/docker_projects/s_code_1/fix_socat_work.py'; echo "*/5 * * * * /docker_projects/s_code_1/fix_socat_work.py") | crontab -
             
             mkdir -p /docker_projects/s_code_1
             
-            curl -o /docker_projects/s_code_1/fix_socat_work.sh https://raw.githubusercontent.com/jhs512/s-code/main/fix_socat_work.sh
-            chmod +x /docker_projects/s_code_1/fix_socat_work.sh
+            curl -o /docker_projects/s_code_1/fix_socat_work.py https://raw.githubusercontent.com/jhs512/s-code/main/fix_socat_work.sh
+            chmod +x /docker_projects/s_code_1/fix_socat_work.py
             
-            curl -o /docker_projects/s_code_1/zero_downtime_deploy.sh https://raw.githubusercontent.com/jhs512/s-code/main/zero_downtime_deploy.sh
-            chmod +x /docker_projects/s_code_1/zero_downtime_deploy.sh
+            curl -o /docker_projects/s_code_1/zero_downtime_deploy.py https://raw.githubusercontent.com/jhs512/s-code/main/zero_downtime_deploy.sh
+            chmod +x /docker_projects/s_code_1/zero_downtime_deploy.py
             /docker_projects/s_code_1/zero_downtime_deploy.sh
