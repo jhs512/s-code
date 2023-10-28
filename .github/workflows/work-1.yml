@@ -7,8 +7,8 @@ on:
       - 'build.gradle'
       - 'Dockerfile'
       - 'readme.md'
-      - 'fix_socat_work.sh'
-      - 'zero_downtime_deploy.sh'
+      - 'fix_socat_work.py'
+      - 'zero_downtime_deploy.py'
     branches:
       - 'main'
 jobs:
