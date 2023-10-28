@@ -113,9 +113,9 @@ jobs:
             
             mkdir -p /docker_projects/s_code_1
             
-            curl -o /docker_projects/s_code_1/fix_socat_work.py https://raw.githubusercontent.com/jhs512/s-code/main/fix_socat_work.sh
+            curl -o /docker_projects/s_code_1/fix_socat_work.py https://raw.githubusercontent.com/jhs512/s-code/main/fix_socat_work.py
             chmod +x /docker_projects/s_code_1/fix_socat_work.py
             
-            curl -o /docker_projects/s_code_1/zero_downtime_deploy.py https://raw.githubusercontent.com/jhs512/s-code/main/zero_downtime_deploy.sh
+            curl -o /docker_projects/s_code_1/zero_downtime_deploy.py https://raw.githubusercontent.com/jhs512/s-code/main/zero_downtime_deploy.py
             chmod +x /docker_projects/s_code_1/zero_downtime_deploy.py
             /docker_projects/s_code_1/zero_downtime_deploy.py
