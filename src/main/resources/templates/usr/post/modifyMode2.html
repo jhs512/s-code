@@ -66,11 +66,11 @@
 
         const Post__modifyBodyDebounce = _.debounce(() => Post__modifyBody(), 500);
 
-        hotkeys('ctrl+alt+q', function (event, handler) {
+        hotkeys('ctrl+q,cmd+q', function (event, handler) {
             Post__switchTab();
         });
 
-        hotkeys('ctrl+alt+s', function (event, handler) {
+        hotkeys('ctrl+s,cmd+s', function (event, handler) {
             Post__save();
         });
 

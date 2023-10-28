@@ -35,7 +35,12 @@
 <script src="/resource/common/common.js"></script>
 
 <script>
-    hotkeys('ctrl+s', function (event, handler) {
+    hotkeys('ctrl+s,cmd+s', function (event, handler) {
+        // Prevent the default save action
+        event.preventDefault();
+    });
+
+    hotkeys('ctrl+q,cmd+q', function (event, handler) {
         // Prevent the default save action
         event.preventDefault();
     });
@@ -72,15 +77,15 @@
         return true;
     }
 
-    hotkeys('ctrl+alt+shift+i', () => goToPostMyListPageUrl());
-    hotkeys('ctrl+alt+shift+w', () => goToPostWritePageUrl());
+    hotkeys('alt+shift+1,opt+shift+1', () => goToPostWritePageUrl());
+    hotkeys('alt+shift+2,opt+shift+2', () => goToPostMyListPageUrl());
 
     if (postId) {
-        hotkeys('ctrl+alt+shift+d', () => goToPostDetailPageUrl());
-        hotkeys('ctrl+alt+shift+r', () => goToPostDetailMode2PageUrl());
-        hotkeys('ctrl+alt+shift+l', () => goToPostDetailMode2LivePageUrl());
-        hotkeys('ctrl+alt+shift+m', () => goToPostModifyPageUrl());
-        hotkeys('ctrl+alt+shift+f', () => goToPostModifyMode2PageUrl());
+        hotkeys('alt+shift+3,opt+shift+3', () => goToPostDetailPageUrl());
+        hotkeys('alt+shift+4,opt+shift+4', () => goToPostDetailMode2PageUrl());
+        hotkeys('alt+shift+5,opt+shift+5', () => goToPostDetailMode2LivePageUrl());
+        hotkeys('alt+shift+6,opt+shift+6', () => goToPostModifyPageUrl());
+        hotkeys('alt+shift+7,opt+shift+7', () => goToPostModifyMode2PageUrl());
     }
 </script>
 
