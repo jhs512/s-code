@@ -31,13 +31,13 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
     public String showLogin() {
-        return "usr/member/login";
+        return "usr/memberModule/member/login";
     }
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
     public String showJoin() {
-        return "usr/member/join";
+        return "usr/memberModule/member/join";
     }
 
     @PreAuthorize("isAnonymous()")
@@ -105,13 +105,13 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/notVerified")
     public String showNotVerified() {
-        return "usr/member/notVerified";
+        return "usr/memberModule/member/notVerified";
     }
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/findUsername")
     public String showFindUsername() {
-        return "usr/member/findUsername";
+        return "usr/memberModule/member/findUsername";
     }
 
     @PreAuthorize("isAnonymous()")
@@ -132,7 +132,7 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @GetMapping("/findPassword")
     public String showFindPassword() {
-        return "usr/member/findPassword";
+        return "usr/memberModule/member/findPassword";
     }
 
     @PreAuthorize("isAnonymous()")
@@ -154,13 +154,13 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public String showMe() {
-        return "usr/member/me";
+        return "usr/memberModule/member/me";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify")
     public String showModify() {
-        return "usr/member/modify";
+        return "usr/memberModule/member/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -187,7 +187,7 @@ public class MemberController {
             return rq.redirect(redirectUrl);
         }
 
-        return "usr/member/checkPassword";
+        return "usr/memberModule/member/checkPassword";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -240,7 +240,7 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/beProducer")
     public String showBeProducer() {
-        return "usr/member/beProducer";
+        return "usr/memberModule/member/beProducer";
     }
 
     @SneakyThrows

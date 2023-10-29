@@ -188,7 +188,7 @@ public class Rq {
         // 200 이 아니라 400 으로 응답코드가 지정되도록
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-        return "common/js";
+        return "globalModule/js";
     }
 
     public String redirect(String url) {
@@ -272,7 +272,7 @@ public class Rq {
         if (listUrl.startsWith("/usr/" + domainName + "/list")) return listByTagPageBaseUrl;
         if (listUrl.startsWith("/usr/" + domainName + "/listByTag")) return listByTagPageBaseUrl;
 
-        return "/usr/post/myListByTag";
+        return "/usr/postModule/post/myListByTag";
     }
 
     public long getFirstNumberPathVariableAsLong(long defaultValue) {

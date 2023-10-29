@@ -4,6 +4,7 @@ import com.sbs.demo5.domain.baseModule.genFile.entity.GenFile;
 import com.sbs.demo5.domain.postModule.post.entity.Post;
 import com.sbs.demo5.domain.postModule.post.service.PostService;
 import com.sbs.demo5.domain.postModule.postKeyword.entity.PostKeyword;
+import com.sbs.demo5.global.app.AppConfig;
 import com.sbs.demo5.global.rq.Rq;
 import com.sbs.demo5.global.rsData.RsData;
 import com.sbs.demo5.standard.util.Ut;
@@ -47,11 +48,11 @@ public class PostController {
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
-        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page - 1, 30, Sort.by(sorts));
         Page<Post> postPage = postService.findByKw(kwType, kw, true, pageable);
         model.addAttribute("postPage", postPage);
 
-        return "usr/post/list";
+        return "usr/postModule/post/list";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -64,11 +65,11 @@ public class PostController {
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
-        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
         Page<Post> postPage = postService.findByKw(rq.getMember(), kwType, kw, pageable);
         model.addAttribute("postPage", postPage);
 
-        return "usr/post/myList";
+        return "usr/postModule/post/myList";
     }
 
     @GetMapping("/detail/{id}")
@@ -78,12 +79,12 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "globalModule", "attachment");
 
         model.addAttribute("post", post);
         model.addAttribute("filesMap", filesMap);
 
-        return "usr/post/detail";
+        return "usr/postModule/post/detail";
     }
 
     @GetMapping("/listByKeyword/{postKeywordId}")
@@ -102,7 +103,7 @@ public class PostController {
         Page<Post> postPage = postService.findByTag(postKeyword.getAuthor(), postKeyword.getContent(), true, pageable);
         model.addAttribute("postPage", postPage);
 
-        return "usr/post/listByKeyword";
+        return "usr/postModule/post/listByKeyword";
     }
 
     @GetMapping("/listByTag/{tagContent}")
@@ -117,7 +118,7 @@ public class PostController {
         Page<Post> postPage = postService.findByTag(tagContent, true, pageable);
         model.addAttribute("postPage", postPage);
 
-        return "usr/post/listByTag";
+        return "usr/postModule/post/listByTag";
     }
 
     @GetMapping("/myListByTag/{tagContent}")
@@ -132,13 +133,13 @@ public class PostController {
         Page<Post> postPage = postService.findByTag(rq.getMember(), tagContent, pageable);
         model.addAttribute("postPage", postPage);
 
-        return "usr/post/mylistByTag";
+        return "usr/postModule/post/mylistByTag";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/write")
     public String showWrite() {
-        return "usr/post/write";
+        return "usr/postModule/post/write";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -153,7 +154,7 @@ public class PostController {
         if (Ut.file.exists(writeForm.getAttachment__1()))
             postService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/usr/post/detail/%d".formatted(rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/usr/postModule/post/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
     @Getter
@@ -180,11 +181,11 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "globalModule", "attachment");
 
         model.addAttribute("post", post);
 
-        return "usr/post/modifyMode2";
+        return "usr/postModule/post/modifyMode2";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -233,12 +234,12 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "globalModule", "attachment");
 
         model.addAttribute("post", post);
         model.addAttribute("filesMap", filesMap);
 
-        return "usr/post/modify";
+        return "usr/postModule/post/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -262,7 +263,7 @@ public class PostController {
         if (Ut.file.exists(modifyForm.getAttachment__2()))
             postService.saveAttachmentFile(rsData.getData(), modifyForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/usr/post/detail/%d".formatted(rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/usr/postModule/post/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
     @Getter
@@ -292,7 +293,7 @@ public class PostController {
 
         RsData<?> rsData = postService.remove(post);
 
-        return rq.redirectOrBack("/usr/post/myList", rsData);
+        return rq.redirectOrBack("/usr/postModule/post/myList", rsData);
     }
 
     public boolean assertActorCanModify() {

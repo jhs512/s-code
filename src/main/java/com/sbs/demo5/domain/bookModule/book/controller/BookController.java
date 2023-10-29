@@ -64,7 +64,7 @@ public class BookController {
     ) {
         Book book = bookService.findById(id).get();
 
-        Map<String, GenFile> filesMap = bookService.findGenFilesMapKeyByFileNo(book, "common", "attachment");
+        Map<String, GenFile> filesMap = bookService.findGenFilesMapKeyByFileNo(book, "globalModule", "attachment");
 
         model.addAttribute("book", book);
         model.addAttribute("filesMap", filesMap);
@@ -122,7 +122,7 @@ public class BookController {
     ) {
         Book book = bookService.findById(id).get();
 
-        Map<String, GenFile> filesMap = bookService.findGenFilesMapKeyByFileNo(book, "common", "attachment");
+        Map<String, GenFile> filesMap = bookService.findGenFilesMapKeyByFileNo(book, "globalModule", "attachment");
 
         model.addAttribute("book", book);
         model.addAttribute("filesMap", filesMap);

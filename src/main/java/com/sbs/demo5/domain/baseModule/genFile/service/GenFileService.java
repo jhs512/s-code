@@ -134,7 +134,7 @@ public class GenFileService {
 
     @Transactional
     public GenFile saveTempFile(Member actor, MultipartFile file) {
-        return save("temp_" + actor.getModelName(), actor.getId(), "common", "editorUpload", 0, file);
+        return save("temp_" + actor.getModelName(), actor.getId(), "globalModule", "editorUpload", 0, file);
     }
 
     @Transactional

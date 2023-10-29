@@ -1,0 +1,66 @@
+<html>
+<head>
+
+</head>
+<body>
+<th:block th:fragment="bookListItemCard(post)">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+
+            <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-3">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">번호</span>
+                    </label>
+                    <div th:text="${book.id}"></div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">작성일</span>
+                    </label>
+                    <div th:text="${#temporals.format(book.createDate, 'yy.MM.dd')}"></div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">저자</span>
+                    </label>
+                    <div th:text="${book.author.producerName}"></div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">공개</span>
+                    </label>
+                    <div th:text="${book.publicHanName}"></div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">본문</span>
+                    </label>
+                    <a class="link" target="_blank" th:href="|/usr/post/listByKeyword/${book.postKeyword.id}|"
+                       th:text="|#${book.postKeyword.content}(${book.postKeyword.total})|"></a>
+                </div>
+
+                <div class="form-control col-span-full">
+                    <label class="label">
+                        <span class="label-text">제목</span>
+                    </label>
+                    <a class="link truncate" th:href="|/usr/book/detail/${book.id}?listUrl=${@rq.encodedCurrentUrl}|"
+                       th:text="${book.subject}"></a>
+                </div>
+
+                <div class="form-control col-span-full">
+                    <label class="label">
+                        <span class="label-text">태그</span>
+                    </label>
+                    <div th:utext="${book.getTagLinks('<a class=`link` href=`%s`>#%s</a>', @rq.getSuitableListByTagPageBaseUrlByCurrentUrl('book') + '/%s')}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

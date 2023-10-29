@@ -63,6 +63,10 @@ public class Post extends BaseEntity implements DocumentHavingSortableTags {
         return tag;
     }
 
+    public String getSubjectForPrint() {
+        return subject;
+    }
+
     public String getPublicHanName() {
         return isPublic ? "공개" : "비공개";
     }

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-from typing import Optional
-import subprocess
 import os
+import subprocess
+from typing import Optional
+
 
 class SocatManager:
     def __init__(self, log_file_path: str = "~/fix_socat_work.log"):
@@ -29,7 +30,8 @@ class SocatManager:
         return None
 
     def run_socat(self, src_port: int, dest_port: int):
-        subprocess.Popen(["nohup", "socat", "-t0", f"TCP-LISTEN:{src_port},fork,reuseaddr", f"TCP:localhost:{dest_port}", "&"])
+        subprocess.Popen(
+            ["nohup", "socat", "-t0", f"TCP-LISTEN:{src_port},fork,reuseaddr", f"TCP:localhost:{dest_port}", "&"])
 
     def log(self, message: str):
         with open(self.log_file_path, "a") as log_file:
@@ -53,6 +55,7 @@ class SocatManager:
     def current_datetime() -> str:
         from datetime import datetime
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
 
 if __name__ == "__main__":
     manager = SocatManager()

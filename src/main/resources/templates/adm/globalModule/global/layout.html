@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html layout:decorate="~{common/layout.html}">
+
+<head>
+
+</head>
+
+<body>
+
+<header layout:fragment="header">
+    <div class="navbar bg-base-100">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <label class="btn btn-ghost btn-circle" tabindex="0">
+                    <i class="fa-solid fa-bars"></i>
+                </label>
+                <ul class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                    tabindex="0">
+                    <li th:if="${@rq.login}"><a href="/"><i class="fa-solid fa-house"></i> 홈</a></li>
+                    <li th:if="${@rq.login}"><a href="/adm/member/list"><i class="fa-solid fa-users"></i> 회원목록</a></li>
+                    <li th:if="${@rq.login}"><a href="/usr/member/logout"><i
+                            class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="navbar-center">
+            <a class="btn btn-ghost normal-case text-xl" href="/adm/home/main"
+               th:text="|${@appConfig.siteName} ADMIN|"></a>
+        </div>
+        <div class="navbar-end">
+            <a class="btn btn-ghost btn-circle" href="/usr/member/me">
+                <img alt="" class="w-[30px] h-[30px] rounded-full object-cover"
+                     th:if="${@rq.login}" th:src="${@rq.profileImgUrl}">
+            </a>
+            <button class="btn btn-ghost btn-circle" th:if="${@rq.login}">
+                <div class="indicator">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="badge badge-xs badge-primary indicator-item"></span>
+                </div>
+            </button>
+        </div>
+    </div>
+</header>
+
+</body>
+
+</html>

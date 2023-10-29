@@ -132,7 +132,7 @@ public class ArticleController {
         Board board = boardService.findByCode(boardCode).get();
         Article article = articleService.findById(id).get();
 
-        Map<String, GenFile> filesMap = articleService.findGenFilesMapKeyByFileNo(article, "common", "attachment");
+        Map<String, GenFile> filesMap = articleService.findGenFilesMapKeyByFileNo(article, "globalModule", "attachment");
 
         model.addAttribute("board", board);
         model.addAttribute("article", article);
@@ -193,7 +193,7 @@ public class ArticleController {
         Board board = boardService.findByCode(boardCode).get();
         Article article = articleService.findById(id).get();
 
-        Map<String, GenFile> filesMap = articleService.findGenFilesMapKeyByFileNo(article, "common", "attachment");
+        Map<String, GenFile> filesMap = articleService.findGenFilesMapKeyByFileNo(article, "globalModule", "attachment");
 
         model.addAttribute("board", board);
         model.addAttribute("article", article);

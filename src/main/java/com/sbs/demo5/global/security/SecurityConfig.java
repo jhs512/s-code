@@ -32,10 +32,10 @@ public class SecurityConfig {
                                 .requestMatchers(requestMatchersOf("/usr/member/notVerified")
                                 ).permitAll()
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/post/modify/*", "/usr/post/modifyMode2/*")
+                                        requestMatchersOf("/usr/postModule/post/modify/*", "/usr/postModule/post/modifyMode2/*")
                                 ).access(accessOf("@postController.assertActorCanModify()"))
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/post/remove/*")
+                                        requestMatchersOf("/usr/postModule/post/remove/*")
                                 ).access(accessOf("@postController.assertActorCanRemove()"))
                                 .requestMatchers(
                                         requestMatchersOf("/usr/book/*/write")
@@ -76,7 +76,7 @@ public class SecurityConfig {
                                 .loginPage("/usr/member/login")
                 )
                 .csrf((csrf) -> csrf
-                        .ignoringRequestMatchers(requestMatchersOf("/usr/post/modifyBody/**")))
+                        .ignoringRequestMatchers(requestMatchersOf("/usr/postModule/post/modifyBody/**")))
                 .headers((headers) -> headers
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(
                                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))

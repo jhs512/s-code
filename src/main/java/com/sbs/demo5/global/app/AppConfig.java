@@ -23,6 +23,11 @@ public class AppConfig {
     @Getter
     public static String siteBaseUrl;
 
+    public static int getBasePageSize() {
+        // TODO : 추후 application.yml 에서 설정하도록 변경
+        return 30;
+    }
+
     @Value("${custom.tempDirPath}")
     public void setTempDirPath(String tempDirPath) {
         AppConfig.tempDirPath = tempDirPath;

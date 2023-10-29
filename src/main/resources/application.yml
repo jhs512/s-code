@@ -64,7 +64,7 @@ logging:
 custom:
   tempDirPath: c:/temp/s_code/temp
   site:
-    name: S-CODE
+    name: scode.gg
     baseUrl: "http://localhost:8090"
   genFile:
     dirPath: c:/temp/s_code
