@@ -48,7 +48,7 @@ public class PostController {
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
-        Pageable pageable = PageRequest.of(page - 1, 30, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
         Page<Post> postPage = postService.findByKw(kwType, kw, true, pageable);
         model.addAttribute("postPage", postPage);
 

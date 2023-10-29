@@ -10,17 +10,16 @@
 <th:block th:fragment="postListItemCard(post)">
     <div class="card bg-base-100 shadow-xl">
         <div class="card-body">
-
             <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-3">
                 <a th:href="|/usr/post/detail/${post.id}?listUrl=${@rq.encodedCurrentUrl}|"
-                   class="col-span-full bg-gray-700 rounded p-3 text-white flex items-center justify-center flex-wrap aspect-video">
+                   class="col-span-full bg-gray-700 rounded p-3 text-gray-100 flex items-center justify-center flex-wrap aspect-video">
                     <div class="flex flex-wrap gap-1">
                         <div class="flex gap-1">
-                            <span>📘</span>
+                            <span>🗒️</span>
                             <span th:text="${post.subjectForPrint}"></span>
                         </div>
                         <div class="flex-grow text-right text-gray-300 italic">
-                            by
+                            <span>by</span>
                             <span th:text="|${post.author.nickname}|"></span>
                         </div>
                     </div>
