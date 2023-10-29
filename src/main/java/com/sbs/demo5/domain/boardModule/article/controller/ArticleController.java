@@ -5,6 +5,7 @@ import com.sbs.demo5.domain.boardModule.article.entity.Article;
 import com.sbs.demo5.domain.boardModule.article.service.ArticleService;
 import com.sbs.demo5.domain.boardModule.board.entity.Board;
 import com.sbs.demo5.domain.boardModule.board.service.BoardService;
+import com.sbs.demo5.global.app.AppConfig;
 import com.sbs.demo5.global.rq.Rq;
 import com.sbs.demo5.global.rsData.RsData;
 import com.sbs.demo5.standard.util.Ut;
@@ -54,11 +55,11 @@ public class ArticleController {
 
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
-        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
         Page<Article> articlePage = articleService.findByKw(board, kwType, kw, pageable);
         model.addAttribute("articlePage", articlePage);
 
-        return "usr/article/list";
+        return "usr/boardModule/article/list";
     }
 
     @GetMapping("/listByTag/{tagContent}")
