@@ -1,4 +1,4 @@
-<html layout:decorate="~{common/layout}">
+<html layout:decorate="~{global/globalModule/global/layout}">
 
 <head>
     <title th:text="|글 ${post.id}|"></title>
@@ -12,7 +12,7 @@
         const isLiveMode = urlPathVariables.length >= 4 && urlPathVariables[3] == 'live';
     </script>
 
-    <th:block th:replace="global/fragments :: toastuiEidtorLib"></th:block>
+    <th:block th:replace="global/globalModule/global/fragments/toastuiEidtorLib :: toastuiEidtorLib"></th:block>
 
     <h1 class="font-bold" th:text="${post.subject}"></h1>
 

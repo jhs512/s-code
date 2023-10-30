@@ -27,7 +27,7 @@ public class PostViewerController {
 
         model.addAttribute("post", post);
 
-        return "usr/postViewer/detail";
+        return "usr/postModule/postViewer/detail";
     }
 
     @GetMapping("/{id}/live")
@@ -36,7 +36,7 @@ public class PostViewerController {
 
         model.addAttribute("post", post);
 
-        return "usr/postViewer/detail";
+        return "usr/postModule/postViewer/detail";
     }
 
     @GetMapping("/{id}/body")
