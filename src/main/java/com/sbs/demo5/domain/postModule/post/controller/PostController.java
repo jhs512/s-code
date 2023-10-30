@@ -154,7 +154,7 @@ public class PostController {
         if (Ut.file.exists(writeForm.getAttachment__1()))
             postService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/usr/postModule/post/detail/%d".formatted(rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/usr/post/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
     @Getter
@@ -293,7 +293,7 @@ public class PostController {
 
         RsData<?> rsData = postService.remove(post);
 
-        return rq.redirectOrBack("/usr/postModule/post/myList", rsData);
+        return rq.redirectOrBack("/usr/post/myList", rsData);
     }
 
     public boolean assertActorCanModify() {
