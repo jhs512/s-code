@@ -35,6 +35,10 @@ public class BookService {
         return bookRepository.findByKw(kwType, kw, isPublic, pageable);
     }
 
+    public Page<Book> findByKw(Member author, String kwType, String kw, Pageable pageable) {
+        return bookRepository.findByKw(author, kwType, kw, pageable);
+    }
+
     public RsData<Book> write(Member author, long postKeywordId, String subject, String tagsStr, String body, String bodyHtml, boolean isPublic) {
         return write(author, postService.findKeywordById(postKeywordId).get(), subject, tagsStr, body, bodyHtml, isPublic);
     }

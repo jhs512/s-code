@@ -1,13 +1,13 @@
-package com.sbs.demo5.domain.boardModule.article.service;
+package com.sbs.demo5.domain.articleModule.article.service;
 
 
 import com.sbs.demo5.domain.baseModule.document.service.DocumentService;
 import com.sbs.demo5.domain.baseModule.genFile.entity.GenFile;
 import com.sbs.demo5.domain.baseModule.genFile.service.GenFileService;
-import com.sbs.demo5.domain.boardModule.article.entity.Article;
-import com.sbs.demo5.domain.boardModule.article.repository.ArticleRepository;
-import com.sbs.demo5.domain.boardModule.board.entity.Board;
-import com.sbs.demo5.domain.boardModule.board.service.BoardService;
+import com.sbs.demo5.domain.articleModule.article.entity.Article;
+import com.sbs.demo5.domain.articleModule.article.repository.ArticleRepository;
+import com.sbs.demo5.domain.articleModule.board.entity.Board;
+import com.sbs.demo5.domain.articleModule.board.service.BoardService;
 import com.sbs.demo5.domain.memberModule.member.entity.Member;
 import com.sbs.demo5.global.app.AppConfig;
 import com.sbs.demo5.global.rsData.RsData;

@@ -263,7 +263,7 @@ public class PostController {
         if (Ut.file.exists(modifyForm.getAttachment__2()))
             postService.saveAttachmentFile(rsData.getData(), modifyForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/usr/postModule/post/detail/%d".formatted(rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/usr/post/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
     @Getter

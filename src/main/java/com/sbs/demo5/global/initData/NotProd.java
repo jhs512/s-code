@@ -1,10 +1,10 @@
 package com.sbs.demo5.global.initData;
 
 import com.sbs.demo5.domain.baseModule.system.service.SystemService;
-import com.sbs.demo5.domain.boardModule.article.entity.Article;
-import com.sbs.demo5.domain.boardModule.article.service.ArticleService;
-import com.sbs.demo5.domain.boardModule.board.entity.Board;
-import com.sbs.demo5.domain.boardModule.board.service.BoardService;
+import com.sbs.demo5.domain.articleModule.article.entity.Article;
+import com.sbs.demo5.domain.articleModule.article.service.ArticleService;
+import com.sbs.demo5.domain.articleModule.board.entity.Board;
+import com.sbs.demo5.domain.articleModule.board.service.BoardService;
 import com.sbs.demo5.domain.bookModule.book.service.BookService;
 import com.sbs.demo5.domain.memberModule.member.entity.Member;
 import com.sbs.demo5.domain.memberModule.member.service.MemberService;
@@ -82,8 +82,8 @@ public class NotProd {
         Article article3 = articleService.write(board2, member2, "제목 3", "#자바의 정석", "내용 3").getData();
         Article article4 = articleService.write(board2, member3, "제목 4", "#홍길동", "내용 4").getData();
 
-        String file1Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/globalModule/globalModule.css");
-        String file2Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/globalModule/globalModule.js");
+        String file1Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.css");
+        String file2Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.js");
         articleService.saveAttachmentFile(article1, file1Path, 1L);
         articleService.saveAttachmentFile(article1, file2Path, 2L);
 
@@ -96,8 +96,8 @@ public class NotProd {
                 .findFirst()
                 .get();
 
-        String file3Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/globalModule/globalModule.css");
-        String file4Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/globalModule/globalModule.js");
+        String file3Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.css");
+        String file4Path = Ut.file.tempCopy(AppConfig.getResourcesStaticDirPath() + "/resource/common/common.js");
         postService.saveAttachmentFile(post1, file3Path, 1L);
         postService.saveAttachmentFile(post1, file4Path, 2L);
 

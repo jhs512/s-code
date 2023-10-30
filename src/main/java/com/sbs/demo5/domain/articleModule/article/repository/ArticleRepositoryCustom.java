@@ -1,7 +1,7 @@
-package com.sbs.demo5.domain.boardModule.article.repository;
+package com.sbs.demo5.domain.articleModule.article.repository;
 
-import com.sbs.demo5.domain.boardModule.article.entity.Article;
-import com.sbs.demo5.domain.boardModule.board.entity.Board;
+import com.sbs.demo5.domain.articleModule.article.entity.Article;
+import com.sbs.demo5.domain.articleModule.board.entity.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

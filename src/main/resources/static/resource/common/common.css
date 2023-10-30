@@ -57,3 +57,7 @@ html > body .modal-box {
     font-weight: 500;
     opacity: 0.7;
 }
+
+.toast-ui-editor {
+    overflow: hidden;
+}

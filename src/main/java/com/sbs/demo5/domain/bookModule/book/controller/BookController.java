@@ -6,6 +6,7 @@ import com.sbs.demo5.domain.bookModule.book.entity.Book;
 import com.sbs.demo5.domain.bookModule.book.service.BookService;
 import com.sbs.demo5.domain.postModule.post.service.PostService;
 import com.sbs.demo5.domain.postModule.postKeyword.entity.PostKeyword;
+import com.sbs.demo5.global.app.AppConfig;
 import com.sbs.demo5.global.rq.Rq;
 import com.sbs.demo5.global.rsData.RsData;
 import com.sbs.demo5.standard.util.Ut;
@@ -50,11 +51,28 @@ public class BookController {
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
-        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
         Page<Book> bookPage = bookService.findByKw(kwType, kw, true, pageable);
         model.addAttribute("bookPage", bookPage);
 
-        return "usr/book/list";
+        return "usr/bookModule/book/list";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/myList")
+    public String showMyList(
+            Model model,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String kw,
+            @RequestParam(defaultValue = "all") String kwType
+    ) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        Pageable pageable = PageRequest.of(page - 1, AppConfig.getBasePageSize(), Sort.by(sorts));
+        Page<Book> bookPage = bookService.findByKw(rq.getMember(), kwType, kw, pageable);
+        model.addAttribute("bookPage", bookPage);
+
+        return "usr/bookModule/book/mylist";
     }
 
     @GetMapping("/detail/{id}")
@@ -69,7 +87,7 @@ public class BookController {
         model.addAttribute("book", book);
         model.addAttribute("filesMap", filesMap);
 
-        return "usr/book/detail";
+        return "usr/bookModule/book/detail";
     }
 
     @PreAuthorize("isAuthenticated()")

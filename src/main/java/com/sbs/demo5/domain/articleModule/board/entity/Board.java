@@ -1,4 +1,4 @@
-package com.sbs.demo5.domain.boardModule.board.entity;
+package com.sbs.demo5.domain.articleModule.board.entity;
 
 import com.sbs.demo5.global.jpa.baseEntity.BaseEntity;
 import jakarta.persistence.Column;

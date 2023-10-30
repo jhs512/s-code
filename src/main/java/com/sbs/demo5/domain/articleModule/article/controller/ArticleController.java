@@ -1,10 +1,10 @@
-package com.sbs.demo5.domain.boardModule.article.controller;
+package com.sbs.demo5.domain.articleModule.article.controller;
 
 import com.sbs.demo5.domain.baseModule.genFile.entity.GenFile;
-import com.sbs.demo5.domain.boardModule.article.entity.Article;
-import com.sbs.demo5.domain.boardModule.article.service.ArticleService;
-import com.sbs.demo5.domain.boardModule.board.entity.Board;
-import com.sbs.demo5.domain.boardModule.board.service.BoardService;
+import com.sbs.demo5.domain.articleModule.article.entity.Article;
+import com.sbs.demo5.domain.articleModule.article.service.ArticleService;
+import com.sbs.demo5.domain.articleModule.board.entity.Board;
+import com.sbs.demo5.domain.articleModule.board.service.BoardService;
 import com.sbs.demo5.global.app.AppConfig;
 import com.sbs.demo5.global.rq.Rq;
 import com.sbs.demo5.global.rsData.RsData;
@@ -59,7 +59,7 @@ public class ArticleController {
         Page<Article> articlePage = articleService.findByKw(board, kwType, kw, pageable);
         model.addAttribute("articlePage", articlePage);
 
-        return "usr/boardModule/article/list";
+        return "usr/articleModule/article/list";
     }
 
     @GetMapping("/listByTag/{tagContent}")
@@ -200,7 +200,7 @@ public class ArticleController {
         model.addAttribute("article", article);
         model.addAttribute("filesMap", filesMap);
 
-        return "usr/article/detail";
+        return "usr/articleModule/article/detail";
     }
 
     @PreAuthorize("isAuthenticated()")

@@ -1,8 +1,8 @@
 package com.sbs.demo5.global.initData;
 
 import com.sbs.demo5.domain.baseModule.system.service.SystemService;
-import com.sbs.demo5.domain.boardModule.board.entity.Board;
-import com.sbs.demo5.domain.boardModule.board.service.BoardService;
+import com.sbs.demo5.domain.articleModule.board.entity.Board;
+import com.sbs.demo5.domain.articleModule.board.service.BoardService;
 import com.sbs.demo5.domain.memberModule.member.entity.Member;
 import com.sbs.demo5.domain.memberModule.member.service.MemberService;
 import com.sbs.demo5.global.app.AppConfig;

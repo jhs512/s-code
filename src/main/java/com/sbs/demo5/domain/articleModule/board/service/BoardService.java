@@ -1,8 +1,8 @@
-package com.sbs.demo5.domain.boardModule.board.service;
+package com.sbs.demo5.domain.articleModule.board.service;
 
 
-import com.sbs.demo5.domain.boardModule.board.entity.Board;
-import com.sbs.demo5.domain.boardModule.board.repository.BoardRepository;
+import com.sbs.demo5.domain.articleModule.board.entity.Board;
+import com.sbs.demo5.domain.articleModule.board.repository.BoardRepository;
 import com.sbs.demo5.global.rsData.RsData;
 import com.sbs.demo5.standard.util.Ut;
 import lombok.RequiredArgsConstructor;

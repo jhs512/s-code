@@ -1,4 +1,4 @@
-package com.sbs.demo5.domain.boardModule.article.repository;
+package com.sbs.demo5.domain.articleModule.article.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
@@ -6,15 +6,15 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sbs.demo5.domain.boardModule.article.entity.Article;
-import com.sbs.demo5.domain.boardModule.board.entity.Board;
+import com.sbs.demo5.domain.articleModule.article.entity.Article;
+import com.sbs.demo5.domain.articleModule.board.entity.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
-import static com.sbs.demo5.domain.boardModule.article.entity.QArticle.article;
+import static com.sbs.demo5.domain.articleModule.article.entity.QArticle.article;
 
 @RequiredArgsConstructor
 public class ArticleRepositoryImpl implements ArticleRepositoryCustom {

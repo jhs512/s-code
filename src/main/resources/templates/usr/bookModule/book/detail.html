@@ -7,7 +7,7 @@
 <body>
 
 <div class="flex-1 flex items-center justify-center" layout:fragment="content">
-    <th:block th:replace="global/fragments :: toastuiEidtorLib"></th:block>
+    <th:block th:replace="global/globalModule/global/fragments/toastuiEidtorLib :: toastuiEidtorLib"></th:block>
 
     <div class="container px-4">
         <h1 class="mb-4">
@@ -46,19 +46,19 @@
                         <div th:text="${book.publicHanName}"></div>
                     </div>
 
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text">본문</span>
-                        </label>
-                        <a class="link" target="_blank" th:href="|/usr/post/listByKeyword/${book.postKeyword.id}|"
-                           th:text="|#${book.postKeyword.content}(${book.postKeyword.total})|"></a>
-                    </div>
-
                     <div class="form-control col-span-full">
                         <label class="label">
                             <span class="label-text">제목</span>
                         </label>
                         <div th:text="${book.subject}"></div>
+                    </div>
+
+                    <div class="form-control col-span-full">
+                        <label class="label">
+                            <span class="label-text">본문</span>
+                        </label>
+                        <a class="link" target="_blank" th:href="|/usr/post/listByKeyword/${book.postKeyword.id}|"
+                           th:text="|#${book.postKeyword.content}(${book.postKeyword.total})|"></a>
                     </div>
 
                     <div class="form-control col-span-full">

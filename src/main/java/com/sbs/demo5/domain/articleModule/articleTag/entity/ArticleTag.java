@@ -1,7 +1,7 @@
-package com.sbs.demo5.domain.boardModule.articleTag.entity;
+package com.sbs.demo5.domain.articleModule.articleTag.entity;
 
 import com.sbs.demo5.domain.baseModule.document.standard.DocumentTag;
-import com.sbs.demo5.domain.boardModule.article.entity.Article;
+import com.sbs.demo5.domain.articleModule.article.entity.Article;
 import com.sbs.demo5.domain.memberModule.member.entity.Member;
 import com.sbs.demo5.global.jpa.baseEntity.BaseEntity;
 import jakarta.persistence.Entity;
