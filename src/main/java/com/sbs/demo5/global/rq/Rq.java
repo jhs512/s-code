@@ -261,18 +261,18 @@ public class Rq {
     public String getSuitableListByTagPageBaseUrlByCurrentUrl(String domainName) {
         String currentUrl = getCurrentUrlPath();
 
-        String listByTagPageBaseUrl = "/usr/" + domainName + "/listByTag";
+        String listByTagPageBaseUrl = "/domain/" + domainName + "/listByTag";
 
-        if (currentUrl.startsWith("/usr/" + domainName + "/list")) return listByTagPageBaseUrl;
-        if (currentUrl.startsWith("/usr/" + domainName + "/listByTag")) return listByTagPageBaseUrl;
+        if (currentUrl.startsWith("/domain/" + domainName + "/list")) return listByTagPageBaseUrl;
+        if (currentUrl.startsWith("/domain/" + domainName + "/listByTag")) return listByTagPageBaseUrl;
 
         String listUrl = getParam("listUrl", "");
 
-        if (currentUrl.startsWith("/usr/" + domainName + "/detail") && listUrl.isBlank()) return listByTagPageBaseUrl;
-        if (listUrl.startsWith("/usr/" + domainName + "/list")) return listByTagPageBaseUrl;
-        if (listUrl.startsWith("/usr/" + domainName + "/listByTag")) return listByTagPageBaseUrl;
+        if (currentUrl.startsWith("/domain/" + domainName + "/detail") && listUrl.isBlank()) return listByTagPageBaseUrl;
+        if (listUrl.startsWith("/domain/" + domainName + "/list")) return listByTagPageBaseUrl;
+        if (listUrl.startsWith("/domain/" + domainName + "/listByTag")) return listByTagPageBaseUrl;
 
-        return "/usr/postModule/post/myListByTag";
+        return "/domain/postModule/post/myListByTag";
     }
 
     public long getFirstNumberPathVariableAsLong(long defaultValue) {

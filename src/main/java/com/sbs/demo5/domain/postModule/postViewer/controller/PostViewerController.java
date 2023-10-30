@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.LocalDateTime;
 
 @Controller
-@RequestMapping("/usr/p")
+@RequestMapping("/p")
 @RequiredArgsConstructor
 public class PostViewerController {
     private final PostService postService;
@@ -27,7 +27,7 @@ public class PostViewerController {
 
         model.addAttribute("post", post);
 
-        return "usr/postModule/postViewer/detail";
+        return "domain/postModule/postViewer/detail";
     }
 
     @GetMapping("/{id}/live")
@@ -36,7 +36,7 @@ public class PostViewerController {
 
         model.addAttribute("post", post);
 
-        return "usr/postModule/postViewer/detail";
+        return "domain/postModule/postViewer/detail";
     }
 
     @GetMapping("/{id}/body")

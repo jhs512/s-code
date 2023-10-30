@@ -16,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/usr/wikenMember")
+@RequestMapping("/wikenMember")
 @RequiredArgsConstructor
 @Validated
 public class WikenMemberController {
@@ -25,13 +25,13 @@ public class WikenMemberController {
     private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
-    @GetMapping("/login")
+    @GetMapping("/migrate")
     public String showLogin() {
-        return "usr/wikenMember/login";
+        return "domain/migrationModule/wikenMember/migrate";
     }
 
     @PreAuthorize("isAnonymous()")
-    @PostMapping("/login")
+    @PostMapping("/migrate")
     @Transactional
     public String login(
             @NotBlank String username
@@ -57,7 +57,7 @@ public class WikenMemberController {
                     if (post.getAuthor().getUsername().equals("garage")) post.setAuthor(member);
                 });
 
-        return rq.redirect("/usr/member/login?username=" + username, "마이그레이션이 완료되었습니다. 로그인을 진행해주세요.");
+        return rq.redirect("/member/login?username=" + username, "마이그레이션이 완료되었습니다. 로그인을 진행해주세요.");
     }
 
     @PreAuthorize("isAuthenticated()")

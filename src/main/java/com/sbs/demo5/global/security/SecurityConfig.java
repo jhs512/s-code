@@ -29,37 +29,37 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                .requestMatchers(requestMatchersOf("/usr/member/notVerified")
+                                .requestMatchers(requestMatchersOf("/member/notVerified")
                                 ).permitAll()
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/postModule/post/modify/*", "/usr/postModule/post/modifyMode2/*")
+                                        requestMatchersOf("/post/modify/*", "/post/modifyMode2/*")
                                 ).access(accessOf("@postController.assertActorCanModify()"))
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/postModule/post/remove/*")
+                                        requestMatchersOf("/post/remove/*")
                                 ).access(accessOf("@postController.assertActorCanRemove()"))
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/book/*/write")
+                                        requestMatchersOf("/domain/book/*/write")
                                 ).access(accessOf("@bookController.assertActorCanWrite()"))
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/book/*/modify/*")
+                                        requestMatchersOf("/domain/book/*/modify/*")
                                 ).access(accessOf("@bookController.assertActorCanModify()"))
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/book/*/remove/*")
+                                        requestMatchersOf("/domain/book/*/remove/*")
                                 ).access(accessOf("@bookController.assertActorCanRemove()"))
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/article/*/write")
+                                        requestMatchersOf("/domain/article/*/write")
                                 ).access(accessOf("@articleController.assertActorCanWrite()"))
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/article/*/modify/*")
+                                        requestMatchersOf("/domain/article/*/modify/*")
                                 ).access(accessOf("@articleController.assertActorCanModify()"))
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/article/*/remove/*")
+                                        requestMatchersOf("/domain/article/*/remove/*")
                                 ).access(accessOf("@articleController.assertActorCanRemove()"))
                                 .requestMatchers(
-                                        requestMatchersOf("/usr/member/beProducer", "/usr/member/modify")
+                                        requestMatchersOf("/member/beProducer", "/member/modify")
                                 ).access(accessOf("@memberController.assertCheckPasswordAuthCodeVerified()"))
                                 .requestMatchers(
-                                        requestMatchersOf("/", "/usr/**")
+                                        requestMatchersOf("/", "/domain/**")
                                 ).access(accessOf("isAnonymous() or @memberController.assertCurrentMemberVerified()"))
                                 .requestMatchers(
                                         requestMatchersOf("/adm/**")
@@ -73,20 +73,20 @@ public class SecurityConfig {
                 )
                 .oauth2Login(
                         oauth2Login -> oauth2Login
-                                .loginPage("/usr/member/login")
+                                .loginPage("/member/login")
                 )
                 .csrf((csrf) -> csrf
-                        .ignoringRequestMatchers(requestMatchersOf("/usr/postModule/post/modifyBody/**")))
+                        .ignoringRequestMatchers(requestMatchersOf("/post/modifyBody/**")))
                 .headers((headers) -> headers
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(
                                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
                 .formLogin((formLogin) -> formLogin
-                        .loginPage("/usr/member/login")
+                        .loginPage("/member/login")
                         .successHandler(new CustomSimpleUrlAuthenticationSuccessHandler())
                         .failureHandler(new CustomSimpleUrlAuthenticationFailureHandler())
                 )
                 .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/usr/member/logout"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true))
         ;

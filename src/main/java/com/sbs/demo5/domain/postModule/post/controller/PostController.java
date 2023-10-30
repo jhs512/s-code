@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/usr/post")
+@RequestMapping("/post")
 @RequiredArgsConstructor
 @Validated
 public class PostController {
@@ -52,7 +52,7 @@ public class PostController {
         Page<Post> postPage = postService.findByKw(kwType, kw, true, pageable);
         model.addAttribute("postPage", postPage);
 
-        return "usr/postModule/post/list";
+        return "domain/postModule/post/list";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -69,7 +69,7 @@ public class PostController {
         Page<Post> postPage = postService.findByKw(rq.getMember(), kwType, kw, pageable);
         model.addAttribute("postPage", postPage);
 
-        return "usr/postModule/post/myList";
+        return "domain/postModule/post/myList";
     }
 
     @GetMapping("/detail/{id}")
@@ -84,7 +84,7 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("filesMap", filesMap);
 
-        return "usr/postModule/post/detail";
+        return "domain/postModule/post/detail";
     }
 
     @GetMapping("/listByKeyword/{postKeywordId}")
@@ -103,7 +103,7 @@ public class PostController {
         Page<Post> postPage = postService.findByTag(postKeyword.getAuthor(), postKeyword.getContent(), true, pageable);
         model.addAttribute("postPage", postPage);
 
-        return "usr/postModule/post/listByKeyword";
+        return "domain/postModule/post/listByKeyword";
     }
 
     @GetMapping("/listByTag/{tagContent}")
@@ -118,7 +118,7 @@ public class PostController {
         Page<Post> postPage = postService.findByTag(tagContent, true, pageable);
         model.addAttribute("postPage", postPage);
 
-        return "usr/postModule/post/listByTag";
+        return "domain/postModule/post/listByTag";
     }
 
     @GetMapping("/myListByTag/{tagContent}")
@@ -133,13 +133,13 @@ public class PostController {
         Page<Post> postPage = postService.findByTag(rq.getMember(), tagContent, pageable);
         model.addAttribute("postPage", postPage);
 
-        return "usr/postModule/post/mylistByTag";
+        return "domain/postModule/post/mylistByTag";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/write")
     public String showWrite() {
-        return "usr/postModule/post/write";
+        return "domain/postModule/post/write";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -154,7 +154,7 @@ public class PostController {
         if (Ut.file.exists(writeForm.getAttachment__1()))
             postService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/usr/post/detail/%d".formatted(rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/post/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
     @Getter
@@ -185,14 +185,13 @@ public class PostController {
 
         model.addAttribute("post", post);
 
-        return "usr/postModule/post/modifyMode2";
+        return "domain/postModule/post/modifyMode2";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modifyBody/{id}")
     @ResponseBody
     public RsData<ModifyBodyResponseBody> modifyBody(
-            Model model,
             @PathVariable long id,
             @RequestBody @Valid ModifyBodyForm form
     ) {
@@ -203,7 +202,7 @@ public class PostController {
         return rsData.newDataOf(
                 new ModifyBodyResponseBody(
                         rsData.getData().getBody(),
-                        rsData.getData().getBodyHtml()
+                        rsData.getData().getBodyHtmlForPrint()
                 )
         );
     }
@@ -239,7 +238,7 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("filesMap", filesMap);
 
-        return "usr/postModule/post/modify";
+        return "domain/postModule/post/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -263,7 +262,7 @@ public class PostController {
         if (Ut.file.exists(modifyForm.getAttachment__2()))
             postService.saveAttachmentFile(rsData.getData(), modifyForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/usr/post/detail/%d".formatted(rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/post/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
     @Getter
@@ -293,7 +292,7 @@ public class PostController {
 
         RsData<?> rsData = postService.remove(post);
 
-        return rq.redirectOrBack("/usr/post/myList", rsData);
+        return rq.redirectOrBack("/post/myList", rsData);
     }
 
     public boolean assertActorCanModify() {

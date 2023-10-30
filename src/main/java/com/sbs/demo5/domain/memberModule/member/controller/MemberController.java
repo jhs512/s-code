@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("/usr/member")
+@RequestMapping("/member")
 @RequiredArgsConstructor
 @Validated
 public class MemberController {
@@ -31,13 +31,13 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
     public String showLogin() {
-        return "usr/memberModule/member/login";
+        return "domain/memberModule/member/login";
     }
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
     public String showJoin() {
-        return "usr/memberModule/member/join";
+        return "domain/memberModule/member/join";
     }
 
     @PreAuthorize("isAnonymous()")
@@ -105,13 +105,13 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/notVerified")
     public String showNotVerified() {
-        return "usr/memberModule/member/notVerified";
+        return "domain/memberModule/member/notVerified";
     }
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/findUsername")
     public String showFindUsername() {
-        return "usr/memberModule/member/findUsername";
+        return "domain/memberModule/member/findUsername";
     }
 
     @PreAuthorize("isAnonymous()")
@@ -122,7 +122,7 @@ public class MemberController {
         return memberService.findByEmail(email)
                 .map(member ->
                         rq.redirect(
-                                "/usr/member/login?lastUsername=%s".formatted(member.getUsername()),
+                                "/member/login?lastUsername=%s".formatted(member.getUsername()),
                                 "해당 회원의 아이디는 `%s` 입니다.".formatted(member.getUsername())
                         )
                 )
@@ -132,7 +132,7 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @GetMapping("/findPassword")
     public String showFindPassword() {
-        return "usr/memberModule/member/findPassword";
+        return "domain/memberModule/member/findPassword";
     }
 
     @PreAuthorize("isAnonymous()")
@@ -145,7 +145,7 @@ public class MemberController {
                 .map(member -> {
                     memberService.sendTempPasswordToEmail(member);
                     return rq.redirect(
-                            "/usr/member/login?lastUsername=%s".formatted(member.getUsername()),
+                            "/member/login?lastUsername=%s".formatted(member.getUsername()),
                             "해당 회원의 이메일로 임시 비밀번호를 발송하였습니다."
                     );
                 }).orElseGet(() -> rq.historyBack("일치하는 회원이 존재하지 않습니다."));
@@ -154,13 +154,13 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public String showMe() {
-        return "usr/memberModule/member/me";
+        return "domain/memberModule/member/me";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify")
     public String showModify() {
-        return "usr/memberModule/member/modify";
+        return "domain/memberModule/member/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -173,7 +173,7 @@ public class MemberController {
                 modifyForm.getProfileImg()
         );
 
-        return rq.redirectOrBack("/usr/member/me", modifyRs);
+        return rq.redirectOrBack("/member/me", modifyRs);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -187,7 +187,7 @@ public class MemberController {
             return rq.redirect(redirectUrl);
         }
 
-        return "usr/memberModule/member/checkPassword";
+        return "domain/memberModule/member/checkPassword";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -240,7 +240,7 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/beProducer")
     public String showBeProducer() {
-        return "usr/memberModule/member/beProducer";
+        return "domain/memberModule/member/beProducer";
     }
 
     @SneakyThrows
@@ -251,6 +251,6 @@ public class MemberController {
 
         RsData<Member> rs = memberService.beProducer(member.getId(), producerName);
 
-        return rq.redirectOrBack("/usr/member/me", rs);
+        return rq.redirectOrBack("/member/me", rs);
     }
 }

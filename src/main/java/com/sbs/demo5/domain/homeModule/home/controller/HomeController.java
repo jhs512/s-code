@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
     @GetMapping("/")
     public String showMain() {
-        return "usr/homeModule/home/main";
+        return "domain/homeModule/home/main";
     }
 
     @GetMapping("/ken")

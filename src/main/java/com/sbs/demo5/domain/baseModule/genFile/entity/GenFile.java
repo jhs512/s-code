@@ -53,7 +53,7 @@ public class GenFile extends BaseEntity {
     }
 
     public String getDownloadUrl() {
-        return "/usr/genFile/download/" + getId();
+        return "/domain/genFile/download/" + getId();
     }
 
     public String getFilePath() {

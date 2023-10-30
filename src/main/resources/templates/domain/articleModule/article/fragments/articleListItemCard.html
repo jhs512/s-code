@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+
+<th:block th:fragment="articleListItemCard(article)">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+
+            <div class="detail grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-3">
+                <a th:href="|/article/${article.board.code}/detail/${article.id}?listUrl=${@rq.encodedCurrentUrl}|"
+                   class="col-span-full bg-gray-700 rounded p-3 text-gray-100 flex items-center justify-center flex-wrap aspect-video">
+                    <div class="flex flex-wrap gap-1">
+                        <div class="flex gap-1">
+                            <span>📜️</span>
+                            <span th:text="${article.subject}"></span>
+                        </div>
+                        <div class="flex-grow text-right text-gray-300 italic">
+                            <span>by</span>
+                            <span th:text="|${article.author.nickname}|"></span>
+                        </div>
+                    </div>
+                </a>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">게시물번호</span>
+                    </label>
+                    <div th:text="${article.id}"></div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">작성일</span>
+                    </label>
+                    <div th:text="${#temporals.format(article.createDate, 'yy.MM.dd')}"></div>
+                </div>
+
+                <div class="form-control col-span-full">
+                    <label class="label">
+                        <span class="label-text">태그</span>
+                    </label>
+                    <div th:utext="${article.getTagLinks('<a class=`link` href=`%s`>#%s</a>', '/article/listByTag/%s')}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>

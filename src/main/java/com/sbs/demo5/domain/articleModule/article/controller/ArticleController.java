@@ -1,10 +1,10 @@
 package com.sbs.demo5.domain.articleModule.article.controller;
 
-import com.sbs.demo5.domain.baseModule.genFile.entity.GenFile;
 import com.sbs.demo5.domain.articleModule.article.entity.Article;
 import com.sbs.demo5.domain.articleModule.article.service.ArticleService;
 import com.sbs.demo5.domain.articleModule.board.entity.Board;
 import com.sbs.demo5.domain.articleModule.board.service.BoardService;
+import com.sbs.demo5.domain.baseModule.genFile.entity.GenFile;
 import com.sbs.demo5.global.app.AppConfig;
 import com.sbs.demo5.global.rq.Rq;
 import com.sbs.demo5.global.rsData.RsData;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/usr/article")
+@RequestMapping("/article")
 @RequiredArgsConstructor
 @Validated
 public class ArticleController {
@@ -59,7 +59,7 @@ public class ArticleController {
         Page<Article> articlePage = articleService.findByKw(board, kwType, kw, pageable);
         model.addAttribute("articlePage", articlePage);
 
-        return "usr/articleModule/article/list";
+        return "domain/articleModule/article/list";
     }
 
     @GetMapping("/listByTag/{tagContent}")
@@ -74,7 +74,7 @@ public class ArticleController {
         Page<Article> articlePage = articleService.findByTag(tagContent, pageable);
         model.addAttribute("articlePage", articlePage);
 
-        return "usr/article/listByTag";
+        return "domain/articleModule/article/listByTag";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -87,7 +87,7 @@ public class ArticleController {
 
         model.addAttribute("board", board);
 
-        return "usr/article/write";
+        return "domain/articleModule/article/write";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -105,7 +105,7 @@ public class ArticleController {
         if (Ut.file.exists(writeForm.getAttachment__1()))
             articleService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/usr/article/%s/detail/%d".formatted(board.getCode(), rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/article/%s/detail/%d".formatted(board.getCode(), rsData.getData().getId()), rsData);
     }
 
     @AllArgsConstructor
@@ -139,7 +139,7 @@ public class ArticleController {
         model.addAttribute("article", article);
         model.addAttribute("filesMap", filesMap);
 
-        return "usr/article/modify";
+        return "domain/articleModule/article/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -165,7 +165,7 @@ public class ArticleController {
         if (Ut.file.exists(modifyForm.getAttachment__2()))
             articleService.saveAttachmentFile(rsData.getData(), modifyForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/usr/article/%s/detail/%d".formatted(board.getCode(), rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/article/%s/detail/%d".formatted(board.getCode(), rsData.getData().getId()), rsData);
     }
 
     @Getter
@@ -200,7 +200,7 @@ public class ArticleController {
         model.addAttribute("article", article);
         model.addAttribute("filesMap", filesMap);
 
-        return "usr/articleModule/article/detail";
+        return "domain/articleModule/article/detail";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -213,7 +213,7 @@ public class ArticleController {
         Article article = articleService.findById(id).get();
         RsData<?> rsData = articleService.remove(article);
 
-        return rq.redirectOrBack("/usr/article/%s/list".formatted(board.getCode()), rsData);
+        return rq.redirectOrBack("/article/%s/list".formatted(board.getCode()), rsData);
     }
 
     public boolean assertActorCanWrite() {

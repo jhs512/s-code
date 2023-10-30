@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html
+        lang="ko"
+        th:with="UtThy=${T(com.sbs.demo5.standard.util.Ut.thy)}"
+        data-theme="light"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE" th:text="${@appConfig.siteName}"></title>
+
+    <!-- 제이쿼리 불러오기 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- toastr 불러오기 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <link href="https://jhs512.github.io/toastr/toastr.css" rel="stylesheet">
+
+    <!-- 폰트어썸 아이콘 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- 아이콘 목록 : https://fontawesome.com/search?o=r&m=free -->
+
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@3.7.7/dist/full.css" rel="stylesheet" type="text/css"/>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
+
+<link href="/resource/common/common.css" rel="stylesheet">
+<script src="/resource/common/common.js"></script>
+
+<script>
+    hotkeys('ctrl+s,cmd+s', function (event, handler) {
+        // Prevent the default save action
+        event.preventDefault();
+    });
+
+    hotkeys('ctrl+q,cmd+q', function (event, handler) {
+        // Prevent the default save action
+        event.preventDefault();
+    });
+
+    const urlPathVariables = getUrlVariables();
+    const urlParams = getUrlParams();
+
+    const isPostWritePage = urlPathVariables[1] === "post" && urlPathVariables[2] === "write";
+    const isPostDetailPage = urlPathVariables[1] === "post" && urlPathVariables[2] === "detail";
+    const isPostDetailMode2Page = urlPathVariables[1] === "p";
+    const isPostDetailMode2LivePage = urlPathVariables[1] === "p" && urlPathVariables[3] === "live";
+    const isPostModifyPage = urlPathVariables[1] === "post" && urlPathVariables[2] === "modify";
+    const isPostModifyMode2Page = urlPathVariables[1] === "post" && urlPathVariables[2] === "modifyMode2";
+
+    const postId = isPostDetailPage || isPostDetailMode2Page || isPostDetailMode2LivePage || isPostModifyPage || isPostModifyMode2Page ? (!isNaN(urlPathVariables[2]) ? parseInt(urlPathVariables[2]) : parseInt(urlPathVariables[3])) : null;
+
+    const postWritePageUrl = "/post/write";
+    const postMyListPageUrl = "/post/myList";
+    const postDetailPageUrl = "/post/detail/" + postId;
+    const postDetailMode2PageUrl = "/p/" + postId;
+    const postDetailMode2LivePageUrl = "/p/" + postId + "/live";
+    const postModifyPageUrl = "/post/modify/" + postId;
+    const postModifyMode2PageUrl = "/post/modifyMode2/" + postId;
+
+    const goToPostWritePageUrl = () => location.href = postWritePageUrl;
+    const goToPostMyListPageUrl = () => location.href = postMyListPageUrl;
+    const goToPostDetailPageUrl = () => location.href = postDetailPageUrl;
+    const goToPostDetailMode2PageUrl = () => location.href = postDetailMode2PageUrl;
+    const goToPostDetailMode2LivePageUrl = () => location.href = postDetailMode2LivePageUrl;
+    const goToPostModifyPageUrl = () => location.href = postModifyPageUrl;
+    const goToPostModifyMode2PageUrl = () => location.href = postModifyMode2PageUrl;
+
+    hotkeys.filter = function (event) {
+        return true;
+    }
+
+    hotkeys('alt+shift+1,opt+shift+1', () => goToPostWritePageUrl());
+    hotkeys('alt+shift+2,opt+shift+2', () => goToPostMyListPageUrl());
+
+    if (postId) {
+        hotkeys('alt+shift+3,opt+shift+3', () => goToPostDetailPageUrl());
+        hotkeys('alt+shift+4,opt+shift+4', () => goToPostDetailMode2PageUrl());
+        hotkeys('alt+shift+5,opt+shift+5', () => goToPostDetailMode2LivePageUrl());
+        hotkeys('alt+shift+6,opt+shift+6', () => goToPostModifyPageUrl());
+        hotkeys('alt+shift+7,opt+shift+7', () => goToPostModifyMode2PageUrl());
+    }
+</script>
+
+<div class="min-h-screen flex flex-col">
+    <header layout:fragment="header" class="sticky top-0 z-50 shadow-sm"></header>
+
+    <main class="flex-1 flex flex-col py-4">
+        <th:block layout:fragment="content"></th:block>
+    </main>
+</div>
+
+<script>
+    // URL에서 msg 파라미터의 값을 가져오는 함수
+    function getMsgFromURL() {
+        const url = new URL(window.location.href);
+        return url.searchParams.get('msg');
+    }
+
+    function getFailMsgFromURL() {
+        const url = new URL(window.location.href);
+        return url.searchParams.get('failMsg');
+    }
+
+    const msg = getMsgFromURL();
+
+    // msg 파라미터의 값이 있으면 toastr로 알림을 표시
+    if (msg) {
+        toastNotice(decodeURIComponent(msg));
+    }
+
+    const failMsg = getFailMsgFromURL();
+
+    // msg 파라미터의 값이 있으면 toastr로 알림을 표시
+    if (failMsg) {
+        toastWarning(decodeURIComponent(failMsg));
+    }
+
+    // history.back 에 의해서 돌아온 경우에 실행됨
+    $(window).bind("pageshow", function (event) {
+        let localStorageKeyAboutHistoryBackFailMsg = "historyBackFailMsg___" + location.href;
+
+        if (!localStorage.getItem(localStorageKeyAboutHistoryBackFailMsg)) {
+            localStorageKeyAboutHistoryBackFailMsg = "historyBackFailMsg___null";
+        }
+
+        const historyBackFailMsg = localStorage.getItem(localStorageKeyAboutHistoryBackFailMsg);
+        if (historyBackFailMsg) {
+            toastWarning(historyBackFailMsg);
+            localStorage.removeItem(localStorageKeyAboutHistoryBackFailMsg);
+        }
+    });
+
+</script>
+
+</body>
+</html>

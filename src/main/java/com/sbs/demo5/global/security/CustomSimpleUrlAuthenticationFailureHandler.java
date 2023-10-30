@@ -18,7 +18,7 @@ public class CustomSimpleUrlAuthenticationFailureHandler extends SimpleUrlAuthen
 
         String failMsg = exception instanceof BadCredentialsException ? "비밀번호가 일치하지 않습니다." : "존재하지 않는 회원입니다.";
 
-        setDefaultFailureUrl("/usr/member/login?lastUsername=" + username + "&failMsg=" + Ut.url.encodeWithTtl(failMsg));
+        setDefaultFailureUrl("/member/login?lastUsername=" + username + "&failMsg=" + Ut.url.encodeWithTtl(failMsg));
         super.onAuthenticationFailure(request, response, exception);
     }
 }

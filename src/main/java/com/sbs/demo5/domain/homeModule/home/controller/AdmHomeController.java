@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdmHomeController {
     @GetMapping("/main")
     public String showMain() {
-        return "adm/home/main";
+        return "adm/admHome/main";
     }
 }

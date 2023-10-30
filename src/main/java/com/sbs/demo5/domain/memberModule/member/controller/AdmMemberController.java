@@ -37,6 +37,6 @@ public class AdmMemberController {
         Page<Member> memberPage = memberService.findByKw(kwType, kw, pageable);
         model.addAttribute("memberPage", memberPage);
 
-        return "adm/member/list";
+        return "adm/admMember/list";
     }
 }

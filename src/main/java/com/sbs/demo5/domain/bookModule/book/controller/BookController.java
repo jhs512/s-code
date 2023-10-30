@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/usr/book")
+@RequestMapping("/book")
 @RequiredArgsConstructor
 @Validated
 public class BookController {
@@ -55,7 +55,7 @@ public class BookController {
         Page<Book> bookPage = bookService.findByKw(kwType, kw, true, pageable);
         model.addAttribute("bookPage", bookPage);
 
-        return "usr/bookModule/book/list";
+        return "domain/bookModule/book/list";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -72,7 +72,7 @@ public class BookController {
         Page<Book> bookPage = bookService.findByKw(rq.getMember(), kwType, kw, pageable);
         model.addAttribute("bookPage", bookPage);
 
-        return "usr/bookModule/book/mylist";
+        return "domain/bookModule/book/mylist";
     }
 
     @GetMapping("/detail/{id}")
@@ -87,7 +87,7 @@ public class BookController {
         model.addAttribute("book", book);
         model.addAttribute("filesMap", filesMap);
 
-        return "usr/bookModule/book/detail";
+        return "domain/bookModule/book/detail";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -97,7 +97,7 @@ public class BookController {
 
         model.addAttribute("postKeywords", postKeywords);
 
-        return "usr/book/write";
+        return "domain/bookModule/book/write";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -112,7 +112,7 @@ public class BookController {
         if (Ut.file.exists(writeForm.getAttachment__1()))
             bookService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/usr/book/detail/%d".formatted(rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/book/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
     @Getter
@@ -145,7 +145,7 @@ public class BookController {
         model.addAttribute("book", book);
         model.addAttribute("filesMap", filesMap);
 
-        return "usr/book/modify";
+        return "domain/bookModule/book/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -169,7 +169,7 @@ public class BookController {
         if (Ut.file.exists(modifyForm.getAttachment__2()))
             bookService.saveAttachmentFile(rsData.getData(), modifyForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/usr/book/detail/%d".formatted(rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/book/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
     @Getter
@@ -199,7 +199,7 @@ public class BookController {
 
         RsData<?> rsData = bookService.remove(book);
 
-        return rq.redirectOrBack("/usr/book/myList", rsData);
+        return rq.redirectOrBack("/book/myList", rsData);
     }
 
     public boolean assertActorCanWrite() {
