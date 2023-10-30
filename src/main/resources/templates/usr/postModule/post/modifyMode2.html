@@ -1,4 +1,4 @@
-<html layout:decorate="~{common/layout}">
+<html layout:decorate="~{usr/globalModule/global/layout}">
 
 <head>
     <title th:text="|글수정|"></title>
@@ -9,7 +9,7 @@
 <div layout:fragment="content" class="-my-4">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
 
-    <th:block th:replace="global/fragments :: toastuiEidtorLib"></th:block>
+    <th:block th:replace="global/globalModule/global/fragments/toastuiEidtorLib :: toastuiEidtorLib"></th:block>
 
     <script type="text/javascript">
         let Post__editor = null;
@@ -29,7 +29,7 @@
 
             if (Post__lastBody == body && Post__lastBodyHtml == bodyHtml) return;
 
-            const action = "/usr/postModule/post/modifyBody/" + urlPathVariables[3];
+            const action = "/usr/post/modifyBody/" + urlPathVariables[3];
             const csrfTokenHeaderName = $("meta[name='_csrf_header']").attr("content");
             const csfTokenValue = $("meta[name='_csrf']").attr("content");
 
