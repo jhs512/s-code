@@ -79,7 +79,7 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "globalModule", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
 
         model.addAttribute("post", post);
         model.addAttribute("filesMap", filesMap);
@@ -181,7 +181,7 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "globalModule", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
 
         model.addAttribute("post", post);
 
@@ -233,7 +233,7 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "globalModule", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
 
         model.addAttribute("post", post);
         model.addAttribute("filesMap", filesMap);

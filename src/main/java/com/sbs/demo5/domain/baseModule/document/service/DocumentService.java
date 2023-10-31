@@ -38,7 +38,7 @@ public class DocumentService {
 
         String newBody = Ut.str.replace(doc.getBody(), "\\(" + TEMP_FILE_PATH + "/([^)]+)\\?type=temp\\)", (String url) -> {
             url = TEMP_FILE_PATH + "/" + url;
-            String newUrl = genFileService.tempToFile(url, (BaseEntity) doc, "globalModule", "inBody", 0).getUrl();
+            String newUrl = genFileService.tempToFile(url, (BaseEntity) doc, "common", "inBody", 0).getUrl();
             urlsMap.put(url, newUrl);
             return "(" + newUrl + ")";
         });
