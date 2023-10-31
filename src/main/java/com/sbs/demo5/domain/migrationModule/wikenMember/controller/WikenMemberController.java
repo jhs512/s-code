@@ -26,14 +26,14 @@ public class WikenMemberController {
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/migrate")
-    public String showLogin() {
+    public String showMigrate() {
         return "domain/migrationModule/wikenMember/migrate";
     }
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/migrate")
     @Transactional
-    public String login(
+    public String migrate(
             @NotBlank String username
     ) {
         memberService.findByUsername(username)
