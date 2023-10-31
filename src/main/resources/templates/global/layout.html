@@ -48,14 +48,14 @@
     const urlPathVariables = getUrlVariables();
     const urlParams = getUrlParams();
 
-    const isPostWritePage = urlPathVariables[1] === "post" && urlPathVariables[2] === "write";
-    const isPostDetailPage = urlPathVariables[1] === "post" && urlPathVariables[2] === "detail";
-    const isPostDetailMode2Page = urlPathVariables[1] === "p";
-    const isPostDetailMode2LivePage = urlPathVariables[1] === "p" && urlPathVariables[3] === "live";
-    const isPostModifyPage = urlPathVariables[1] === "post" && urlPathVariables[2] === "modify";
-    const isPostModifyMode2Page = urlPathVariables[1] === "post" && urlPathVariables[2] === "modifyMode2";
+    const isPostWritePage = urlPathVariables[0] === "post" && urlPathVariables[1] === "write";
+    const isPostDetailPage = urlPathVariables[0] === "post" && urlPathVariables[1] === "detail";
+    const isPostDetailMode2Page = urlPathVariables[0] === "p";
+    const isPostDetailMode2LivePage = urlPathVariables[0] === "p" && urlPathVariables[2] === "live";
+    const isPostModifyPage = urlPathVariables[0] === "post" && urlPathVariables[1] === "modify";
+    const isPostModifyMode2Page = urlPathVariables[0] === "post" && urlPathVariables[1] === "modifyMode2";
 
-    const postId = isPostDetailPage || isPostDetailMode2Page || isPostDetailMode2LivePage || isPostModifyPage || isPostModifyMode2Page ? (!isNaN(urlPathVariables[2]) ? parseInt(urlPathVariables[2]) : parseInt(urlPathVariables[3])) : null;
+    const postId = isPostDetailPage || isPostDetailMode2Page || isPostDetailMode2LivePage || isPostModifyPage || isPostModifyMode2Page ? (!isNaN(urlPathVariables[1]) ? parseInt(urlPathVariables[1]) : parseInt(urlPathVariables[2])) : null;
 
     const postWritePageUrl = "/post/write";
     const postMyListPageUrl = "/post/myList";
