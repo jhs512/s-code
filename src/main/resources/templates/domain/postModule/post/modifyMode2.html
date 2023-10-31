@@ -29,7 +29,7 @@
 
             if (Post__lastBody == body && Post__lastBodyHtml == bodyHtml) return;
 
-            const action = "/post/modifyBody/" + urlPathVariables[3];
+            const action = "/post/modifyBody/" + urlPathVariables[2];
             const csrfTokenHeaderName = $("meta[name='_csrf_header']").attr("content");
             const csfTokenValue = $("meta[name='_csrf']").attr("content");
 
