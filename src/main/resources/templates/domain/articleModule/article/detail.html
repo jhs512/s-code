@@ -87,7 +87,8 @@
                            th:if="${@articleService.checkActorCanRemove(@rq.member, article).success}"
                            class="btn btn-link"
                            th:href="|/article/${board.code}/remove/${article.id}|" method="POST">삭제</a>
-                        <a class="btn btn-link" th:href="|/article/${board.code}/list|">목록</a>
+                        <a th:with="listUrl = ${param.listUrl != null ? param.listUrl : '/article/' + board.code + '/list'}"
+                           class="btn btn-link" th:href="${listUrl}">목록</a>
                     </div>
                 </div>
             </div>

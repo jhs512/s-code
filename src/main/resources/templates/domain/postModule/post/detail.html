@@ -94,7 +94,7 @@
                            th:if="${@postService.checkActorCanRemove(@rq.member, post).success}"
                            class="btn btn-link"
                            th:href="|/post/remove/${post.id}|" method="POST">삭제</a>
-                        <a th:with="listUrl = ${param.listUrl != null ? param.listUrl : '/postModule/post/list'}"
+                        <a th:with="listUrl = ${param.listUrl != null ? param.listUrl : '/post/list'}"
                            class="btn btn-link" th:href="${listUrl}">목록</a>
                     </div>
                 </div>
