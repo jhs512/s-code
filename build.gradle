@@ -7,9 +7,12 @@ plugins {
 group = 'com.ll'
 version = '0.0.1'
 
+targetCompatibility = "21.PREVIEW"
+sourceCompatibility = "21.PREVIEW"
+
 java {
-    targetCompatibility = "21.PREVIEW"
-    sourceCompatibility = "21.PREVIEW"
+    targetCompatibility = targetCompatibility
+    sourceCompatibility = sourceCompatibility
 }
 
 configurations {
@@ -84,6 +87,3 @@ tasks.named('test') {
 tasks.withType(JavaCompile).each {
     it.options.compilerArgs.add('--enable-preview')
 }
-
-targetCompatibility = "21.PREVIEW"
-sourceCompatibility = "21.PREVIEW"
