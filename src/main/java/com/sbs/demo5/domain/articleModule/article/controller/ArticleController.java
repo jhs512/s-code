@@ -165,7 +165,7 @@ public class ArticleController {
         if (Ut.file.exists(modifyForm.getAttachment__2()))
             articleService.saveAttachmentFile(rsData.getData(), modifyForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack(STR. "/article/\{ board.getCode() }/detail/\{ rsData.getData().getId() }" , rsData);
+        return rq.redirectOrBack("/article/%s/detail/%d".formatted(board.getCode(), rsData.getData().getId()), rsData);
     }
 
     @Getter
@@ -213,7 +213,7 @@ public class ArticleController {
         Article article = articleService.findById(id).get();
         RsData<?> rsData = articleService.remove(article);
 
-        return rq.redirectOrBack(STR. "/article/\{ board.getCode() }/list" , rsData);
+        return rq.redirectOrBack("/article/%s/list".formatted(board.getCode()), rsData);
     }
 
     public boolean assertActorCanWrite() {
