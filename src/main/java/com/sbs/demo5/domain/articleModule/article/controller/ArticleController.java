@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.StringTemplate.STR;
+
 @Controller
 @RequestMapping("/article")
 @RequiredArgsConstructor
@@ -104,6 +106,8 @@ public class ArticleController {
             articleService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__1(), 1);
         if (Ut.file.exists(writeForm.getAttachment__1()))
             articleService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__2(), 2);
+
+        String s = STR."HI";
 
         return rq.redirectOrBack("/article/%s/detail/%d".formatted(board.getCode(), rsData.getData().getId()), rsData);
     }

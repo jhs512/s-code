@@ -8,7 +8,8 @@ group = 'com.ll'
 version = '0.0.1'
 
 java {
-    sourceCompatibility = '21'
+    targetCompatibility = "21.PREVIEW"
+    sourceCompatibility = "21.PREVIEW"
 }
 
 configurations {
@@ -77,4 +78,12 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    jvmArgs(['--enable-preview'])
 }
+
+tasks.withType(JavaCompile).each {
+    it.options.compilerArgs.add('--enable-preview')
+}
+
+targetCompatibility = "21.PREVIEW"
+sourceCompatibility = "21.PREVIEW"
