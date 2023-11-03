@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk
+FROM openjdk:22-slim
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 EXPOSE 8080
