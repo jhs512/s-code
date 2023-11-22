@@ -1,5 +1,6 @@
 package com.sbs.demo5.global.rq;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sbs.demo5.domain.memberModule.member.entity.Member;
 import com.sbs.demo5.domain.memberModule.member.service.MemberService;
 import com.sbs.demo5.global.rsData.RsData;
@@ -8,6 +9,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.Setter;
+import lombok.SneakyThrows;
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -21,7 +26,8 @@ public class Rq {
     private final HttpServletRequest req;
     private final HttpServletResponse resp;
     private final HttpSession session;
-    private final User user;
+    private User user;
+    @Setter
     private Member member = null;
 
     public Rq(MemberService memberService, HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
@@ -33,7 +39,7 @@ public class Rq {
         // 현재 로그인한 회원의 인증정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication.getPrincipal() instanceof User) {
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
             this.user = (User) authentication.getPrincipal();
         } else {
             this.user = null;
@@ -117,24 +123,34 @@ public class Rq {
         resp.addCookie(cookie);
     }
 
-    private String getCookie(String name, String defaultValue) {
+    public Cookie getCookie(String name) {
         Cookie[] cookies = req.getCookies();
 
         if (cookies == null) {
-            return defaultValue;
+            return null;
         }
 
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(name)) {
-                return cookie.getValue();
+                return cookie;
             }
         }
 
-        return defaultValue;
+        return null;
+    }
+
+    public String getCookieValue(String name, String defaultValue) {
+        Cookie cookie = getCookie(name);
+
+        if (cookie == null) {
+            return defaultValue;
+        }
+
+        return cookie.getValue();
     }
 
     private long getCookieAsLong(String name, int defaultValue) {
-        String value = getCookie(name, null);
+        String value = getCookieValue(name, null);
 
         if (value == null) {
             return defaultValue;
@@ -144,12 +160,31 @@ public class Rq {
     }
 
     public void removeCookie(String name) {
-        Cookie cookie = new Cookie(name, "");
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        resp.addCookie(cookie);
-    }
+        Cookie cookie = getCookie(name);
 
+        if (cookie == null) {
+            return;
+        }
+
+        switch (name) {
+            case "refreshToken", "accessToken" -> {
+                ResponseCookie responseCookie = ResponseCookie.from(name, null)
+                        .path("/")
+                        .maxAge(0)
+                        .sameSite("None")
+                        .secure(true)
+                        .httpOnly(true)
+                        .build();
+
+                resp.addHeader("Set-Cookie", responseCookie.toString());
+            }
+            default -> {
+                cookie.setPath("/");
+                cookie.setMaxAge(0);
+                resp.addCookie(cookie);
+            }
+        }
+    }
 
     public String getAllCookieValuesAsString() {
         StringBuilder sb = new StringBuilder();
@@ -268,7 +303,8 @@ public class Rq {
 
         String listUrl = getParam("listUrl", "");
 
-        if (currentUrl.startsWith("/domain/" + domainName + "/detail") && listUrl.isBlank()) return listByTagPageBaseUrl;
+        if (currentUrl.startsWith("/domain/" + domainName + "/detail") && listUrl.isBlank())
+            return listByTagPageBaseUrl;
         if (listUrl.startsWith("/domain/" + domainName + "/list")) return listByTagPageBaseUrl;
         if (listUrl.startsWith("/domain/" + domainName + "/listByTag")) return listByTagPageBaseUrl;
 
@@ -285,5 +321,44 @@ public class Rq {
         }
 
         return defaultValue;
+    }
+
+    public void addCrossDomainCookie(String name, String value) {
+        ResponseCookie cookie = ResponseCookie.from(name, value)
+                .path("/")
+                .sameSite("None")
+                .secure(true)
+                .httpOnly(true)
+                .build();
+
+        resp.addHeader("Set-Cookie", cookie.toString());
+    }
+
+    public void setStatusCode(int statusCode) {
+        resp.setStatus(statusCode);
+    }
+
+    @SneakyThrows
+    public void printJson(String resultCode, String msg) {
+        resp.setContentType("application/json; charset=UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().append(
+                new ObjectMapper().writeValueAsString(
+                        RsData.of(resultCode, msg)
+                )
+        );
+    }
+
+    public void setLogined(Member member) {
+        user = new User(member.getUsername(), "", member.getGrantedAuthorities());
+        this.member = member;
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user,
+                "",
+                member.getGrantedAuthorities()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 }

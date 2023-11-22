@@ -26,9 +26,9 @@ spring:
           starttls:
             enable: true
   datasource:
-    url: jdbc:mariadb://localhost:3307/s_code_dev?useUnicode=true&characterEncoding=utf8mb4&collation=utf8mb4_unicode_ci
+    url: jdbc:mariadb://localhost:3306/s_code_dev?useUnicode=true&characterEncoding=utf8mb4&collation=utf8mb4_unicode_ci
     username: root
-    password:
+    password: lldj123414
     driver-class-name: org.mariadb.jdbc.Driver
   security:
     oauth2:
@@ -40,8 +40,19 @@ spring:
             client-name: Kakao
             authorization-grant-type: authorization_code
             redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
+          kakaoForApi:
+            clientId: NEED_TO_INPUT_ON_SECRET
+            scope: profile_nickname, profile_image
+            client-name: KakaoForApi
+            authorization-grant-type: authorization_code
+            redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
         provider:
           kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+          kakaoForApi:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me

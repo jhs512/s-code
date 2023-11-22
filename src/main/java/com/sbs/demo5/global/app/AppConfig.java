@@ -28,6 +28,10 @@ public class AppConfig {
         return 30;
     }
 
+    public static String getJwtSecretKey() {
+        return "abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789";
+    }
+
     @Value("${custom.tempDirPath}")
     public void setTempDirPath(String tempDirPath) {
         AppConfig.tempDirPath = tempDirPath;

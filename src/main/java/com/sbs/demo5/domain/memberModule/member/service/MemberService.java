@@ -33,10 +33,12 @@ public class MemberService {
     private final EmailService emailService;
     private final EmailVerificationService emailVerificationService;
     private final AttrService attrService;
+    private final JwtService jwtService;
 
     private final MemberRepository memberRepository;
 
     private final PasswordEncoder passwordEncoder;
+
 
     // 조회
     public Optional<Member> findByEmail(String email) {
@@ -292,5 +294,35 @@ public class MemberService {
                 });
 
         return RsData.of("S-1", "활동명이 적용되었습니다.");
+    }
+
+    public String genRefreshToken(Member actor) {
+        String refreshToken = attrService.get("member__%d__extra__refreshToken".formatted(actor.getId()), "");
+
+        if (!refreshToken.isBlank()) return refreshToken;
+
+        refreshToken = jwtService.genRefreshToken(actor);
+
+        attrService.set("member__%d__extra__refreshToken".formatted(actor.getId()), refreshToken);
+
+        return refreshToken;
+    }
+
+    public String genAccessToken(Member actor) {
+        return jwtService.genAccessToken(actor);
+    }
+
+    public boolean validateToken(String accessToken) {
+        if ( accessToken.isBlank() ) return false;
+
+        return jwtService.validateToken(accessToken);
+    }
+
+    public Member getMemberByToken(String token) {
+        if (token.isBlank()) return null;
+
+        long memberId = jwtService.getMemberId(token);
+
+        return findById(memberId).get();
     }
 }

@@ -61,4 +61,12 @@ public interface DocumentHavingTags extends Document {
                 .sorted()
                 .collect(Collectors.joining(" "));
     }
+
+
+    default String[] getTagsArr() {
+        return _getTags()
+                .stream()
+                .map(DocumentTag::getContent)
+                .toArray(String[]::new);
+    }
 }
