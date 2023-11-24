@@ -1,13 +1,9 @@
 server:
   shutdown: graceful
 spring:
-  data:
-    redis:
-      host: 172.17.0.1
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: ${spring.servlet.multipart.max-file-size}
+      max-file-size: 5MB
   datasource:
     url: jdbc:mariadb://172.17.0.1:3306/s_code_prod
     username: lldjlocal
@@ -25,6 +21,6 @@ logging:
 custom:
   tempDirPath: /gen/temp
   site:
-    baseUrl: "https://www.s-code.io"
+    baseUrl: "https://www.scode.gg"
   genFile:
     dirPath: /gen

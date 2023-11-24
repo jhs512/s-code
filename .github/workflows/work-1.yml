@@ -7,8 +7,7 @@ on:
       - 'build.gradle'
       - 'Dockerfile'
       - 'readme.md'
-      - 'fix_socat_work.py'
-      - 'zero_downtime_deploy.py'
+      - 'infraScript/**'
     branches:
       - 'main'
 jobs:
@@ -113,9 +112,9 @@ jobs:
             
             (crontab -l 2>/dev/null | grep -v '/docker_projects/s_code_1/fix_socat_work.py'; echo "*/5 * * * * /docker_projects/s_code_1/fix_socat_work.py") | crontab -
             
-            curl -o /docker_projects/s_code_1/fix_socat_work.py https://raw.githubusercontent.com/jhs512/s-code/main/fix_socat_work.py
+            curl -o /docker_projects/s_code_1/fix_socat_work.py https://raw.githubusercontent.com/jhs512/s-code/main/infraScript/fix_socat_work.py
             chmod +x /docker_projects/s_code_1/fix_socat_work.py
             
-            curl -o /docker_projects/s_code_1/zero_downtime_deploy.py https://raw.githubusercontent.com/jhs512/s-code/main/zero_downtime_deploy.py
+            curl -o /docker_projects/s_code_1/zero_downtime_deploy.py https://raw.githubusercontent.com/jhs512/s-code/infraScript/main/zero_downtime_deploy.py
             chmod +x /docker_projects/s_code_1/zero_downtime_deploy.py
             /docker_projects/s_code_1/zero_downtime_deploy.py
