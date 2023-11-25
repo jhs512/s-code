@@ -135,7 +135,7 @@
                 form.body.value = markdown;
                 form.bodyHtml.value = html;
 
-                if (form.body.value.length == 0 || form.bodyHtml.value.length == 0) {
+                if (form.body.value.length == 0) {
                     toastWarning("내용을 입력해주세요");
                     editor.focus();
                     return;

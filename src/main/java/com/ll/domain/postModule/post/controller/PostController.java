@@ -79,7 +79,7 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "global", "attachment");
 
         model.addAttribute("post", post);
         model.addAttribute("filesMap", filesMap);
@@ -135,7 +135,6 @@ public class PostController {
 
         return "domain/postModule/post/mylistByTag";
     }
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/write")
     public String showWrite() {
@@ -181,7 +180,7 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "global", "attachment");
 
         model.addAttribute("post", post);
 
@@ -233,7 +232,7 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "global", "attachment");
 
         model.addAttribute("post", post);
         model.addAttribute("filesMap", filesMap);

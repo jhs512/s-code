@@ -1,7 +1,7 @@
 <html layout:decorate="~{global/usr/layout}">
 
 <head>
-    <title>위캔 로그인</title>
+    <title>위캔 계정 마이그레이션</title>
 </head>
 
 <body>
@@ -10,7 +10,7 @@
     <div class="max-w-2xl w-full px-4">
         <h1 class="mb-4">
             <i class="fa-solid fa-arrow-right-to-bracket"></i>
-            위캔 로그인
+            위캔 계정 마이그레이션
         </h1>
 
         <form class="flex flex-col gap-6" method="POST" onsubmit="submitLoginForm(this); return false;"
@@ -28,7 +28,7 @@
             <div class="flex flex-col gap-2">
                 <button class="btn btn-block btn-primary gap-1">
                     <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                    <span>로그인</span>
+                    <span>마이그레이션</span>
                 </button>
 
                 <div class="text-center">
@@ -40,10 +40,10 @@
         </form>
 
         <script>
-            let submitLoginFormDone = false;
+            let submitMigrateFormDone = false;
 
-            function submitLoginForm(form) {
-                if (submitLoginFormDone) return;
+            function submitMigrateForm(form) {
+                if (submitMigrateFormDone) return;
 
                 form.username.value = form.username.value.trim();
 
@@ -60,7 +60,7 @@
                 }
 
                 form.submit();
-                submitLoginFormDone = true;
+                submitMigrateFormDone = true;
             }
         </script>
     </div>

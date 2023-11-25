@@ -84,6 +84,7 @@
             uri.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (str, key, value) {
                 params[key] = value;
             });
+
             return params;
         }
 
@@ -165,7 +166,7 @@
                 }
 
                 return (
-                    '<iframe frameborder="0" width="100%" height="' +
+                    '<iframe width="100%" height="' +
                     height +
                     'px" src="' +
                     uri +
@@ -435,7 +436,7 @@ $$
                         ? ToastEditor__initialSource
                         : ToastEditor__escape($initialValueEl.html().trim());
 
-                const ctrlAltSFuncName = $(node).attr('ctrl-alt-s-func-name');
+                const ctrlSFuncName = $(node).attr('ctrl-s-func-name');
 
                 const editor = new toastui.Editor({
                     el: node,
@@ -456,21 +457,38 @@ $$
                     language: "ko-KR",
                     useCommandShortcut: false,
                     events: {
-                        keydown: function (mode, event, dd) {
-                            if (ctrlAltSFuncName && event.isComposing == false && event.isTrusted && event.altKey && event.ctrlKey && event.key == 's') {
-                                eval(ctrlAltSFuncName + "()");
-                                return;
-                            } else if (event.isComposing == false && event.isTrusted && event.ctrlKey && event.key == 's') {
-                                eval(ctrlAltSFuncName + "()");
+                        keydown: function (mode, event) {
+                            if (ctrlSFuncName && event.isComposing == false && event.isTrusted && event.ctrlKey && event.key == 's') {
+                                // 윈도우 : Ctrl + S 를 누르면 저장
+                                eval(ctrlSFuncName + "()");
+                                return false;
+                            } else if (ctrlSFuncName && event.isComposing == false && event.isTrusted && event.metaKey && event.key == 's') {
+                                // MAC : Cmd + S 를 누르면 저장
+                                eval(ctrlSFuncName + "()");
                                 return false;
                             } else if (event.isComposing == false && event.isTrusted && event.ctrlKey && event.key == 'z') {
-                                editor.exec("undo")
+                                // 윈도우 : Ctrl + z 를 누르면 undo
+                                editor.exec("undo");
+                                return false;
+                            } else if (event.isComposing == false && event.isTrusted && event.metaKey && event.key == 'z') {
+                                // MAC : Cmd + z 를 누르면 undo
+                                editor.exec("undo");
                                 return false;
                             } else if (event.isComposing == false && event.isTrusted && event.ctrlKey && event.key == 'y') {
-                                editor.exec("redo")
+                                // 윈도우 : Ctrl + y 를 누르면 redo
+                                editor.exec("redo");
+                                return false;
+                            } else if (event.isComposing == false && event.isTrusted && event.metaKey && event.key == 'y') {
+                                // MAC : Cmd + y 를 누르면 redo
+                                editor.exec("redo");
                                 return false;
                             } else if (event.isComposing == false && event.isTrusted && event.ctrlKey && event.shiftKey && (event.key == 'z' || event.key == 'Z')) {
-                                editor.exec("redo")
+                                // 윈도우 : Ctrl + Shift + z 를 누르면 redo
+                                editor.exec("redo");
+                                return false;
+                            } else if (event.isComposing == false && event.isTrusted && event.metaKey && event.shiftKey && (event.key == 'z' || event.key == 'Z')) {
+                                // MAC : Cmd + Shift + z 를 누르면 redo
+                                editor.exec("redo");
                                 return false;
                             }
                         }
@@ -531,16 +549,6 @@ $$
                             }) || ""
                         );
                     },
-                });
-
-                // 키보드 이벤트 리스너 추가
-                document.addEventListener('keydown', function (event) {
-                    // 예: Ctrl + B를 누르면 bold 기능 실행
-                    if (event.ctrlKey && event.key === 'b') {
-                        editor.exec('bold');
-                        event.preventDefault(); // 기본 동작 방지
-                    }
-                    // 여기에 다른 단축키 조합을 추가할 수 있습니다.
                 });
 
                 $node.data("data-toast-editor", editor);

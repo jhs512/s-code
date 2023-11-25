@@ -1,52 +1,78 @@
 <!DOCTYPE html>
+<!-- lang="ko" : 한글이 안깨지도록 -->
+<!--
+th:with="UtThy=${T(com.ll.standard.util.Ut.thy)}"
+UtThy 라는 이름으로 com.ll.standard.util.Ut.thy 를 타임리프에서 사용할 수 있도록 함
+-->
+<!-- data-theme="light" : 데이지 UI 테마를 light 로 고정 -->
 <html
         lang="ko"
         th:with="UtThy=${T(com.ll.standard.util.Ut.thy)}"
         data-theme="light"
 >
 <head>
+    <!-- 한글이 안깨지도록 -->
     <meta charset="UTF-8">
+    <!-- 모바일 브라우저에서 화면이 축소되지 않도록 -->
     <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
           name="viewport">
+    <!-- IE 브라우저에서 최신 렌더링 엔진을 사용하도록 -->
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
+
+    <!-- 스프링 시큐리티 CSRF TOKEN, AJAX(POST) 요청 등에 이용된다. -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <!-- `콘텐트 타이틀 | 레이아웃 타이틀` 형태로 타이틀 구성 -->
     <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE" th:text="${@appConfig.siteName}"></title>
 
-    <!-- 제이쿼리 불러오기 -->
+    <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-    <!-- toastr 불러오기 -->
+    <!-- toastr -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
     <link href="https://jhs512.github.io/toastr/toastr.css" rel="stylesheet">
 
-    <!-- 폰트어썸 아이콘 -->
+    <!-- 폰트어썸 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <!-- 아이콘 목록 : https://fontawesome.com/search?o=r&m=free -->
 
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <!-- 단축키 라이브러리 -->
+    <script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
 </head>
 <body>
-<link href="https://cdn.jsdelivr.net/npm/daisyui@3.7.7/dist/full.css" rel="stylesheet" type="text/css"/>
+
+<!-- 데이지 UI -->
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.6/dist/full.min.css" rel="stylesheet" type="text/css"/>
 <script src="https://cdn.tailwindcss.com"></script>
 
-<script src="https://unpkg.com/hotkeys-js/dist/hotkeys.min.js"></script>
-
-<link href="/resource/common/common.css" rel="stylesheet">
-<script src="/resource/common/common.js"></script>
+<!-- 사이트 리소스 -->
+<link href="/resource/global/global.css" rel="stylesheet">
+<script src="/resource/global/global.js"></script>
 
 <script>
+    let documentIsHidden = false;
+
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            documentIsHidden = true;
+        } else {
+            documentIsHidden = false;
+        }
+    });
+
+    // 브라우저에 내장된 ctrl + s 의 기본작동을 막는다.
+    // 에디터에서 사용하는 단축키와 겹치지 때문
     hotkeys('ctrl+s,cmd+s', function (event, handler) {
-        // Prevent the default save action
         event.preventDefault();
     });
 
+    // 브라우저에 내장된 ctrl + q 의 기본작동을 막는다.
+    // 에디터에서 사용하는 단축키와 겹치지 때문
     hotkeys('ctrl+q,cmd+q', function (event, handler) {
-        // Prevent the default save action
         event.preventDefault();
     });
 
     const urlPathVariables = getUrlVariables();
-    const urlParams = getUrlParams();
 
     const isPostWritePage = urlPathVariables[0] === "post" && urlPathVariables[1] === "write";
     const isPostDetailPage = urlPathVariables[0] === "post" && urlPathVariables[1] === "detail";

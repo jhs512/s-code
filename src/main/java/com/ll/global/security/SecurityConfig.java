@@ -15,8 +15,6 @@ import org.springframework.security.web.access.expression.WebExpressionAuthoriza
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.util.stream.Stream;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -28,44 +26,53 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(
-                        authorizeRequests -> authorizeRequests
-                                .requestMatchers(requestMatchersOf("/member/notVerified")
-                                ).permitAll()
+                        authorizeHttpRequests -> authorizeHttpRequests
+                                .requestMatchers("/member/notVerified")
+                                .permitAll()
                                 .requestMatchers(
-                                        requestMatchersOf("/post/modify/*", "/post/modifyMode2/*")
-                                ).access(accessOf("@postController.assertActorCanModify()"))
-                                .requestMatchers(
-                                        requestMatchersOf("/post/remove/*")
-                                ).access(accessOf("@postController.assertActorCanRemove()"))
-                                .requestMatchers(
-                                        requestMatchersOf("/domain/book/*/write")
-                                ).access(accessOf("@bookController.assertActorCanWrite()"))
-                                .requestMatchers(
-                                        requestMatchersOf("/domain/book/*/modify/*")
-                                ).access(accessOf("@bookController.assertActorCanModify()"))
-                                .requestMatchers(
-                                        requestMatchersOf("/domain/book/*/remove/*")
-                                ).access(accessOf("@bookController.assertActorCanRemove()"))
-                                .requestMatchers(
-                                        requestMatchersOf("/domain/article/*/write")
-                                ).access(accessOf("@articleController.assertActorCanWrite()"))
-                                .requestMatchers(
-                                        requestMatchersOf("/domain/article/*/modify/*")
-                                ).access(accessOf("@articleController.assertActorCanModify()"))
-                                .requestMatchers(
-                                        requestMatchersOf("/domain/article/*/remove/*")
-                                ).access(accessOf("@articleController.assertActorCanRemove()"))
-                                .requestMatchers(
-                                        requestMatchersOf("/member/beProducer", "/member/modify")
-                                ).access(accessOf("@memberController.assertCheckPasswordAuthCodeVerified()"))
-                                .requestMatchers(
-                                        requestMatchersOf("/", "/domain/**")
-                                ).access(accessOf("isAnonymous() or @memberController.assertCurrentMemberVerified()"))
-                                .requestMatchers(
-                                        requestMatchersOf("/adm/**")
+                                        "/post/modify/*", "/post/modifyMode2/*"
                                 )
-                                .hasAuthority("admin")
-                                .anyRequest().permitAll()
+                                .access(accessOf("@postController.assertActorCanModify()"))
+                                .requestMatchers(
+                                        "/post/remove/*"
+                                )
+                                .access(accessOf("@postController.assertActorCanRemove()"))
+                                .requestMatchers("/book/*/write")
+                                .access(accessOf("@bookController.assertActorCanWrite()"))
+                                .requestMatchers(
+                                        "/book/*/modify/*"
+                                )
+                                .access(accessOf("@bookController.assertActorCanModify()"))
+                                .requestMatchers(
+                                        "/book/*/remove/*"
+                                )
+                                .access(accessOf("@bookController.assertActorCanRemove()"))
+                                .requestMatchers(
+                                        "/article/*/write"
+                                )
+                                .access(accessOf("@articleController.assertActorCanWrite()"))
+                                .requestMatchers(
+                                        "/article/*/modify/*"
+                                )
+                                .access(accessOf("@articleController.assertActorCanModify()"))
+                                .requestMatchers(
+                                        "/article/*/remove/*"
+                                )
+                                .access(accessOf("@articleController.assertActorCanRemove()"))
+                                .requestMatchers(
+                                        "/beProducer", "/member/modify"
+                                )
+                                .access(accessOf("@memberController.assertCheckPasswordAuthCodeVerified()"))
+                                .requestMatchers(
+                                        "/**"
+                                )
+                                .access(accessOf("isAnonymous() or @memberController.assertCurrentMemberVerified()"))
+                                .requestMatchers(
+                                        "/adm/**"
+                                )
+                                .hasRole("ADMIN")
+                                .anyRequest()
+                                .permitAll()
                 )
                 .exceptionHandling(
                         exceptionHandling -> exceptionHandling
@@ -75,20 +82,27 @@ public class SecurityConfig {
                         oauth2Login -> oauth2Login
                                 .loginPage("/member/login")
                 )
-                .csrf((csrf) -> csrf
-                        .ignoringRequestMatchers(requestMatchersOf("/post/modifyBody/**")))
-                .headers((headers) -> headers
-                        .addHeaderWriter(new XFrameOptionsHeaderWriter(
-                                XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
-                .formLogin((formLogin) -> formLogin
-                        .loginPage("/member/login")
-                        .successHandler(new CustomSimpleUrlAuthenticationSuccessHandler())
-                        .failureHandler(new CustomSimpleUrlAuthenticationFailureHandler())
+                .csrf(
+                        csrf -> csrf
+                                .ignoringRequestMatchers("/post/modifyBody/**"))
+                .headers(
+                        headers -> headers
+                                .addHeaderWriter(
+                                        new XFrameOptionsHeaderWriter(
+                                                XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN
+                                        )
+                                )
                 )
-                .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true))
+                .formLogin(
+                        formLogin -> formLogin
+                                .loginPage("/member/login")
+                                .successHandler(new CustomSimpleUrlAuthenticationSuccessHandler())
+                                .failureHandler(new CustomSimpleUrlAuthenticationFailureHandler())
+                )
+                .logout(
+                        logout -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                )
         ;
         return http.build();
     }
@@ -100,12 +114,6 @@ public class SecurityConfig {
         authorization.setExpressionHandler(expressionHandler);
 
         return authorization;
-    }
-
-    private AntPathRequestMatcher[] requestMatchersOf(String... patterns) {
-        return Stream.of(patterns)
-                .map(AntPathRequestMatcher::new)
-                .toArray(AntPathRequestMatcher[]::new);
     }
 
     @Bean
