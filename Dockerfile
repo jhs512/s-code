@@ -6,10 +6,10 @@ WORKDIR /app
 
 # 호스트 시스템의 build/libs 디렉토리 내의 모든 .jar 파일을
 # 컨테이너의 /app 디렉토리로 복사
-COPY build/libs/*.jar /app/
+COPY build/libs/*.jar /app/app.jar
 
 # 실행할 JAR 파일 지정
 # 여기서는 단일 JAR 파일을 가정하고 있지만, 여러 파일이 있는 경우
 # 실행할 특정 파일을 지정해야 합니다.
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "s-code-0.0.1.jar"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
 
