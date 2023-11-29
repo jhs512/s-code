@@ -1,8 +1,8 @@
 package com.ll.global.initData;
 
-import com.ll.domain.baseModule.system.service.SystemService;
 import com.ll.domain.articleModule.board.entity.Board;
 import com.ll.domain.articleModule.board.service.BoardService;
+import com.ll.domain.baseModule.system.service.SystemService;
 import com.ll.domain.memberModule.member.entity.Member;
 import com.ll.domain.memberModule.member.service.MemberService;
 import com.ll.global.app.AppConfig;

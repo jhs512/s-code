@@ -1,6 +1,7 @@
 package com.ll.global.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,42 +28,17 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
-                                .requestMatchers("/member/notVerified")
+                                .requestMatchers(
+                                        PathRequest.toStaticResources().atCommonLocations(),
+                                        PathRequest.toH2Console()
+                                )
                                 .permitAll()
                                 .requestMatchers(
-                                        "/post/modify/*", "/post/modifyMode2/*"
+                                        "/resource/**", "/gen/**"
                                 )
-                                .access(accessOf("@postController.assertActorCanModify()"))
-                                .requestMatchers(
-                                        "/post/remove/*"
-                                )
-                                .access(accessOf("@postController.assertActorCanRemove()"))
-                                .requestMatchers("/book/*/write")
-                                .access(accessOf("@bookController.assertActorCanWrite()"))
-                                .requestMatchers(
-                                        "/book/*/modify/*"
-                                )
-                                .access(accessOf("@bookController.assertActorCanModify()"))
-                                .requestMatchers(
-                                        "/book/*/remove/*"
-                                )
-                                .access(accessOf("@bookController.assertActorCanRemove()"))
-                                .requestMatchers(
-                                        "/article/*/write"
-                                )
-                                .access(accessOf("@articleController.assertActorCanWrite()"))
-                                .requestMatchers(
-                                        "/article/*/modify/*"
-                                )
-                                .access(accessOf("@articleController.assertActorCanModify()"))
-                                .requestMatchers(
-                                        "/article/*/remove/*"
-                                )
-                                .access(accessOf("@articleController.assertActorCanRemove()"))
-                                .requestMatchers(
-                                        "/beProducer", "/member/modify"
-                                )
-                                .access(accessOf("@memberController.assertCheckPasswordAuthCodeVerified()"))
+                                .permitAll()
+                                .requestMatchers("/member/notVerified")
+                                .permitAll()
                                 .requestMatchers(
                                         "/**"
                                 )
@@ -82,9 +58,21 @@ public class SecurityConfig {
                         oauth2Login -> oauth2Login
                                 .loginPage("/member/login")
                 )
+                .headers(
+                        headers -> headers
+                                .addHeaderWriter(
+                                        new XFrameOptionsHeaderWriter(
+                                                XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)
+                                )
+                )
                 .csrf(
                         csrf -> csrf
-                                .ignoringRequestMatchers("/post/modifyBody/**"))
+                                .ignoringRequestMatchers("/post/modifyBody/**", "/h2-console/**")
+                                .ignoringRequestMatchers(
+                                        PathRequest.toH2Console() + "/**"
+                                )
+
+                )
                 .headers(
                         headers -> headers
                                 .addHeaderWriter(

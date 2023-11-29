@@ -1,17 +1,18 @@
+# 아래 설정들은 운영환경, 테스트환경, 개발환경에서 공통으로 사용된다.
 server:
   servlet:
     session:
-      timeout: 2592000
+      timeout: 2592000 # 30일
 spring:
   profiles:
-    active: dev
-    include: secret
+    active: dev # 기본적으로는 application-dev.yml 이 로딩된다는 의미, activeProfiles 에 의해서 바뀔 수 있음
+    include: secret # active 되는 설정파일 application-{dev|test|production}.yml 다음에 application-secret.yml 이 로딩된다는 의미
   threads:
     virtual:
-      enabled: true
+      enabled: true # 자바 21, 스프링 3.20 이상부터 사용가능, 요청처리에 사용되는 쓰레드가 Non-Blocking 방식으로 작동하도록
   servlet:
     multipart:
-      max-file-size: 50MB
+      max-file-size: 50MB # 파일 업로드 최대 크기
       max-request-size: ${spring.servlet.multipart.max-file-size}
   mail:
     host: smtp.gmail.com
@@ -31,16 +32,17 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # DB 스키마 자동생성, 앱이 재실행되어도 데이터는 유지된다.
     properties:
       hibernate:
-        default_batch_fetch_size: 100
-        format_sql: true
-        highlight_sql: true
-        use_sql_comments: true
+        default_batch_fetch_size: 100 # Lazy 로딩이 될 때 한번에 DB에서 가져오는 데이터의 수
+        format_sql: true # SQL 로그를 보기 좋게 포맷팅
+        highlight_sql: true # SQL 로그에 하이라이트
+        use_sql_comments: true # SQL 로그에 코멘트
   security:
     oauth2:
       client:
+        # OAuth2 인증을 위한 설정
         registration:
           kakao:
             clientId: NEED_TO_INPUT_ON_SECRET
@@ -56,15 +58,16 @@ spring:
             user-name-attribute: id
 logging:
   level:
+    # SQL에 사용된 실제 파라미터, SQL의 결과도 출력
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
 custom:
-  tempDirPath: c:/temp/s_code/temp
   site:
-    name: scode.gg
+    name: scode.gg # 사이트 이름, 도메인이 아니라 사이트명 입니다.
     baseUrl: "http://localhost:8090"
+  tempDirPath: c:/temp/s_code/temp
   genFile:
     dirPath: c:/temp/s_code
   security:
@@ -72,4 +75,11 @@ custom:
       client:
         registration:
           kakao:
-            devUserOauthId: 3058152288
+            # 개발자 팀원1의 카카오 회원 가입시 발급되는 계정 아이디
+            devUser1OauthId: 3058152288
+            # 개발자 팀원2의 카카오 회원 가입시 발급되는 계정 아이디
+            devUser2OauthId:
+            # 개발자 팀원3의 카카오 회원 가입시 발급되는 계정 아이디
+            devUser3OauthId:
+            # 개발자 팀원4의 카카오 회원 가입시 발급되는 계정 아이디
+            devUser4OauthId:

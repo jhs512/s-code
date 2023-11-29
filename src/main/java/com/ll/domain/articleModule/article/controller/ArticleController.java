@@ -15,12 +15,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -105,14 +103,13 @@ public class ArticleController {
         if (Ut.file.exists(writeForm.getAttachment__1()))
             articleService.saveAttachmentFile(rsData.getData(), writeForm.getAttachment__2(), 2);
 
-        return rq.redirectOrBack("/article/%s/detail/%d".formatted(board.getCode(), rsData.getData().getId()), rsData);
+        return rq.redirectOrBack("/article/{boardCode}/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
     @AllArgsConstructor
     @Getter
     public static class ArticleWriteForm {
         @NotBlank
-        @Length(min = 2)
         private String subject;
         private String tagsStr;
         @NotBlank
@@ -133,7 +130,7 @@ public class ArticleController {
         Board board = boardService.findByCode(boardCode).get();
         Article article = articleService.findById(id).get();
 
-        Map<String, GenFile> filesMap = articleService.findGenFilesMapKeyByFileNo(article, "global", "attachment");
+        Map<String, GenFile> filesMap = articleService.findGenFilesMapKeyByFileNo(article, "common", "attachment");
 
         model.addAttribute("board", board);
         model.addAttribute("article", article);
@@ -172,7 +169,6 @@ public class ArticleController {
     @Setter
     public static class ArticleModifyForm {
         @NotBlank
-        @Length(min = 2)
         private String subject;
         private String tagsStr;
         @NotBlank
@@ -194,7 +190,7 @@ public class ArticleController {
         Board board = boardService.findByCode(boardCode).get();
         Article article = articleService.findById(id).get();
 
-        Map<String, GenFile> filesMap = articleService.findGenFilesMapKeyByFileNo(article, "global", "attachment");
+        Map<String, GenFile> filesMap = articleService.findGenFilesMapKeyByFileNo(article, "common", "attachment");
 
         model.addAttribute("board", board);
         model.addAttribute("article", article);
@@ -214,46 +210,5 @@ public class ArticleController {
         RsData<?> rsData = articleService.remove(article);
 
         return rq.redirectOrBack("/article/%s/list".formatted(board.getCode()), rsData);
-    }
-
-    public boolean assertActorCanWrite() {
-        String boardCode = rq.getPathVariable(2);
-        Board board = boardService.findByCode(boardCode).get();
-        articleService.checkActorCanWrite(rq.getMember(), board)
-                .optional()
-                .filter(RsData::isFail)
-                .ifPresent(rsData -> {
-                    throw new AccessDeniedException(rsData.getMsg());
-                });
-
-        return true;
-    }
-
-    public boolean assertActorCanModify() {
-        long articleId = rq.getFirstNumberPathVariableAsLong(0);
-        Article article = articleService.findById(articleId).get();
-
-        articleService.checkActorCanModify(rq.getMember(), article)
-                .optional()
-                .filter(RsData::isFail)
-                .ifPresent(rsData -> {
-                    throw new AccessDeniedException(rsData.getMsg());
-                });
-
-        return true;
-    }
-
-    public boolean assertActorCanRemove() {
-        long articleId = rq.getFirstNumberPathVariableAsLong(0);
-        Article article = articleService.findById(articleId).get();
-
-        articleService.checkActorCanRemove(rq.getMember(), article)
-                .optional()
-                .filter(RsData::isFail)
-                .ifPresent(rsData -> {
-                    throw new AccessDeniedException(rsData.getMsg());
-                });
-
-        return true;
     }
 }

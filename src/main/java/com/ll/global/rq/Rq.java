@@ -78,14 +78,14 @@ public class Rq {
         return getMember().isAdmin();
     }
 
-    public boolean isProducer() {
+    public boolean isCreator() {
         if (isLogout()) return false;
 
-        return getMember().isProducer();
+        return getMember().isCreator();
     }
 
-    public String getProducerPageName() {
-        if (isProducer()) return "크리에이터 정보";
+    public String getCreatorPageName() {
+        if (isCreator()) return "크리에이터 정보";
         return "크리에이터 신청";
     }
 
@@ -166,49 +166,19 @@ public class Rq {
             return;
         }
 
-        switch (name) {
-            case "refreshToken", "accessToken" -> {
-                ResponseCookie responseCookie = ResponseCookie.from(name, null)
-                        .path("/")
-                        .maxAge(0)
-                        .sameSite("None")
-                        .secure(true)
-                        .httpOnly(true)
-                        .build();
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        resp.addCookie(cookie);
 
-                resp.addHeader("Set-Cookie", responseCookie.toString());
-            }
-            default -> {
-                cookie.setPath("/");
-                cookie.setMaxAge(0);
-                resp.addCookie(cookie);
-            }
-        }
-    }
+        ResponseCookie responseCookie = ResponseCookie.from(name, null)
+                .path("/")
+                .maxAge(0)
+                .sameSite("None")
+                .secure(true)
+                .httpOnly(true)
+                .build();
 
-    public String getAllCookieValuesAsString() {
-        StringBuilder sb = new StringBuilder();
-
-        Cookie[] cookies = req.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                sb.append(cookie.getName()).append(": ").append(cookie.getValue()).append("\n");
-            }
-        }
-
-        return sb.toString();
-    }
-
-    public String getAllSessionValuesAsString() {
-        StringBuilder sb = new StringBuilder();
-
-        java.util.Enumeration<String> attributeNames = session.getAttributeNames();
-        while (attributeNames.hasMoreElements()) {
-            String attributeName = attributeNames.nextElement();
-            sb.append(attributeName).append(": ").append(session.getAttribute(attributeName)).append("\n");
-        }
-
-        return sb.toString();
+        resp.addHeader("Set-Cookie", responseCookie.toString());
     }
 
     public String historyBack(RsData rs) {
@@ -216,14 +186,11 @@ public class Rq {
     }
 
     public String historyBack(String msg) {
-        String referer = req.getHeader("referer");
-        String key = "historyBackFailMsg___" + referer;
-        req.setAttribute("localStorageKeyAboutHistoryBackFailMsg", key);
         req.setAttribute("historyBackFailMsg", Ut.url.withTtl(msg));
         // 200 이 아니라 400 으로 응답코드가 지정되도록
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-        return "globalModule/js";
+        return "global/js";
     }
 
     public String redirect(String url) {
@@ -296,19 +263,19 @@ public class Rq {
     public String getSuitableListByTagPageBaseUrlByCurrentUrl(String domainName) {
         String currentUrl = getCurrentUrlPath();
 
-        String listByTagPageBaseUrl = "/domain/" + domainName + "/listByTag";
+        String listByTagPageBaseUrl = "/" + domainName + "/listByTag";
 
-        if (currentUrl.startsWith("/domain/" + domainName + "/list")) return listByTagPageBaseUrl;
-        if (currentUrl.startsWith("/domain/" + domainName + "/listByTag")) return listByTagPageBaseUrl;
+        if (currentUrl.startsWith("/" + domainName + "/list")) return listByTagPageBaseUrl;
+        if (currentUrl.startsWith("/" + domainName + "/listByTag")) return listByTagPageBaseUrl;
 
         String listUrl = getParam("listUrl", "");
 
-        if (currentUrl.startsWith("/domain/" + domainName + "/detail") && listUrl.isBlank())
+        if (currentUrl.startsWith("/" + domainName + "/detail") && listUrl.isBlank())
             return listByTagPageBaseUrl;
-        if (listUrl.startsWith("/domain/" + domainName + "/list")) return listByTagPageBaseUrl;
-        if (listUrl.startsWith("/domain/" + domainName + "/listByTag")) return listByTagPageBaseUrl;
+        if (listUrl.startsWith("/" + domainName + "/list")) return listByTagPageBaseUrl;
+        if (listUrl.startsWith("/" + domainName + "/listByTag")) return listByTagPageBaseUrl;
 
-        return "/domain/postModule/post/myListByTag";
+        return "/post/myListByTag";
     }
 
     public long getFirstNumberPathVariableAsLong(long defaultValue) {
@@ -355,10 +322,16 @@ public class Rq {
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 user,
-                "",
-                member.getGrantedAuthorities()
+                user.getPassword(),
+                user.getAuthorities()
         );
 
         SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    public String creatorNameForPrint() {
+        if (!isCreator()) return "-";
+        if (isCreator()) return getMember().getCreatorName();
+        return "";
     }
 }

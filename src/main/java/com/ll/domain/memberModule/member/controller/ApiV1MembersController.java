@@ -1,6 +1,6 @@
 package com.ll.domain.memberModule.member.controller;
 
-import com.ll.domain.baseModule.base.exception.HttpException;
+import com.ll.domain.baseModule.base.exception.GlobalException;
 import com.ll.domain.memberModule.member.dto.MemberDto;
 import com.ll.domain.memberModule.member.entity.Member;
 import com.ll.domain.memberModule.member.service.MemberService;
@@ -45,7 +45,7 @@ public class ApiV1MembersController {
         Member member = memberService.findByUsername(loginDto.getUsername()).get();
 
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
-            throw new HttpException(403, "F-1", "비밀번호가 일치하지 않습니다.");
+            throw new GlobalException("403", "비밀번호가 일치하지 않습니다.");
         }
 
         String refreshToken = memberService.genRefreshToken(member);

@@ -6,16 +6,14 @@ function setTimeoutZero(callback) {
 }
 
 function getUrlParams() {
-    const search = window.location.search.substring(1);
-    const params = search.split('&');
-    const result = {};
+    const params = new URLSearchParams(location.href.split('?')[1]);
 
-    params.forEach(param => {
-        const [key, value] = param.split('=');
-        result[decodeURIComponent(key)] = decodeURIComponent(value || '');
-    });
+    const paramsObj = {};
+    for (const [key, value] of params) {
+        paramsObj[key] = value;
+    }
 
-    return result;
+    return paramsObj;
 }
 
 function getUrlVariables() {

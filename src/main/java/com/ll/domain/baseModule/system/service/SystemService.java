@@ -18,10 +18,10 @@ public class SystemService {
     }
 
     public void setNotProdInitDataConfigured(boolean configured) {
-        attrService.set("member__1__system__notProdInitDataConfigured", configured);
+        attrService.set("system__notProdInitDataConfigured", configured);
     }
 
     public boolean isNotProdInitDataConfigured() {
-        return attrService.getAsBoolean("member__1__system__notProdInitDataConfigured", false);
+        return attrService.getAsBoolean("system__notProdInitDataConfigured", false);
     }
 }

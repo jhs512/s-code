@@ -24,16 +24,16 @@
                     </li>
                     <li th:if="${@rq.login}"><a href="/member/me"><i class="fa-solid fa-user"></i> 내 정보</a></li>
                     <li th:if="${@rq.login}">
-                        <a href="/member/checkPassword?redirectUrl=/member/beProducer">
+                        <a href="/member/checkPassword?redirectUrl=/member/beCreator">
                             <i class="fa-brands fa-product-hunt"></i>
-                            <span th:text="${@rq.producerPageName}"></span>
+                            <span th:text="${@rq.creatorPageName}"></span>
                         </a>
                     </li>
                     <li th:if="${@rq.login}"><a href="/post/myList"><i class="fa-regular fa-file-lines"></i> 내 글</a>
                     </li>
                     <li><a href="/post/list"><i class="fa-regular fa-rectangle-list"></i> 글</a>
                     </li>
-                    <li th:if="${@rq.producer}"><a href="/book/myList"><i class="fa-solid fa-book-open"></i> 내가 쓴 책</a>
+                    <li th:if="${@rq.creator}"><a href="/book/myList"><i class="fa-solid fa-book-open"></i> 내가 쓴 책</a>
                     </li>
                     <li th:if="${@rq.login}"><a href="/book/myList"><i class="fa-solid fa-pencil"></i> 내 책</a>
 
@@ -53,9 +53,9 @@
             <a class="btn btn-ghost normal-case text-xl" href="/" th:text="${@appConfig.siteName}"></a>
         </div>
         <div class="navbar-end">
-            <a class="btn btn-ghost btn-circle" href="/member/me">
+            <a class="btn btn-ghost btn-circle" href="/member/me" th:if="${@rq.login}">
                 <img alt="" class="w-[30px] h-[30px] rounded-full object-cover"
-                     th:if="${@rq.login}" th:src="${@rq.profileImgUrl}">
+                     th:src="${@rq.profileImgUrl}">
             </a>
             <button class="btn btn-ghost btn-circle" th:if="${@rq.login}">
                 <div class="indicator">

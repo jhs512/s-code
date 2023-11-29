@@ -12,7 +12,7 @@ public class MemberDto {
     private final LocalDateTime modifyDate;
     private final String username;
     private final String nickname;
-    private final String producerName;
+    private final String creatorName;
     private final String email;
 
     public MemberDto(Member member) {
@@ -21,7 +21,7 @@ public class MemberDto {
         this.modifyDate = member.getModifyDate();
         this.username = member.getUsername();
         this.nickname = member.getNickname();
-        this.producerName = member.getProducerName();
+        this.creatorName = member.getCreatorName();
         this.email = member.getEmail();
     }
 }

@@ -79,7 +79,7 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "global", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
 
         model.addAttribute("post", post);
         model.addAttribute("filesMap", filesMap);
@@ -180,8 +180,6 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "global", "attachment");
-
         model.addAttribute("post", post);
 
         return "domain/postModule/post/modifyMode2";
@@ -232,7 +230,7 @@ public class PostController {
     ) {
         Post post = postService.findById(id).get();
 
-        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "global", "attachment");
+        Map<String, GenFile> filesMap = postService.findGenFilesMapKeyByFileNo(post, "common", "attachment");
 
         model.addAttribute("post", post);
         model.addAttribute("filesMap", filesMap);

@@ -6,7 +6,7 @@
 
 <body>
 
-<div class="flex-1 flex items-center justify-center" layout:fragment="content">
+<div th:classappend="|flex items-center justify-center|" layout:fragment="content">
     <th:block th:replace="global/fragments/toastuiEidtorLib :: toastuiEidtorLib"></th:block>
 
     <div class="container px-4">
@@ -36,7 +36,7 @@
                         <label class="label">
                             <span class="label-text">저자</span>
                         </label>
-                        <div th:text="${book.author.producerName}"></div>
+                        <div th:text="${book.author.getCreatorName}"></div>
                     </div>
 
                     <div class="form-control">

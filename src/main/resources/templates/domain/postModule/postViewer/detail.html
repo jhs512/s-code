@@ -34,6 +34,8 @@
 
             let Post__lastModified = /*[[${post.modifyDate}]]*/ null;
 
+            alert(Post__lastModified);
+
             function Post__loadLatestBody() {
                 if (documentIsHidden) {
                     setTimeout(Post__loadLatestBody, 5000);
@@ -43,7 +45,12 @@
                 const postId = getNThNumberOfArr(urlPathVariables, 1);
                 const url = '/p/' + postId + '/body?lastModifyDate=' + Post__lastModified;
 
-                fetch(url)
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json',
+                    }
+                })
                     .then(function (response) {
                         return response.json();
                     })

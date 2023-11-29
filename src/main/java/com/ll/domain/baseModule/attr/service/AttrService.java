@@ -2,6 +2,7 @@ package com.ll.domain.baseModule.attr.service;
 
 import com.ll.domain.baseModule.attr.entity.Attr;
 import com.ll.domain.baseModule.attr.repository.AttrRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,36 @@ import java.time.format.DateTimeFormatter;
 @Transactional(readOnly = true)
 public class AttrService {
     private final AttrRepository attrRepository;
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+
+    @Getter
+    private static class VarName {
+        private String relTypeCode;
+        private long relId;
+        private String typeCode;
+        private String type2Code;
+
+        public VarName(String varName) {
+            if (varName == null || varName.isBlank()) {
+                throw new IllegalArgumentException("varName is null or blank");
+            }
+
+            if (varName.startsWith("system__")) {
+                varName = "system__0__" + varName;
+            }
+
+            String[] varNameBits = varName.split("__");
+
+            if (varNameBits.length != 4) {
+                throw new IllegalArgumentException("varName is must be 4 bits separated by '__'");
+            }
+
+            this.relTypeCode = varNameBits[0];
+            this.relId = Long.parseLong(varNameBits[1]);
+            this.typeCode = varNameBits[2];
+            this.type2Code = varNameBits[3];
+        }
+    }
 
     // 조회
     public String get(String varName, String defaultValue) {
@@ -25,25 +56,26 @@ public class AttrService {
             return defaultValue;
         }
 
-        if (attr.getExpireDate() != null && attr.getExpireDate().compareTo(LocalDateTime.now()) < 0) {
+        if (attr.getExpireDate() != null && attr.getExpireDate().isBefore(LocalDateTime.now())) {
             return defaultValue;
         }
 
         return attr.getVal();
     }
 
-    private Attr findAttr(String relTypeCode, Long relId, String typeCode, String type2Code) {
-        return attrRepository.findByRelTypeCodeAndRelIdAndTypeCodeAndType2Code(relTypeCode, relId, typeCode, type2Code).orElse(null);
+    private Attr findAttr(String varName) {
+        return findAttr(new VarName(varName));
     }
 
-    private Attr findAttr(String varName) {
-        String[] varNameBits = varName.split("__");
-        String relTypeCode = varNameBits[0];
-        long relId = Integer.parseInt(varNameBits[1]);
-        String typeCode = varNameBits[2];
-        String type2Code = varNameBits[3];
-
-        return findAttr(relTypeCode, relId, typeCode, type2Code);
+    private Attr findAttr(VarName _varName) {
+        return attrRepository
+                .findByRelTypeCodeAndRelIdAndTypeCodeAndType2Code(
+                        _varName.getRelTypeCode(),
+                        _varName.getRelId(),
+                        _varName.getTypeCode(),
+                        _varName.getType2Code()
+                )
+                .orElse(null);
     }
 
     public long getAsLong(String varName, long defaultValue) {
@@ -75,11 +107,10 @@ public class AttrService {
             return defaultValue;
         }
 
-        return LocalDateTime.parse(value, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"));
+        return LocalDateTime.parse(value, dateTimeFormatter);
     }
 
     // 명령
-
     // String, expireDate 없음
     @Transactional
     public void set(String varName, String value) {
@@ -125,31 +156,25 @@ public class AttrService {
     // LocalDateTime, expireDate 있음
     @Transactional
     public void set(String varName, LocalDateTime value, LocalDateTime expireDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
-
-        _set(varName, value.format(formatter), expireDate);
+        _set(varName, value.format(dateTimeFormatter), expireDate);
     }
 
     private void _set(String varName, String value, LocalDateTime expireDate) {
-        String[] varNameBits = varName.split("__");
-        String relTypeCode = varNameBits[0];
-        long relId = Long.parseLong(varNameBits[1]);
-        String typeCode = varNameBits[2];
-        String type2Code = varNameBits[3];
+        VarName _varName = new VarName(varName);
 
-        _set(relTypeCode, relId, typeCode, type2Code, value, expireDate);
+        _set(_varName, value, expireDate);
     }
 
-    private void _set(String relTypeCode, Long relId, String typeCode, String type2Code, String value, LocalDateTime expireDate) {
-        Attr attr = findAttr(relTypeCode, relId, typeCode, type2Code);
+    private void _set(VarName varName, String value, LocalDateTime expireDate) {
+        Attr attr = findAttr(varName);
 
         if (attr == null) {
             attr = Attr
                     .builder()
-                    .relTypeCode(relTypeCode)
-                    .relId(relId)
-                    .typeCode(typeCode)
-                    .type2Code(type2Code)
+                    .relTypeCode(varName.getRelTypeCode())
+                    .relId(varName.getRelId())
+                    .typeCode(varName.getTypeCode())
+                    .type2Code(varName.getType2Code())
                     .build();
         }
 

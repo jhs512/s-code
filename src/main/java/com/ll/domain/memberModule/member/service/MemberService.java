@@ -53,13 +53,13 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
-    private Optional<Member> findByProducerName(String producerName) {
-        return memberRepository.findByProducerName(producerName);
+    private Optional<Member> findByCreatorName(String creatorName) {
+        return memberRepository.findByCreatorName(creatorName);
     }
 
     public Optional<String> findProfileImgUrl(Member member) {
         return genFileService.findBy(
-                        member.getModelName(), member.getId(), "global", "profileImg", 1
+                        member.getModelName(), member.getId(), "common", "profileImg", 1
                 )
                 .map(GenFile::getUrl);
     }
@@ -76,14 +76,14 @@ public class MemberService {
         return RsData.of("S-1", "%s(은)는 사용 가능한 이메일 입니다.".formatted(email), email);
     }
 
-    public RsData<String> checkProducerNameDup(Member actor, String producerName) {
-        if (producerName.equals(actor.getProducerName()))
-            return RsData.of("S-1", "%s(은)는 사용 가능한 활동명입니다.".formatted(producerName), producerName);
+    public RsData<String> checkCreatorNameDup(Member actor, String creatorName) {
+        if (creatorName.equals(actor.getCreatorName()))
+            return RsData.of("S-1", "%s(은)는 사용 가능한 활동명입니다.".formatted(creatorName), creatorName);
 
-        if (findByProducerName(producerName).isPresent())
-            return RsData.of("F-1", "%s(은)는 사용중인 활동명입니다.".formatted(producerName));
+        if (findByCreatorName(creatorName).isPresent())
+            return RsData.of("F-1", "%s(은)는 사용중인 활동명입니다.".formatted(creatorName));
 
-        return RsData.of("S-1", "%s(은)는 사용 가능한 활동명입니다.".formatted(producerName), producerName);
+        return RsData.of("S-1", "%s(은)는 사용 가능한 활동명입니다.".formatted(creatorName), creatorName);
     }
 
     // 명령
@@ -155,7 +155,7 @@ public class MemberService {
     private void saveProfileImg(Member member, String profileImgFilePath) {
         if (Ut.str.isBlank(profileImgFilePath)) return;
 
-        genFileService.save(member.getModelName(), member.getId(), "global", "profileImg", 1, profileImgFilePath);
+        genFileService.save(member.getModelName(), member.getId(), "common", "profileImg", 1, profileImgFilePath);
     }
 
     private void sendJoinCompleteEmail(Member member) {
@@ -287,10 +287,10 @@ public class MemberService {
     }
 
     @Transactional
-    public RsData<Member> beProducer(long memberId, String producerName) {
+    public RsData<Member> beCreator(long memberId, String creatorName) {
         memberRepository.findById(memberId)
                 .ifPresent(member -> {
-                    member.setProducerName(producerName);
+                    member.setCreatorName(creatorName);
                 });
 
         return RsData.of("S-1", "활동명이 적용되었습니다.");

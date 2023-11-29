@@ -1,6 +1,6 @@
 package com.ll.domain.migrationModule.wikenMember.controller;
 
-import com.ll.domain.baseModule.base.exception.NeedHistoryBackException;
+import com.ll.domain.baseModule.base.exception.GlobalException;
 import com.ll.domain.memberModule.member.entity.Member;
 import com.ll.domain.memberModule.member.service.MemberService;
 import com.ll.domain.postModule.post.service.PostService;
@@ -38,7 +38,7 @@ public class WikenMemberController {
     ) {
         memberService.findByUsername(username)
                 .ifPresent(member -> {
-                    throw new NeedHistoryBackException("마이그레이션 완료된 회원입니다. 정상적인 로그인을 진행해주세요.");
+                    throw new GlobalException("400", "이미 존재하는 아이디입니다.");
                 });
 
         Member member = memberService.join(

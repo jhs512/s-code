@@ -6,7 +6,7 @@
 
 <body>
 
-<div class="flex-1 flex items-center justify-center" layout:fragment="content">
+<div th:classappend="|flex items-center justify-center|" layout:fragment="content">
     <div class="max-w-2xl w-full px-4">
         <h1 class="mb-4">
             <i class="fa-solid fa-user"></i>
@@ -70,7 +70,7 @@
                         <label class="label">
                             <span class="label-text">제작자 활동명</span>
                         </label>
-                        <div th:text="${@rq.member.producerName}"></div>
+                        <div th:text="${@rq.member.creatorNameForPrint}"></div>
                     </div>
                 </div>
             </div>
@@ -82,8 +82,8 @@
                 <a th:if="${@rq.member.modifyAvailable}" class="btn btn-link"
                    href="/member/checkPassword?redirectUrl=/member/modify">회원정보수정</a>
                 <a class="btn btn-link"
-                   href="/member/checkPassword?redirectUrl=/member/beProducer"
-                   th:text="${@rq.producerPageName}"
+                   href="/member/checkPassword?redirectUrl=/member/beCreator"
+                   th:text="${@rq.creatorPageName}"
                 ></a>
                 <a class="btn btn-link" href="/member/withdrawal">회원탈퇴</a>
             </div>

@@ -6,7 +6,7 @@
 
 <body>
 
-<div class="flex-1 flex items-center justify-center" layout:fragment="content">
+<div th:classappend="|flex items-center justify-center|" layout:fragment="content">
     <div class="container px-4">
         <h1 class="mb-4">
             <i class="fa-solid fa-hashtag"></i>
@@ -21,7 +21,7 @@
 
             <ul class="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[20px]">
                 <li th:each="post : ${postPage.content}">
-                    <div th:replace="global/fragments :: postListItemCard(${post})"></div>
+                    <div th:replace="domain/postModule/post/fragments/postListItemCard :: postListItemCard(${post})"></div>
                 </li>
             </ul>
 

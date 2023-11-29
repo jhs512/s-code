@@ -27,7 +27,7 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String nickname;
     @Column(unique = true)
-    private String producerName;
+    private String creatorName;
     @Column(unique = true)
     private String email;
 
@@ -35,19 +35,19 @@ public class Member extends BaseEntity {
         return "admin".equals(username);
     }
 
-    public boolean isProducer() {
-        return producerName != null;
+    public boolean isCreator() {
+        return creatorName != null;
     }
 
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
         // 모든 멤버는 admMember 권한을 가진다.
-        grantedAuthorities.add(new SimpleGrantedAuthority("member"));
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
 
         // username이 admin인 회원은 추가로 admin 권한도 가진다.
-        if (isAdmin()) grantedAuthorities.add(new SimpleGrantedAuthority("admin"));
-        if (isProducer()) grantedAuthorities.add(new SimpleGrantedAuthority("producer"));
+        if (isAdmin()) grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        if (isCreator()) grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_CREATOR"));
 
         return grantedAuthorities;
     }
@@ -67,5 +67,10 @@ public class Member extends BaseEntity {
     public String getEmailForPrint() {
         if (isSocialMember()) return "-";
         return email;
+    }
+
+    public String getCreatorNameForPrint() {
+        if (!isCreator()) return "-";
+        return creatorName;
     }
 }

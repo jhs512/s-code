@@ -296,7 +296,7 @@ public class Ut {
         }
 
         public static String withTtl(String msg) {
-            return msg + ";ttl=" + new Date().getTime();
+            return msg + ";ttl=" + new Date().getTime() + 5000;
         }
 
         public static String getPath(String refererUrl, String defaultValue) {

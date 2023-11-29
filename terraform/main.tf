@@ -244,3 +244,5 @@ resource "aws_route53_record" "record_ec2-1_vpc-1_com" {
   records = [aws_instance.ec2_1.private_ip]
 }
 # EC2 설정 끝
+
+

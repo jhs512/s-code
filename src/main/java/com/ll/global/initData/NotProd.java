@@ -1,10 +1,10 @@
 package com.ll.global.initData;
 
-import com.ll.domain.baseModule.system.service.SystemService;
 import com.ll.domain.articleModule.article.entity.Article;
 import com.ll.domain.articleModule.article.service.ArticleService;
 import com.ll.domain.articleModule.board.entity.Board;
 import com.ll.domain.articleModule.board.service.BoardService;
+import com.ll.domain.baseModule.system.service.SystemService;
 import com.ll.domain.bookModule.book.service.BookService;
 import com.ll.domain.memberModule.member.entity.Member;
 import com.ll.domain.memberModule.member.service.MemberService;
@@ -25,31 +25,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Configuration
 @Profile("!prod")
 public class NotProd {
-    @Value("${custom.security.oauth2.client.registration.kakao.devUserOauthId}")
-    private String kakaoDevUserOAuthId;
-
     @Autowired
     @Lazy
     private NotProd self;
 
     @Autowired
-    private BoardService boardService;
+    private SystemService systemService;
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private BoardService boardService;
     @Autowired
     private ArticleService articleService;
+
     @Autowired
     private PostService postService;
     @Autowired
     private BookService bookService;
-    @Autowired
-    private SystemService systemService;
+
+    @Value("${custom.security.oauth2.client.registration.kakao.devUser1OauthId}")
+    private String kakaoDevUser1OAuthId;
+    @Value("${custom.security.oauth2.client.registration.kakao.devUser2OauthId}")
+    private String kakaoDevUser2OAuthId;
+    @Value("${custom.security.oauth2.client.registration.kakao.devUser3OauthId}")
+    private String kakaoDevUser3OAuthId;
+    @Value("${custom.security.oauth2.client.registration.kakao.devUser4OauthId}")
+    private String kakaoDevUser4OAuthId;
 
     @Bean
     public ApplicationRunner initNotProd() {
         return args -> {
-
             if (systemService.isNotProdInitDataConfigured() == false) {
+
                 self.work1();
                 self.work2();
 
@@ -72,10 +80,20 @@ public class NotProd {
         memberService.setEmailVerified(member3);
         memberService.setEmailVerified(member4);
 
-        memberService.beProducer(member2.getId(), "장필우");
-        memberService.beProducer(member3.getId(), "고니");
+        memberService.beCreator(member2.getId(), "장필우");
+        memberService.beCreator(member3.getId(), "고니");
 
-        Member memberByKakao = memberService.whenSocialLogin("KAKAO", "KAKAO__%s".formatted(kakaoDevUserOAuthId), "홍길동", "");
+        if (Ut.str.hasLength(kakaoDevUser1OAuthId))
+            memberService.whenSocialLogin("KAKAO", "KAKAO__%s".formatted(kakaoDevUser1OAuthId), "팀원1", "");
+
+        if (Ut.str.hasLength(kakaoDevUser2OAuthId))
+            memberService.whenSocialLogin("KAKAO", "KAKAO__%s".formatted(kakaoDevUser2OAuthId), "팀원2", "");
+
+        if (Ut.str.hasLength(kakaoDevUser3OAuthId))
+            memberService.whenSocialLogin("KAKAO", "KAKAO__%s".formatted(kakaoDevUser3OAuthId), "팀원3", "");
+
+        if (Ut.str.hasLength(kakaoDevUser4OAuthId))
+            memberService.whenSocialLogin("KAKAO", "KAKAO__%s".formatted(kakaoDevUser4OAuthId), "팀원4", "");
 
         Article article1 = articleService.write(board1, member2, "제목 1", "#자바 #HTML", "내용 1").getData();
         Article article2 = articleService.write(board1, member3, "제목 2", "#CSS #HTML #홍길동", "내용 2").getData();

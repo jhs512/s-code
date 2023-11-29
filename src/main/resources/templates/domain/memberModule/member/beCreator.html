@@ -1,0 +1,152 @@
+<html layout:decorate="~{global/usr/layout}">
+
+<head>
+    <title th:text="${@rq.creatorPageName}"></title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+</head>
+
+<body>
+
+<div th:classappend="|flex items-center justify-center|" layout:fragment="content">
+    <div class="max-w-2xl w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-brands fa-product-hunt"></i>
+            <span th:text="${@rq.creatorPageName}"></span>
+        </h1>
+
+        <form class="flex flex-col gap-6" method="POST" name="be-creator-form"
+              onsubmit="submitbeCreatorForm(this); return false;"
+              th:action>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">아이디</span>
+                </label>
+                <div class="badge badge-lg badge-ghost" th:text="${@rq.member.username}"></div>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">별명</span>
+                </label>
+                <div class="badge badge-lg badge-ghost" th:text="${@rq.member.nickname}"></div>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">활동명</span>
+                </label>
+                <input class="input input-bordered" maxlength="30" name="creatorName" placeholder="활동명"
+                       th:value="${@rq.member.getCreatorName}" type="text" onchange="$(this).keyup();"
+                       onkeyup="checkCreatorNameDupDebounce();" onpaste="setTimeoutZero(() => $(this).keyup());">
+                <div class="mt-2 text-sm"></div>
+            </div>
+
+            <div>
+                <button class="btn btn-block btn-primary gap-1">
+                    <i class="fa-brands fa-product-hunt"></i>
+                    <span th:unless="${@rq.creator}">크리에이터 활동시작</span>
+                    <span th:if="${@rq.creator}">크리에이터 정보수정</span>
+                </button>
+
+                <div class="text-center">
+                    <a class="btn btn-link" href="/member/me">내 정보</a>
+                    <a class="btn btn-link" href="/member/logout">로그아웃</a>
+                    <a class="btn btn-link" href="/member/withdrawal">회원탈퇴</a>
+                </div>
+            </div>
+        </form>
+
+        <script>
+            const beCreatorForm = document['be-creator-form'];
+
+            // creatorName 중복체크 시작
+            function checkCreatorNameDup(form) {
+                form.creatorName.value = form.creatorName.value.trim();
+
+                if (form.creatorName.value.length == 0) {
+                    clearCreatorNameInputMsg();
+                    return;
+                }
+
+                if (form.creatorName.value.length < 2) {
+                    clearCreatorNameInputMsg();
+                    return;
+                }
+
+                if (lastCheckedCreatorName == form.creatorName.value) return;
+
+                lastCheckedCreatorName = form.creatorName.value;
+
+                clearCreatorNameInputMsg();
+
+                fetch(
+                    'checkCreatorNameDup?creatorName=' + form.creatorName.value
+                )
+                    .then(res => res.json())
+                    .then((rs) => {
+                        if (rs.success) {
+                            validCreatorName = rs.data;
+                        }
+
+                        setCreatorNameInputMsg(rs.success, rs.msg);
+                    });
+            }
+
+            const checkCreatorNameDupDebounce = _.debounce(() => checkCreatorNameDup(beCreatorForm), 500);
+
+            function clearCreatorNameInputMsg() {
+                $(beCreatorForm.creatorName).removeClass('input-accent input-error');
+                $(beCreatorForm.creatorName).next().removeClass('text-green-400 text-red-400');
+                $(beCreatorForm.creatorName).next().empty();
+            }
+
+            function setCreatorNameInputMsg(isSuccess, msg) {
+                if (isSuccess) $(beCreatorForm.creatorName).addClass('input-accent');
+                if (!isSuccess) $(beCreatorForm.creatorName).addClass('input-error');
+
+                $(beCreatorForm.creatorName).next().addClass(isSuccess ? 'text-green-400' : 'text-red-400');
+
+                $(beCreatorForm.creatorName).next().text(msg);
+            }
+
+            let validCreatorName = '';
+            let lastCheckedCreatorName = '';
+            // creatorName 중복체크 끝
+
+            let submitBeCreatorFormDone = false;
+
+            function submitbeCreatorForm(form) {
+                if (submitBeCreatorFormDone) return;
+
+                form.creatorName.value = form.creatorName.value.trim();
+
+                if (form.creatorName.value.length == 0) {
+                    form.creatorName.focus();
+                    toastWarning('활동명을 입력해주세요.');
+                    return;
+                }
+
+                if (form.creatorName.value.length < 2) {
+                    form.creatorName.focus();
+                    toastWarning('활동명을 2자 이상 입력해주세요.');
+                    return;
+                }
+
+                if (validCreatorName != form.creatorName.value) {
+                    $(form.creatorName).next().focus();
+                    toastWarning('활동명 중복체크를 해주세요.');
+                    return;
+                }
+
+                form.submit();
+                submitBeCreatorFormDone = true;
+            }
+        </script>
+    </div>
+</div>
+
+</body>
+
+</html>
