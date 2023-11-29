@@ -30,7 +30,7 @@ public class SecurityConfig {
                         authorizeHttpRequests -> authorizeHttpRequests
                                 .requestMatchers(
                                         PathRequest.toStaticResources().atCommonLocations(),
-                                        PathRequest.toH2Console()
+                                        new AntPathRequestMatcher("/h2-console/**")
                                 )
                                 .permitAll()
                                 .requestMatchers(
